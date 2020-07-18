@@ -5,7 +5,7 @@ export default {
       routingFadeDuration: 250,
     },
     locale: {
-      supportedLanguages: ['en', 'de'],
+      supportedLanguages: ['en'],
       standardLanguage: 'en',
     },
   },

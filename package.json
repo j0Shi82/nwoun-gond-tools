@@ -1,5 +1,5 @@
 {
-  "name": "svelte-app",
+  "name": "nwoun-homepage-index",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@babel/core": "^7.10.5",
@@ -41,6 +41,7 @@
     "lint": "eslint -c .eslintrc.js --ext .svelte,.js src"
   },
   "dependencies": {
+    "@fullhuman/postcss-purgecss": "^2.3.0",
     "autoprefixer": "^9.8.5",
     "express": "^4.17.1",
     "postcss-discard-duplicates": "^4.0.2",
@@ -48,7 +49,8 @@
     "svelte-i18n": "^3.0.4",
     "svelte-preprocess": "^4.0.8",
     "svelte-spa-chunk": "^2.0.0",
-    "svelte-spa-router": "^2.2.0"
+    "svelte-spa-router": "^2.2.0",
+    "tailwindcss": "^1.5.1"
   },
   "husky": {
     "hooks": {
