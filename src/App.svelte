@@ -4,6 +4,7 @@ import {
 } from 'utils/imports/core';
 import backgroundImage from 'assets/media/images/NW_M14_Artwork.jpg';
 import headerBanner from 'assets/media/images/nwunlogo.png';
+import headerBannerSmall from 'assets/media/images/nwunlogo-small.png';
 
 import 'assets/style/tailwind.scss';
 import 'assets/style/global.scss';
@@ -33,7 +34,9 @@ setupLocalization();
       <img src="{headerBanner}" id="headerBanner" class="h-16 md:h-32" />
       <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">Neverwinteer's #1 independent news source and community from 2015 - 2019!</div>
     </div>
-    <div id="sticky" class="sticky top-0 w-full bg-red-700 h-12 z-20"></div>
+    <div id="sticky" class="sticky flex top-0 w-full bg-red-700 h-12 z-20 p-2">
+      <img src="{headerBannerSmall}" class="h-full w-auto" />
+    </div>
     <RouterComponent {routes} on:routeLoaded="{routerOnRouteLoaded}" />
 </main>
 {/if}
