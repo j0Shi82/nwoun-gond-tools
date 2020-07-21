@@ -2,14 +2,33 @@
 import {
   isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded,
 } from 'utils/imports/core';
+import { svelteLifecycleOnMount, svelteTransitionScale } from 'utils/imports/svelte';
 import backgroundImage from 'assets/media/images/NW_M14_Artwork.jpg';
 import headerBanner from 'assets/media/images/nwunlogo.png';
 import headerBannerSmall from 'assets/media/images/nwunlogo-small.png';
 
+import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faEdit, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import FaIcon from 'svelte-fa';
+
 import 'assets/style/tailwind.scss';
 import 'assets/style/global.scss';
 
+let showSmallLogo = false;
+
 setupLocalization();
+
+svelteLifecycleOnMount(() => {
+  const listener = () => {
+    showSmallLogo = window.scrollY > 144;
+  };
+
+  window.addEventListener('scroll', listener);
+
+  return () => {
+    window.removeEventListener('scroll', listener);
+  };
+});
 </script>
 
 <style lang="scss">
@@ -22,7 +41,7 @@ setupLocalization();
   }
 
   #sticky {
-    box-shadow: 0 5px 20px 0 rgba(0,0,0,.75);
+    box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.75);
   }
 
 </style>
@@ -34,8 +53,28 @@ setupLocalization();
       <img src="{headerBanner}" id="headerBanner" class="h-16 md:h-32" />
       <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">Neverwinteer's #1 independent news source and community from 2015 - 2019!</div>
     </div>
-    <div id="sticky" class="sticky flex top-0 w-full bg-red-700 h-12 z-20 p-2">
-      <img src="{headerBannerSmall}" class="h-full w-auto" />
+    <div id="sticky" class="sticky flex justify-between top-0 w-full bg-red-700 h-12 z-20">
+      <div style="width: 150px;">
+        {#if showSmallLogo}
+          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{headerBannerSmall}" class="h-full w-auto" />
+        {/if}
+      </div>
+      <div id="blogLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <FaIcon icon={faWordpress} class="text-2xl"></FaIcon>
+        <span class="ml-2 text-xl font-bold">UN:Blogged</span>
+      </div>
+      <div id="discordLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <FaIcon icon={faDiscord} class="text-2xl"></FaIcon>
+        <span class="ml-2 text-xl font-bold">Discord</span>
+      </div>
+      <div id="boardLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <FaIcon icon={faEdit} class="text-2xl"></FaIcon>
+        <span class="ml-2 text-xl font-bold">Message Board</span>
+      </div>
+      <div id="boardLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <FaIcon icon={faHashtag} class="text-2xl"></FaIcon>
+        <span class="ml-2 text-xl font-bold">DevTracker</span>
+      </div>
     </div>
     <RouterComponent {routes} on:routeLoaded="{routerOnRouteLoaded}" />
 </main>
