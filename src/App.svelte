@@ -8,13 +8,14 @@ import headerBanner from 'assets/media/images/nwunlogo.png';
 import headerBannerSmall from 'assets/media/images/nwunlogo-small.png';
 
 import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { faEdit, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faHashtag, faBars } from '@fortawesome/free-solid-svg-icons';
 import FaIcon from 'svelte-fa';
 
 import 'assets/style/tailwind.scss';
 import 'assets/style/global.scss';
 
 let showSmallLogo = false;
+let menuOpen = false;
 
 setupLocalization();
 
@@ -53,29 +54,36 @@ svelteLifecycleOnMount(() => {
       <img src="{headerBanner}" id="headerBanner" class="h-16 md:h-32" />
       <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">Neverwinteer's #1 independent news source and community from 2015 - 2019!</div>
     </div>
-    <div id="sticky" class="sticky flex justify-between top-0 w-full bg-red-700 h-12 z-20">
-      <div style="width: 150px;">
-        {#if showSmallLogo}
-          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{headerBannerSmall}" class="h-full w-auto" />
-        {/if}
+    <div id="sticky" class="sticky z-20 top-0 bg-red-700">
+      <div id="mainMenu" class=" flex justify-between w-full h-12 ">
+        <div style="width: 150px;">
+          {#if showSmallLogo}
+            <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{headerBannerSmall}" class="h-full w-auto" />
+          {/if}
+        </div>
+        <div id="blogLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faWordpress} class="text-2xl"></FaIcon>
+          <span class="ml-2 text-xl font-bold">UN:Blogged</span>
+        </div>
+        <div id="discordLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faDiscord} class="text-2xl"></FaIcon>
+          <span class="ml-2 text-xl font-bold">Discord</span>
+        </div>
+        <div id="boardLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faEdit} class="text-2xl"></FaIcon>
+          <span class="ml-2 text-xl font-bold">Message Board</span>
+        </div>
+        <div id="boardLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faHashtag} class="text-2xl"></FaIcon>
+          <span class="ml-2 text-xl font-bold">DevTracker</span>
+        </div>
+        <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+          <FaIcon icon={faBars} class="text-2xl"></FaIcon>
+        </div>
       </div>
-      <div id="blogLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-        <FaIcon icon={faWordpress} class="text-2xl"></FaIcon>
-        <span class="ml-2 text-xl font-bold">UN:Blogged</span>
-      </div>
-      <div id="discordLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-        <FaIcon icon={faDiscord} class="text-2xl"></FaIcon>
-        <span class="ml-2 text-xl font-bold">Discord</span>
-      </div>
-      <div id="boardLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-        <FaIcon icon={faEdit} class="text-2xl"></FaIcon>
-        <span class="ml-2 text-xl font-bold">Message Board</span>
-      </div>
-      <div id="boardLink" class="flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-        <FaIcon icon={faHashtag} class="text-2xl"></FaIcon>
-        <span class="ml-2 text-xl font-bold">DevTracker</span>
-      </div>
+      <div id="mobileMenu" class="p-2" class:hidden="{!menuOpen}" class:flex="{menuOpen}"></div>
     </div>
+    {menuOpen}
     <RouterComponent {routes} on:routeLoaded="{routerOnRouteLoaded}" />
 </main>
 {/if}
