@@ -73,7 +73,7 @@ svelteLifecycleOnMount(() => {
           <FaIcon icon={faEdit} class="text-2xl"></FaIcon>
           <span class="ml-2 text-xl font-bold">Message Board</span>
         </div>
-        <div id="boardLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <div id="trackerLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
           <FaIcon icon={faHashtag} class="text-2xl"></FaIcon>
           <span class="ml-2 text-xl font-bold">DevTracker</span>
         </div>
@@ -81,9 +81,25 @@ svelteLifecycleOnMount(() => {
           <FaIcon icon={faBars} class="text-2xl"></FaIcon>
         </div>
       </div>
-      <div id="mobileMenu" class="p-2" class:hidden="{!menuOpen}" class:flex="{menuOpen}"></div>
+      <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}">
+        <div id="blogMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faWordpress} class="text-2xl w-8"></FaIcon>
+          <span class="ml-2 text-xl font-bold">UN:Blogged</span>
+        </div>
+        <div id="discordMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faDiscord} class="text-2xl w-8"></FaIcon>
+          <span class="ml-2 text-xl font-bold">Discord</span>
+        </div>
+        <div id="boardMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faEdit} class="text-2xl w-8"></FaIcon>
+          <span class="ml-2 text-xl font-bold">Message Board</span>
+        </div>
+        <div id="trackerMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+          <FaIcon icon={faHashtag} class="text-2xl w-8"></FaIcon>
+          <span class="ml-2 text-xl font-bold">DevTracker</span>
+        </div>
+      </div>
     </div>
-    {menuOpen}
     <RouterComponent {routes} on:routeLoaded="{routerOnRouteLoaded}" />
 </main>
 {/if}
