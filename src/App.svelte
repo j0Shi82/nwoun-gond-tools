@@ -1,16 +1,13 @@
 <script>
 import {
-  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded,
+  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded, localize, routerPush, getLocalizedRoute,
 } from 'utils/imports/core';
 import { svelteLifecycleOnMount, svelteTransitionScale } from 'utils/imports/svelte';
-import { externalLinks } from 'utils/imports/data';
-import backgroundImage from 'assets/media/images/NW_M14_Artwork.jpg';
-import headerBanner from 'assets/media/images/nwunlogo.png';
-import headerBannerSmall from 'assets/media/images/nwunlogo-small.png';
+import { menuItems, images } from 'utils/imports/data';
 
-import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { faEdit, faHashtag, faBars } from '@fortawesome/free-solid-svg-icons';
-import FaIcon from 'svelte-fa';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+
+import { Icon, MenuItem } from 'utils/imports/components';
 
 import 'assets/style/tailwind.scss';
 import 'assets/style/global.scss';
@@ -31,6 +28,10 @@ svelteLifecycleOnMount(() => {
     window.removeEventListener('scroll', listener);
   };
 });
+
+function goHome() {
+  routerPush(getLocalizedRoute('home'));
+}
 </script>
 
 <style lang="scss">
@@ -38,8 +39,12 @@ svelteLifecycleOnMount(() => {
     @apply w-full h-auto min-h-full fixed top-0 left-0 z-0 opacity-25 object-left object-cover;
   }
 
-  #main-content {
+  #page-wrapper {
     @apply relative z-10 mt-0 mr-auto mb-0 ml-auto max-w-screen-xl;
+  }
+
+  #main-content {
+    @apply p-2;
   }
 
   #sticky {
@@ -49,58 +54,48 @@ svelteLifecycleOnMount(() => {
 </style>
     
 {#if !$isLocalizationLoading}
-<img src="{backgroundImage}" id="background" alt="Showing a vmapire" />
-<main class="main-content" id="main-content">
-    <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
-      <img src="{headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
-      <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">Neverwinteer's #1 independent news source and community from 2015 - 2019!</div>
-    </div>
-    <div id="sticky" class="sticky z-20 top-0 bg-red-700">
-      <div id="mainMenu" class=" flex justify-between w-full h-12 ">
-        <div style="width: 150px;">
-          {#if showSmallLogo}
-            <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{headerBannerSmall}" class="h-full w-auto" alt="small logo of Neverwinter Uncensored" />
-          {/if}
-        </div>
-        <div id="blogLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto" on:click="{() => window.open(externalLinks.blog)}">
-          <FaIcon icon={faWordpress} class="text-2xl"></FaIcon>
-          <span class="ml-2 text-xl font-bold">UN:Blogged</span>
-        </div>
-        <div id="discordLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto" on:click="{() => window.open(externalLinks.discord)}">
-          <FaIcon icon={faDiscord} class="text-2xl"></FaIcon>
-          <span class="ml-2 text-xl font-bold">Discord</span>
-        </div>
-        <div id="boardLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto" on:click="{() => window.open(externalLinks.forum)}">
-          <FaIcon icon={faEdit} class="text-2xl"></FaIcon>
-          <span class="ml-2 text-xl font-bold">Message Board</span>
-        </div>
-        <div id="trackerLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-          <FaIcon icon={faHashtag} class="text-2xl"></FaIcon>
-          <span class="ml-2 text-xl font-bold">DevTracker</span>
-        </div>
-        <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
-          <FaIcon icon={faBars} class="text-2xl"></FaIcon>
-        </div>
+<img src="{images.backgroundImage}" id="background" alt="Showing a vmapire" />
+<div id="page-wrapper">
+  <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
+    <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32 cursor-pointer" alt="logo of Neverwinter Uncensored" on:click="{goHome}" />
+    <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">{$localize('header.subtitle')}</div>
+  </div>
+  <div id="sticky" class="sticky z-20 top-0 bg-red-700">
+    <div id="mainMenu" class=" flex justify-between w-full h-12 ">
+      <div style="width: 150px;">
+        {#if showSmallLogo}
+          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBannerSmall}" class="h-full w-auto cursor-pointer" on:click="{goHome}" alt="small logo of Neverwinter Uncensored" />
+        {/if}
       </div>
-      <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}">
-        <div id="blogMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-          <FaIcon icon={faWordpress} class="text-2xl w-8"></FaIcon>
-          <span class="ml-2 text-xl font-bold">UN:Blogged</span>
-        </div>
-        <div id="discordMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-          <FaIcon icon={faDiscord} class="text-2xl w-8"></FaIcon>
-          <span class="ml-2 text-xl font-bold">Discord</span>
-        </div>
-        <div id="boardMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-          <FaIcon icon={faEdit} class="text-2xl w-8"></FaIcon>
-          <span class="ml-2 text-xl font-bold">Message Board</span>
-        </div>
-        <div id="trackerMobileLink" class="flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
-          <FaIcon icon={faHashtag} class="text-2xl w-8"></FaIcon>
-          <span class="ml-2 text-xl font-bold">DevTracker</span>
-        </div>
+      {#each menuItems as item}
+        <MenuItem 
+          id="{item.id}"
+          mobile="{false}"
+          icon="{item.icon}"
+          textLocaleKey="{item.textLocaleKey}"
+          linkType="{item.external ? 'external' : 'internal'}"
+          link="{item.link}"
+        />
+      {/each}
+      <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+        <Icon icon={faBars} class="text-2xl"></Icon>
       </div>
     </div>
+    <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}">
+      {#each menuItems as item}
+        <MenuItem 
+          id="{`${item.id}Mobile`}"
+          mobile="{true}"
+          icon="{item.icon}"
+          textLocaleKey="{item.textLocaleKey}"
+          linkType="{item.external ? 'external' : 'internal'}"
+          link="{item.link}"
+        />
+      {/each}
+    </div>
+  </div>
+  <main class="main-content" id="main-content">
     <RouterComponent {routes} on:routeLoaded="{routerOnRouteLoaded}" />
-</main>
+  </main>
+</div>
 {/if}

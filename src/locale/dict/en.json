@@ -1,3 +1,19 @@
 {
-    "test": "English Text"
+    "menu": {
+        "blog": "UN:Blogged",
+        "forum": "Message Board",
+        "discord": "Discord",
+        "tracker": "DevTracker"
+    },
+    "header": {
+        "subtitle": "Neverwinter's #1 independent news source and community from 2015 - 2019!"
+    },
+    "home": {
+        "p1": "Neverwinter Uncensored was born in 2015 because some players were searching for an independent news platform and community for the game. And because there was none, we created it ourselves! Originally started as a fan project, NWO:UN grew to become the game's #1 fan site. In the heyday, we delivered our content and tools to over 100,000 players per month. It was a tough decision to shut down the site in January 2019, but unfortunately it could no longer be properly maintained.",
+        "p2": "We're trying to keep the old community platforms up as long as possible so you guys have a place to talk the game outside the official realms. Old articles are also still accessible, although mostly for nostalgic reasons. The information is long outdated.",
+        "p3": "Running Neverwinter Uncensored was truly an insane experience. Building and managing a community and website is just so diverse and helped me make major leaps personally and professionally. The project had some rough edges, but I will never once regretted spending nearly three years of my life on it.",
+        "p4": "There's so much people to thank, but since forgetting important contributors and companions is inevitable I'll lend an excellent quote from an excellent player: <i>You know who you are</i>. I'll never forget what we were able to build and achieve here.",
+        "p6": "Cheers!",
+        "p7": "- j0Shi"
+    }
 }

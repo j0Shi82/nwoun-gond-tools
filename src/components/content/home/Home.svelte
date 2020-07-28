@@ -1,22 +1,16 @@
 <script>
-import { svelteLifecycleOnDestroy } from 'utils/imports/svelte';
-import { localize, routerPush, getLocalizedRoute } from 'utils/imports/core';
-import { currentLocale, currentRouteName } from 'utils/imports/store';
-
-// re-route to localized url on lang change
-const localeUnsub = currentLocale.subscribe(() => {
-  // to prevent re-routing to default routeName store value, check whether a route name has been set already
-  // on page load routeName is still null
-  if ($currentRouteName !== null) {
-    routerPush(getLocalizedRoute($currentRouteName));
-  }
-});
-
-svelteLifecycleOnDestroy(() => {
-  localeUnsub();
-});
+import { localize } from 'utils/imports/core';
 </script>
 
-<div>{$localize('test')}</div>
-<button on:click="{() => { currentLocale.set('en'); }}">EN</button>
-<button on:click="{() => { currentLocale.set('de'); }}">DE</button>
+<style lang="scss">
+  p {
+    @apply mb-2
+  }
+</style>
+
+<p>{@html $localize('home.p1')}</p>
+<p>{@html $localize('home.p2')}</p>
+<p>{@html $localize('home.p3')}</p>
+<p>{@html $localize('home.p4')}</p>
+<p>{@html $localize('home.p6')}</p>
+<p>{@html $localize('home.p7')}</p>
