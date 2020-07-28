@@ -3,6 +3,7 @@ import {
   isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded,
 } from 'utils/imports/core';
 import { svelteLifecycleOnMount, svelteTransitionScale } from 'utils/imports/svelte';
+import { externalLinks } from 'utils/imports/data';
 import backgroundImage from 'assets/media/images/NW_M14_Artwork.jpg';
 import headerBanner from 'assets/media/images/nwunlogo.png';
 import headerBannerSmall from 'assets/media/images/nwunlogo-small.png';
@@ -48,28 +49,28 @@ svelteLifecycleOnMount(() => {
 </style>
     
 {#if !$isLocalizationLoading}
-<img src="{backgroundImage}" id="background">
+<img src="{backgroundImage}" id="background" alt="Showing a vmapire" />
 <main class="main-content" id="main-content">
     <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
-      <img src="{headerBanner}" id="headerBanner" class="h-16 md:h-32" />
+      <img src="{headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
       <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">Neverwinteer's #1 independent news source and community from 2015 - 2019!</div>
     </div>
     <div id="sticky" class="sticky z-20 top-0 bg-red-700">
       <div id="mainMenu" class=" flex justify-between w-full h-12 ">
         <div style="width: 150px;">
           {#if showSmallLogo}
-            <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{headerBannerSmall}" class="h-full w-auto" />
+            <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{headerBannerSmall}" class="h-full w-auto" alt="small logo of Neverwinter Uncensored" />
           {/if}
         </div>
-        <div id="blogLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <div id="blogLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto" on:click="{() => window.open(externalLinks.blog)}">
           <FaIcon icon={faWordpress} class="text-2xl"></FaIcon>
           <span class="ml-2 text-xl font-bold">UN:Blogged</span>
         </div>
-        <div id="discordLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <div id="discordLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto" on:click="{() => window.open(externalLinks.discord)}">
           <FaIcon icon={faDiscord} class="text-2xl"></FaIcon>
           <span class="ml-2 text-xl font-bold">Discord</span>
         </div>
-        <div id="boardLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto">
+        <div id="boardLink" class="hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto" on:click="{() => window.open(externalLinks.forum)}">
           <FaIcon icon={faEdit} class="text-2xl"></FaIcon>
           <span class="ml-2 text-xl font-bold">Message Board</span>
         </div>

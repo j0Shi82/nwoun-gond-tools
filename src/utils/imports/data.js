@@ -1,8 +1,7 @@
 import routeLocales from 'locale/dict/routes';
-
-const dummy = {};
+import externalLinks from 'data/externalLinks';
 
 export {
   routeLocales as routeLocaleDict,
-  dummy,
+  externalLinks,
 };
