@@ -5,14 +5,30 @@ import { Button, Spinner } from 'utils/imports/components';
 import axios from 'axios';
 
 let apiData = [];
+let devData = [];
+let topicData = [];
 let loading = true;
 let error = false;
 let curPage = 0;
-let requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage}`;
+let curDev = '';
+let curID = 0;
+let requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
 $: {
-  requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage}`;
+  requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
 }
 const avatarData = {};
+
+function getDevlist() {
+  axios.get('https://api.uncnso.red/v1/devtracker/devlist').then((response) => {
+    devData = response.data;
+  });
+}
+
+function getTopics() {
+  axios.get('https://api.uncnso.red/v1/devtracker/topiclist?threshold=5').then((response) => {
+    topicData = response.data;
+  });
+}
 
 function get(uri) {
   loading = true;
@@ -45,6 +61,8 @@ $: {
 
 svelteLifecycleOnMount(() => {
   curPage = 0;
+  getDevlist();
+  getTopics();
 });
 
 function visitForum(data) {
@@ -56,10 +74,22 @@ function visitForum(data) {
 {#if !loading}
 <div id="form" class="p-2">
   <div class="relative">
-    <select class="block appearance-none w-full bg-black border border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
-      <option>New Mexico</option>
-      <option>Missouri</option>
-      <option>Texas</option>
+    <select bind:value="{curDev}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
+      <option value="" selected>-- Developer --</option>
+      {#each devData as data}
+      <option value="{data.dev_id}">{data.dev_name} ({data.post_count})</option>
+      {/each}
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-red-700">
+      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+    </div>
+  </div>
+  <div class="relative">
+    <select bind:value="{curID}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
+      <option value="" selected>-- Hot Topics --</option>
+      {#each topicData as data}
+      <option value="{data.discussion_id}">{data.discussion_name} ({data.post_count})</option>
+      {/each}
     </select>
     <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-red-700">
       <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -82,8 +112,8 @@ function visitForum(data) {
       </div>
     </div>
     <div class="flex-auto">
-        <div class="w-full border-black border-b-2 text-lg bold">{data.discussion_name}</div>
-        <div class="italic">{data.body}</div>
+        <div class="w-full border-black border-b-2 border-t-2 md:border-t-0 text-lg bold">{data.discussion_name}</div>
+        <div class="italic" style="word-break: break-word;">{@html data.body}</div>
     </div>
 </div>
 {/each}
