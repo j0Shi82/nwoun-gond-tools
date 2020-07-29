@@ -1,10 +1,11 @@
 <script>
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { formatDate, formatTime } from 'utils/imports/core';
-import { Button } from 'utils/imports/components';
+import { Button, Spinner } from 'utils/imports/components';
 import axios from 'axios';
 
 let apiData = [];
+let loading = true;
 let error = false;
 let curPage = 0;
 let requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage}`;
@@ -14,6 +15,7 @@ $: {
 const avatarData = {};
 
 function get(uri) {
+  loading = true;
   axios.get(uri)
     .then((response) => {
       apiData = response.data;
@@ -31,6 +33,9 @@ function get(uri) {
     })
     .catch(() => {
       error = true;
+    })
+    .finally(() => {
+      loading = false;
     });
 }
 
@@ -48,7 +53,19 @@ function visitForum(data) {
 }
 </script>
 
-<div id="form"></div>
+{#if !loading}
+<div id="form" class="p-2">
+  <div class="relative">
+    <select class="block appearance-none w-full bg-black border border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
+      <option>New Mexico</option>
+      <option>Missouri</option>
+      <option>Texas</option>
+    </select>
+    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-red-700">
+      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+    </div>
+  </div>
+</div>
 <div id="pages" class="m-2 flex justify-between">
   <Button text="&lt;&lt; Prev" invisible="{curPage < 1}" click="{() => { curPage -= 1; }}" />
   <Button text="Next &gt;&gt;" click="{() => { curPage += 1; }}" />
@@ -74,3 +91,6 @@ function visitForum(data) {
   <Button text="&lt;&lt; Prev" invisible="{curPage < 1}" click="{() => { curPage -= 1; }}" />
   <Button text="Next &gt;&gt;" click="{() => { curPage += 1; }}" />
 </div>
+{:else}
+<Spinner />
+{/if}
