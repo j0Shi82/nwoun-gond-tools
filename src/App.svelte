@@ -64,7 +64,7 @@ function goHome() {
     <div id="mainMenu" class=" flex justify-between w-full h-12 ">
       <div style="width: 150px;">
         {#if showSmallLogo}
-          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBannerSmall}" class="h-full w-auto cursor-pointer" on:click="{goHome}" alt="small logo of Neverwinter Uncensored" />
+          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBanner}" class="h-full w-auto cursor-pointer" on:click="{goHome}" alt="small logo of Neverwinter Uncensored" />
         {/if}
       </div>
       {#each menuItems as item}

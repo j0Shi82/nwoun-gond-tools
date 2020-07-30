@@ -95,7 +95,7 @@ module.exports = {
       filename: './statistics.html',
     }),
     new HtmlWebpackPlugin({
-      title: 'My Page Title',
+      title: 'Neverwinter Uncensored',
       template: './src/index.template.html',
     }),
     new CopyPlugin({
