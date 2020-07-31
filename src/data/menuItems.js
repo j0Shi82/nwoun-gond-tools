@@ -3,6 +3,7 @@ import { faEdit, faHashtag } from '@fortawesome/free-solid-svg-icons';
 
 export default [
   {
+    type: 'talk',
     id: 'blogLink',
     textLocaleKey: 'menu.blog',
     external: true,
@@ -10,6 +11,7 @@ export default [
     icon: faWordpress,
   },
   {
+    type: 'talk',
     id: 'forumLink',
     textLocaleKey: 'menu.forum',
     external: true,
@@ -17,6 +19,7 @@ export default [
     icon: faEdit,
   },
   {
+    type: 'talk',
     id: 'discordLink',
     textLocaleKey: 'menu.discord',
     external: true,
@@ -24,6 +27,7 @@ export default [
     icon: faDiscord,
   },
   {
+    type: 'page',
     id: 'trackerLink',
     textLocaleKey: 'menu.tracker',
     external: false,

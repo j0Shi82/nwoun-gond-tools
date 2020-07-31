@@ -8,9 +8,11 @@ export let icon;
 export let textLocaleKey;
 export let linkType = 'external';
 export let link;
+export let condensed = false;
+export let flexAuto = true;
 
-const mobileClasses = 'flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto';
-const desktopClasses = 'hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-auto';
+const mobileClasses = 'flex h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2';
+const desktopClasses = 'hidden md:flex justify-center h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2';
 
 function linkClick() {
   if (linkType === 'external') {
@@ -23,7 +25,7 @@ function linkClick() {
 }
 </script>
 
-<div id="{id}" class="{mobile ? mobileClasses : desktopClasses}" on:click="{linkClick}">
+<div id="{id}" class:flex-auto="{flexAuto}" class="{mobile ? mobileClasses : desktopClasses}" on:click="{linkClick}">
     <Icon icon={icon} class="text-2xl{mobile ? ' w-8' : ''}"></Icon>
-    <span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>
+    {#if !condensed}<span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>{/if}
 </div>

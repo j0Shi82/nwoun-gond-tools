@@ -62,12 +62,12 @@ function goHome() {
   </div>
   <div id="sticky" class="sticky z-20 top-0 bg-red-700">
     <div id="mainMenu" class=" flex justify-between w-full h-12 ">
-      <div style="width: 150px;">
+      <div style="width: 150px;" class="py-2 ml-2">
         {#if showSmallLogo}
           <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBanner}" class="h-full w-auto cursor-pointer" on:click="{goHome}" alt="small logo of Neverwinter Uncensored" />
         {/if}
       </div>
-      {#each menuItems as item}
+      {#each menuItems.filter((i) => i.type !== 'talk') as item}
         <MenuItem 
           id="{item.id}"
           mobile="{false}"
@@ -77,12 +77,36 @@ function goHome() {
           link="{item.link}"
         />
       {/each}
+      <div id="menu-talk" class="flex-none flex">
+        {#each menuItems.filter((i) => i.type === 'talk') as item}
+        <MenuItem 
+          id="{item.id}"
+          condensed
+          mobile="{false}"
+          flexAuto="{false}"
+          icon="{item.icon}"
+          textLocaleKey="{item.textLocaleKey}"
+          linkType="{item.external ? 'external' : 'internal'}"
+          link="{item.link}"
+        />
+        <MenuItem 
+        id="{`${item.id}Mobile`}"
+          condensed
+          mobile="{true}"
+          flexAuto="{false}"
+          icon="{item.icon}"
+          textLocaleKey="{item.textLocaleKey}"
+          linkType="{item.external ? 'external' : 'internal'}"
+          link="{item.link}"
+        />
+      {/each}
+      </div>
       <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
         <Icon icon={faBars} class="text-2xl"></Icon>
       </div>
     </div>
     <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}">
-      {#each menuItems as item}
+      {#each menuItems.filter((i) => i.type !== 'talk') as item}
         <MenuItem 
           id="{`${item.id}Mobile`}"
           mobile="{true}"
