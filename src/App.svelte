@@ -60,7 +60,7 @@ function goHome() {
     <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32 cursor-pointer" alt="logo of Neverwinter Uncensored" on:click="{goHome}" />
     <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">{$localize('header.subtitle')}</div>
   </div>
-  <div id="sticky" class="sticky z-20 top-0 bg-red-700">
+  <div id="sticky" class="sticky z-20 top-0 bg-nwoun">
     <div id="mainMenu" class=" flex justify-between w-full h-12 ">
       <div style="width: 150px;" class="py-2 ml-2">
         {#if showSmallLogo}
@@ -101,7 +101,7 @@ function goHome() {
         />
       {/each}
       </div>
-      <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-red-700 pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+      <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
         <Icon icon={faBars} class="text-2xl"></Icon>
       </div>
     </div>

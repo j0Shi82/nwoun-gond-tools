@@ -1,18 +1,37 @@
 <script>
 import { localize } from 'utils/imports/core';
-import { images } from 'utils/imports/data';
+import { homeGallery } from 'utils/imports/data';
 </script>
 
 <style lang="scss">
   p {
-    @apply mb-2;
+    @apply mb-2 rounded-md;
+
+    &.gray {
+      @apply bg-gray-300 bg-opacity-50 p-2;
+    }
   }
 </style>
 
-<p>{@html $localize('home.p1')}</p>
-<img src="{images.googleAnalytics}" alt="Neverwinter:Uncensored usage numbers" class="mx-auto my-2 w-full md:w-3/5 h-auto" />
-<p>{@html $localize('home.p2')}</p>
-<p>{@html $localize('home.p3')}</p>
-<p>{@html $localize('home.p4')}</p>
-<p>{@html $localize('home.p6')}</p>
-<p>{@html $localize('home.p7')}</p>
+<p class="gray">{@html $localize('home.p1')}</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+  {#each homeGallery.filter((el, i) => i < 4) as image }
+  <div class="pb-2/3 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({image.thumb})" on:click="{() => { window.open(image.full); }}"></div>
+  {/each}
+</div>
+<p class="gray">
+  {@html $localize('home.p2')}
+  <br />
+  <br />
+  {@html $localize('home.p3')}
+  <br />
+  <br />
+  {@html $localize('home.p4')}
+</p>
+<p class="text-lg font-bold text-center bg-transparent">{@html $localize('home.p6')}</p>
+<p class="text-lg italic font-bold text-center bg-transparent">{@html $localize('home.p7')}</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+  {#each homeGallery.filter((el, i) => i >= 4) as image }
+  <div class="pb-2/3 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({image.thumb})" on:click="{() => { window.open(image.full); }}"></div>
+  {/each}
+</div>

@@ -17,5 +17,5 @@
 </style>
     
 <div class="w-full">
-    <div class="loader ease-linear rounded-full border-8 border-t-8 border-red-700 h-64 w-64 m-auto"></div>
+    <div class="loader ease-linear rounded-full border-8 border-t-8 border-nwoun h-64 w-64 m-auto"></div>
 </div>

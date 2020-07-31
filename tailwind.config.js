@@ -7,6 +7,9 @@ module.exports = {
       colors: {
         nwoun: '#b51208',
       },
+      spacing: {
+        '2/3': '66.66667%',
+      },
     },
   },
 };
