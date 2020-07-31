@@ -1,5 +1,5 @@
 import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { faEdit, faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faHashtag, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 export default [
   {
@@ -33,5 +33,13 @@ export default [
     external: false,
     link: 'devtracker',
     icon: faHashtag,
+  },
+  {
+    type: 'page',
+    id: 'infohubLink',
+    textLocaleKey: 'menu.infohub',
+    external: false,
+    link: 'infohub',
+    icon: faInfoCircle,
   },
 ];

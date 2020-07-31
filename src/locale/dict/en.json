@@ -3,7 +3,8 @@
         "blog": "UN:Blogged",
         "forum": "Message Board",
         "discord": "Discord",
-        "tracker": "DevTracker"
+        "tracker": "DevTracker",
+        "infohub": "Game Resources"
     },
     "header": {
         "subtitle": "Neverwinter's #1 independent news source and community from 2015 - 2019!"
