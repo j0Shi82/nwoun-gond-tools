@@ -74,7 +74,7 @@ svelteLifecycleOnMount(() => {
 {#if !loading}
 <div id="form" class="m-2 mb-0">
   <div class="relative">
-    <select on:blur="{() => { curPage = 0; }}" bind:value="{curDev}" disabled="{curID !== '0'}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
+    <select on:change="{() => { curPage = 0; }}" bind:value="{curDev}" disabled="{curID !== '0'}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
       <option value="" selected>-- Developer --</option>
       {#each devData as data}
       <option value="{data.dev_id}">{data.dev_name} ({data.post_count})</option>
@@ -85,7 +85,7 @@ svelteLifecycleOnMount(() => {
     </div>
   </div>
   <div class="relative mt-2">
-    <select on:blur="{() => { curPage = 0; }}" bind:value="{curID}" disabled="{curDev !== ''}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
+    <select on:change="{() => { curPage = 0; }}" bind:value="{curID}" disabled="{curDev !== ''}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
       <option value="0" selected>-- Hot Topics --</option>
       {#each topicData as data}
       <option value="{data.discussion_id}">{data.discussion_name} ({data.post_count})</option>
