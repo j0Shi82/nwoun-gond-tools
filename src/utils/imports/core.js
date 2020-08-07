@@ -4,6 +4,7 @@ import getGuards from 'router/utils/getGuards';
 import Router, { push, wrap } from 'svelte-spa-router';
 import routes from 'router/index';
 import routeLoaded from 'router/routeLoaded';
+import axios from 'axios';
 
 // locale
 import {
@@ -21,6 +22,7 @@ export {
   wrap as routeWrapper,
   _ as localize,
   date as formatDate,
+  axios,
   time as formatTime,
   register as registerLocaleDict,
   init as initLocalization,

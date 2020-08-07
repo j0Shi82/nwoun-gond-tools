@@ -6,6 +6,7 @@ import { location, querystring } from 'svelte-spa-router';
 import { locale, locales } from 'svelte-i18n';
 
 const { routeName, isRouting } = store.app.router;
+const { avatars } = store.devtracker;
 
 export {
   setRouterIsRouting as storeSetRouterIsRouting,
@@ -15,4 +16,5 @@ export {
   isRouting as isRoutingInProgress,
   locale as currentLocale,
   locales,
+  avatars as devtrackerAvatarList,
 };

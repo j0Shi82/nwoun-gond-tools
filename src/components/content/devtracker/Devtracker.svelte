@@ -1,7 +1,8 @@
 <script>
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Button, Spinner, DevtrackerPost } from 'utils/imports/components';
-import axios from 'axios';
+import { devtrackerAvatarList } from 'utils/imports/store';
+import { axios } from 'utils/imports/core';
 
 let apiData = [];
 let devData = [];
@@ -21,7 +22,7 @@ let requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage
 $: {
   requestUri = `https://api.uncnso.red/v1/devtracker/list?start_page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
 }
-const avatarData = {};
+const avatarData = $devtrackerAvatarList;
 
 function getDevlist() {
   axios.get('https://api.uncnso.red/v1/devtracker/devlist').then((response) => {
@@ -41,16 +42,21 @@ function get(uri) {
     .then((response) => {
       apiData = response.data;
 
-      apiData.map((el) => el.dev_id).reduce((all, cur) => {
-        if (!all.includes(cur)) all.push(cur);
-        return all;
-      }, []).forEach((devID) => {
-        axios({
-          url: `https://api.uncnso.red/v1/devtracker/devinfo?dev=${devID}`,
-        }).then((res) => {
-          avatarData[devID] = res.data.Profile.PhotoUrl;
+      apiData
+        .map((el) => el.dev_id)
+        .reduce((all, cur) => {
+          if (!all.includes(cur)) all.push(cur);
+          return all;
+        }, [])
+        .filter((el) => !Object.keys(avatarData).includes(el))
+        .forEach((devID) => {
+          axios({
+            url: `https://api.uncnso.red/v1/devtracker/devinfo?dev=${devID}`,
+          }).then((res) => {
+            avatarData[devID] = res.data.Profile.PhotoUrl;
+            devtrackerAvatarList.set(avatarData);
+          });
         });
-      });
     })
     .catch(() => {
       error = true;
