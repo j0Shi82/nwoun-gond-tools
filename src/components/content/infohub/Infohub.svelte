@@ -5,6 +5,7 @@ import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import pcLogo from 'assets/media/images/Windows_logo_-_2012_derivative.svg.png';
 import xboxLogo from 'assets/media/images/Xbox_one_logo.svg.png';
 import ps4Logo from 'assets/media/images/ps4-logos-scee-blue.png';
+import pweLogo from 'assets/media/images/pwe.png';
 
 let pcData = [];
 let xboxData = [];
@@ -43,12 +44,20 @@ svelteLifecycleOnMount(() => {
 });
 </script>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-{#each allData as data}
-    <div class="w-full bg-nwoun p-2 flex items-center">
-        <img class="h-4 w-4 mr-2" src="{data.platformLogo}" alt="platform logo" />
-        <a href="{data.link}" target="_blank" class="truncate">{data.title}</a>
+<div class="grid grid-cols-12 gap-2">
+    <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
+    {#each allData as data}
+        <div class="w-full bg-nwoun p-2 flex items-center rounded-md">
+            <img class="h-4 w-4 mr-2" src="{data.platformLogo}" alt="platform logo" />
+            <a href="{data.link}" target="_blank" class="truncate">{data.title}</a>
+        </div>
+    {/each}
     </div>
-{/each}
+    <div class="col-span-1">
+        <div class="sticky" style="top: 50px;">
+            <div class="pb-1/1 w-full bg-contain bg-center bg-no-repeat" style="background-image: url({pweLogo});">
+            </div>
+        </div>
+    </div>
 </div>
 
