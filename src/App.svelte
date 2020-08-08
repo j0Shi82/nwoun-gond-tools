@@ -99,13 +99,13 @@ function goHome() {
           linkType="{item.external ? 'external' : 'internal'}"
           link="{item.link}"
         />
-      {/each}
-      </div>
-      <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
-        <Icon icon={faBars} class="text-2xl"></Icon>
+        {/each}
+        <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+          <Icon icon={faBars} class="text-2xl"></Icon>
+        </div>
       </div>
     </div>
-    <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}">
+    <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}" on:click="{() => { menuOpen = false; }}">
       {#each menuItems.filter((i) => i.type !== 'talk') as item}
         <MenuItem 
           id="{`${item.id}Mobile`}"

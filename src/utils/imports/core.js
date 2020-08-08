@@ -4,13 +4,16 @@ import getGuards from 'router/utils/getGuards';
 import Router, { push, wrap } from 'svelte-spa-router';
 import routes from 'router/index';
 import routeLoaded from 'router/routeLoaded';
-import axios from 'axios';
 
 // locale
 import {
   _, register, init, date, isLoading, time,
 } from 'svelte-i18n';
 import setupLocalization from 'locale/i18n';
+
+// plugins
+import axios from 'axios';
+import * as animateScroll from 'svelte-scrollto';
 
 export {
   getLocalizedRoute,
@@ -28,4 +31,5 @@ export {
   init as initLocalization,
   isLoading as isLocalizationLoading,
   setupLocalization,
+  animateScroll,
 };
