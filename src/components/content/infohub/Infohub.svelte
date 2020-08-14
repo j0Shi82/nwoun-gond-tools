@@ -12,10 +12,10 @@ import dicussionLogo from 'assets/media/images/Wikiversity-Mooc-Icon-Discussion.
 let pcData = [];
 let xboxData = [];
 let ps4Data = [];
-let forumData = [];
-let redditData = [];
 let allData = [];
 let allDiscussionData = [];
+let discussionTags = [];
+let currentDiscussionTag = 0;
 
 function getArcNews() {
   axios.get('https://api.uncnso.red/v1/nwfeeds/arcgamespc').then((response) => {
@@ -31,13 +31,25 @@ function getArcNews() {
   });
 }
 
-function getCommunityDiscussions() {
-  axios.get('https://api.uncnso.red/v1/nwfeeds/arcgamesforum').then((response) => {
-    forumData = response.data;
+function getCommunityDiscussions(tag = '') {
+  axios.get(`http://localhost:8080/v1/infoaggregates/discussion?limit=50&tag=${tag}`).then((response) => {
+    allDiscussionData = response.data.map((el) => {
+      let logo = pweLogo;
+      switch (el.site) {
+        case 'nwreddit':
+          logo = redditLogo;
+          break;
+        case 'arcgamesforum':
+          logo = pweLogo;
+          break;
+        default: logo = pweLogo;
+      }
+      return { ...el, logo };
+    });
   });
 
-  axios.get('https://api.uncnso.red/v1/nwfeeds/officialreddit').then((response) => {
-    redditData = response.data;
+  axios.get('http://localhost:8080/v1/infoaggregates/discussiontags').then((response) => {
+    discussionTags = response.data;
   });
 }
 
@@ -66,21 +78,6 @@ $: {
     }, [])
   // only show first 16 items
     .filter((el, i) => i < 16);
-}
-
-$: {
-// merge all data into one
-  allDiscussionData = [
-    ...forumData.map((el) => ({ ...el, logo: pweLogo })),
-    ...redditData.map((el) => ({ ...el, logo: redditLogo })),
-  // sort by ts
-  ].sort((a, b) => {
-    if (a.ts < b.ts) return 1;
-    if (a.ts > b.ts) return -1;
-    return 0;
-  })
-  // only show first 16 items
-    .filter((el, i) => i < 50);
 }
 
 svelteLifecycleOnMount(() => {
@@ -112,8 +109,21 @@ svelteLifecycleOnMount(() => {
             <a href="{data.link}" target="_blank" class="truncate font-medium">{data.title}</a>
         </div>
       {/each}
-      <div class="col-span-1 md:col-span-2">
+      <div>
         <span class="font-bold text-2xl" id="discussion">Discussion</span>
+      </div>
+      <div class="relative">
+        <select bind:value="{currentDiscussionTag}" on:blur="{() => { getCommunityDiscussions(currentDiscussionTag); }}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
+          <option value="0">--- CHOOSE ---</option>
+          {#each discussionTags as tag}
+          <option value="{tag.id}">{tag.term}</option>
+          {/each}
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-red-700">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path>
+          </svg>
+        </div>
       </div>
       {#each allDiscussionData as data}
         <div class="w-full bg-nwoun p-2 flex items-center rounded-md">
