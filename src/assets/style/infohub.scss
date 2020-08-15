@@ -1,0 +1,18 @@
+$tags-border-color       : #b51208;
+$tags-hover-border-color : #b51208;
+$tags-focus-border-color : #b51208;
+$tag-bg: #b51208;
+$tag-hover:#b51208;
+$tagify-dd-color-primary:#b51208;
+
+@import '@yaireo/tagify/src/tagify.scss';
+
+.tagify,
+:root {
+  --tags-border-color: #b51208;
+  --tags-hover-border-color: #b51208;
+  --tags-focus-border-color: #b51208;
+  --tag-bg: #b51208;
+  --tag-hover: #b51208;
+  --tagify-dd-color-primary: #b51208;
+}

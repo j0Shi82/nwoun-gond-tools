@@ -1,6 +1,7 @@
 <script>
 import { axios, animateScroll } from 'utils/imports/core';
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
+import { Tagify } from 'utils/imports/plugins';
 
 import pcLogo from 'assets/media/images/Windows_logo_-_2012_derivative.svg.png';
 import xboxLogo from 'assets/media/images/Xbox_one_logo.svg.png';
@@ -9,13 +10,15 @@ import pweLogo from 'assets/media/images/arclogo.png';
 import redditLogo from 'assets/media/images/reddit_icon.png';
 import dicussionLogo from 'assets/media/images/Wikiversity-Mooc-Icon-Discussion.svg.png';
 
+import 'assets/style/infohub.scss';
+
 let pcData = [];
 let xboxData = [];
 let ps4Data = [];
 let allData = [];
 let allDiscussionData = [];
 let discussionTags = [];
-let currentDiscussionTag = 0;
+let tagify = null;
 
 function getArcNews() {
   axios.get('https://api.uncnso.red/v1/nwfeeds/arcgamespc').then((response) => {
@@ -31,8 +34,8 @@ function getArcNews() {
   });
 }
 
-function getCommunityDiscussions(tag = '') {
-  axios.get(`http://localhost:8080/v1/infoaggregates/discussion?limit=50&tag=${tag}`).then((response) => {
+function getCommunityDiscussions(tags = '') {
+  axios.get(`http://localhost:8080/v1/infoaggregates/discussion?limit=50&tags=${tags}`).then((response) => {
     allDiscussionData = response.data.map((el) => {
       let logo = pweLogo;
       switch (el.site) {
@@ -50,6 +53,9 @@ function getCommunityDiscussions(tag = '') {
 
   axios.get('http://localhost:8080/v1/infoaggregates/discussiontags').then((response) => {
     discussionTags = response.data;
+    if (tagify !== null) {
+      tagify.settings.whitelist.splice(0, discussionTags.map((el) => el.term).length, ...discussionTags.map((el) => el.term));
+    }
   });
 }
 
@@ -83,6 +89,27 @@ $: {
 svelteLifecycleOnMount(() => {
   getArcNews();
   getCommunityDiscussions();
+  tagify = new Tagify(
+    document.querySelector('#discussionTagFilter input'),
+    {
+      whitelist: discussionTags.map((el) => el.term),
+      enforceWhitelist: true,
+      editTags: false,
+      placeholder: 'Add tags to filter posts',
+      dropdown: {
+        classname: 'color-nwoun',
+        enabled: 3, // show the dropdown immediately on focus
+        maxItems: 10,
+        position: 'text', // place the dropdown near the typed text
+        closeOnSelect: true, // keep the dropdown open after selecting a suggestion
+        highlightFirst: true,
+      },
+    },
+  );
+  tagify
+    .on('change', (e) => {
+      getCommunityDiscussions(JSON.parse(e.detail.value).map((el) => discussionTags.filter((tag) => tag.term === el.value)).map((el) => el[0].id).join(','));
+    });
 });
 </script>
 
@@ -109,21 +136,11 @@ svelteLifecycleOnMount(() => {
             <a href="{data.link}" target="_blank" class="truncate font-medium">{data.title}</a>
         </div>
       {/each}
-      <div>
+      <div class="col-span-1 md:col-span-2">
         <span class="font-bold text-2xl" id="discussion">Discussion</span>
       </div>
-      <div class="relative">
-        <select bind:value="{currentDiscussionTag}" on:blur="{() => { getCommunityDiscussions(currentDiscussionTag); }}" class="block appearance-none w-full bg-black border-2 border-red-700 text-red-700 font-bold py-3 px-4 pr-8 rounded leading-tight focus:outline-none" id="grid-state">
-          <option value="0">--- CHOOSE ---</option>
-          {#each discussionTags as tag}
-          <option value="{tag.id}">{tag.term}</option>
-          {/each}
-        </select>
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-red-700">
-          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"></path>
-          </svg>
-        </div>
+      <div class="col-span-1 md:col-span-2" id="discussionTagFilter">
+        <input />
       </div>
       {#each allDiscussionData as data}
         <div class="w-full bg-nwoun p-2 flex items-center rounded-md">
