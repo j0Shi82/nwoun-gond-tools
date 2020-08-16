@@ -94,6 +94,7 @@ svelteLifecycleOnMount(() => {
     {
       whitelist: discussionTags.map((el) => el.term),
       enforceWhitelist: true,
+      skipInvalid: true,
       editTags: false,
       placeholder: 'Add tags to filter posts',
       dropdown: {
@@ -108,7 +109,8 @@ svelteLifecycleOnMount(() => {
   );
   tagify
     .on('change', (e) => {
-      getCommunityDiscussions(JSON.parse(e.detail.value).map((el) => discussionTags.filter((tag) => tag.term === el.value)).map((el) => el[0].id).join(','));
+      if (e.detail.value === '') getCommunityDiscussions();
+      else getCommunityDiscussions(JSON.parse(e.detail.value).map((el) => discussionTags.filter((tag) => tag.term === el.value)).map((el) => el[0].id).join(','));
     });
 });
 </script>
