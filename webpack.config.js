@@ -2,15 +2,17 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const WebpackModuleNomodulePlugin = require('webpack-module-nomodule-plugin');
 
 const path = require('path');
 
 const sveltePreprocess = require('svelte-preprocess');
+const babelConfig = require('./babel.config');
 
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
-module.exports = {
+const makeConfig = (target) => ({
   entry: {
     bundle: ['./src/main.js'],
   },
@@ -28,8 +30,8 @@ module.exports = {
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: '[name].[contenthash].js',
-    chunkFilename: '[name].[chunkhash].[contenthash].js',
+    filename: `[name].[contenthash].${target}.js`,
+    chunkFilename: `[name].[chunkhash].[contenthash].${target}.js`,
   },
   module: {
     rules: [
@@ -38,6 +40,9 @@ module.exports = {
         exclude: /node_modules\/(?!svelte)/,
         use: {
           loader: 'babel-loader',
+          options: {
+            ...babelConfig[target],
+          },
         },
       },
       {
@@ -98,6 +103,7 @@ module.exports = {
       title: 'Neverwinter Uncensored',
       template: './src/index.template.html',
     }),
+    new WebpackModuleNomodulePlugin(target, 'minimal'),
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, 'public'), to: path.resolve(__dirname, 'dist') },
@@ -106,4 +112,6 @@ module.exports = {
   ],
   devtool: prod ? false : 'source-map',
   target: 'web',
-};
+});
+
+module.exports = prod ? [makeConfig('modern'), makeConfig('legacy')] : makeConfig('modern');
