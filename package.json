@@ -3,6 +3,7 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@babel/core": "^7.11.1",
+    "@babel/plugin-transform-runtime": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-modules": "^0.1.3",
     "babel-eslint": "^10.1.0",
@@ -24,7 +25,10 @@
     "mini-css-extract-plugin": "^0.10.0",
     "node-sass": "^4.14.1",
     "npm-check-updates": "^7.1.1",
+    "postcss-custom-properties": "^9.1.1",
+    "postcss-import": "^12.0.1",
     "postcss-loader": "^3.0.0",
+    "postcss-nested": "^4.2.3",
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "style-loader": "^1.2.1",
@@ -42,12 +46,14 @@
     "lint": "eslint -c .eslintrc.js --ext .svelte,.js src"
   },
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.11.2",
     "@fortawesome/free-brands-svg-icons": "^5.14.0",
     "@fortawesome/free-solid-svg-icons": "^5.14.0",
     "@fullhuman/postcss-purgecss": "^2.3.0",
     "@yaireo/tagify": "^3.17.7",
     "autoprefixer": "^9.8.6",
     "axios": "^0.19.2",
+    "core-js": "^3.6.5",
     "express": "^4.17.1",
     "intersection-observer": "^0.11.0",
     "postcss-discard-duplicates": "^4.0.2",
@@ -66,6 +72,13 @@
       "pre-push": "yarn test"
     }
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "ios >= 9",
+    "not dead",
+    "ie >= 11"
+  ],
   "lint-staged": {
     "*.{js,svelte}": [
       "yarn lint"

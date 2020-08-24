@@ -16,7 +16,7 @@ import { homeGallery } from 'utils/imports/data';
 <p class="gray">{@html $localize('home.p1')}</p>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
   {#each homeGallery.filter((el, i) => i < 4) as image }
-  <div class="pb-2/3 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({image.thumb})" on:click="{() => { window.open(image.full); }}"></div>
+  <div class="pb-2/3 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({image.thumb});" on:click="{() => { window.open(image.full); }}"></div>
   {/each}
 </div>
 <p class="gray">
@@ -32,6 +32,6 @@ import { homeGallery } from 'utils/imports/data';
 <p class="text-lg italic font-bold text-center bg-transparent">{@html $localize('home.p7')}</p>
 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
   {#each homeGallery.filter((el, i) => i >= 4) as image }
-  <div class="pb-2/3 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({image.thumb})" on:click="{() => { window.open(image.full); }}"></div>
+  <div class="pb-2/3 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({image.thumb});" on:click="{() => { window.open(image.full); }}"></div>
   {/each}
 </div>

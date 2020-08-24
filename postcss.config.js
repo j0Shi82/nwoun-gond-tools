@@ -16,13 +16,14 @@ const purgecss = require('@fullhuman/postcss-purgecss')({
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
-const plugins = [
+const getPlugins = (target) => [
+  require('postcss-import'),
   tailwindcss,
-  ...(prod ? [purgecss] : []),
+  require('postcss-nested'),
+  require('postcss-custom-properties'),
   autoprefixer(),
+  ...(prod ? [purgecss] : []),
   postcssDiscardDuplicates,
 ];
 
-module.exports = {
-  plugins,
-};
+module.exports = ({ options = { target: 'modern' } }) => ({ plugins: getPlugins(options.target) });

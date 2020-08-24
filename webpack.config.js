@@ -3,10 +3,10 @@ const Visualizer = require('webpack-visualizer-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const WebpackModuleNomodulePlugin = require('webpack-module-nomodule-plugin');
-
 const path = require('path');
-
 const sveltePreprocess = require('svelte-preprocess');
+
+const sveltePath = path.resolve('node_modules', 'svelte');
 const babelConfig = require('./babel.config');
 
 const mode = process.env.NODE_ENV || 'development';
@@ -22,7 +22,7 @@ const makeConfig = (target) => ({
   },
   resolve: {
     alias: {
-      svelte: path.resolve('node_modules', 'svelte'),
+      svelte: sveltePath,
     },
     extensions: ['.mjs', '.js', '.svelte'],
     mainFields: ['svelte', 'browser', 'module', 'main'],
@@ -36,12 +36,12 @@ const makeConfig = (target) => ({
   module: {
     rules: [
       {
-        test: /\.(js|mjs|svelte)$/,
-        exclude: /node_modules\/(?!svelte)/,
+        test: /\.(?:svelte|m?js)$/,
+        include: [path.resolve(__dirname, 'src'), sveltePath],
         use: {
           loader: 'babel-loader',
           options: {
-            ...babelConfig[target],
+            ...babelConfig.env[target],
           },
         },
       },
@@ -74,7 +74,16 @@ const makeConfig = (target) => ({
             loader: 'css-loader',
             options: { sourceMap: true },
           },
-          'postcss-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              config: {
+                ctx: {
+                  target,
+                },
+              },
+            },
+          },
           {
             loader: 'sass-loader',
             options: {
@@ -103,15 +112,15 @@ const makeConfig = (target) => ({
       title: 'Neverwinter Uncensored',
       template: './src/index.template.html',
     }),
-    new WebpackModuleNomodulePlugin(target, 'minimal'),
+    prod ? new WebpackModuleNomodulePlugin(target, 'minimal') : () => {},
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, 'public'), to: path.resolve(__dirname, 'dist') },
       ],
     }),
   ],
-  devtool: prod ? false : 'source-map',
+  devtool: prod ? 'source-map' : 'source-map',
   target: 'web',
 });
 
-module.exports = prod ? [makeConfig('modern'), makeConfig('legacy')] : makeConfig('modern');
+module.exports = prod ? [makeConfig('modern'), makeConfig('legacy')] : makeConfig('legacy');

@@ -21,21 +21,20 @@ const plugins = [
 const config = {
   env: {
     legacy: {
+      sourceType: 'unambiguous',
       presets: [
         [
           '@babel/preset-env', {
-            modules: false,
-            loose: true,
-            corejs: 3,
-            targets: {
-              browsers: ['> 0.25%', 'not dead', 'ie >= 11'],
-            },
-            useBuiltIns: 'entry',
+            // debug: true,
+            corejs: { version: 3, proposals: true },
+            targets: '> 1%, last 2 versions, ios >= 9, not dead, ie >= 11',
+            useBuiltIns: 'usage',
           },
         ],
       ],
       plugins: [
-        ['@babel/plugin-transform-runtime', { corejs: 3 }],
+        '@babel/plugin-transform-runtime',
+        ...plugins,
       ],
     },
     modern: {
