@@ -27,7 +27,7 @@ const config = {
           '@babel/preset-env', {
             // debug: true,
             corejs: { version: 3, proposals: true },
-            targets: '> 1%, last 2 versions, ios >= 9, not dead, ie >= 11',
+            targets: 'cover 99.5%, not dead',
             useBuiltIns: 'usage',
           },
         ],
