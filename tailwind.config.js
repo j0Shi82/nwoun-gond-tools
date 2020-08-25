@@ -2,6 +2,9 @@ module.exports = {
   purge: [
     './src/**/*.svelte',
   ],
+  future: {
+    removeDeprecatedGapUtilities: true,
+  },
   theme: {
     extend: {
       colors: {

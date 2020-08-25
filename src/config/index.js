@@ -8,5 +8,6 @@ export default {
       supportedLanguages: ['en'],
       standardLanguage: 'en',
     },
+    apiServer: process.env.NODE_ENV === 'production' ? 'https://api.uncnso.red' : 'http://localhost:8080',
   },
 };

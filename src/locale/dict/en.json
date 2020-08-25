@@ -16,5 +16,13 @@
         "p4": "There's so much people to thank, but since forgetting important contributors and companions is inevitable, I'll steal an excellent quote from an excellent Neverwinter player: <i>You know who you are</i>. I'll never forget what we were able to build and achieve here.",
         "p6": "Cheers!",
         "p7": "- j0Shi"
+    },
+    "infohub": {
+        "filter": "Filter",
+        "news": "Official News",
+        "guides": "Guides / Blogs",
+        "social": "Social Feeds",
+        "discussions": "Discussions",
+        "mmonews": "External News"
     }
 }

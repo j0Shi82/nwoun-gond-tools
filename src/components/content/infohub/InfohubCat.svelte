@@ -1,0 +1,48 @@
+<script>
+import { localize, axios } from 'utils/imports/core';
+import { svelteCreateEventDispatcher } from 'utils/imports/svelte';
+import { apiServer } from 'utils/imports/config';
+import { infohubLogos } from 'utils/imports/data';
+
+export let apiEndpoint;
+export let icon = null;
+export let id;
+export let titleLocaleIdent;
+export let tags;
+export let itemCount = 20;
+export let show = false;
+
+let allData = [];
+const dispatch = svelteCreateEventDispatcher();
+
+$: {
+  dispatch('loading', true);
+  axios.get(`${apiServer}${apiEndpoint}?limit=${itemCount}&tags=${tags}`).then((response) => {
+    allData = response.data.map((el) => {
+      let logo = infohubLogos.pwe;
+      if (typeof infohubLogos[el.site] !== 'undefined') logo = infohubLogos[el.site];
+      return { ...el, logo };
+    });
+  });
+}
+
+$: {
+  dispatch('loading', allData.length ? false : null);
+}
+</script>
+
+{#if allData.length && show}
+    <div class="col-span-1 md:col-span-2">
+        {#if icon !== null}
+        <span style="background-image: url({icon});"  class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="{id}">{$localize(titleLocaleIdent)}</span>
+        {:else}
+        <span class="font-bold text-2xl" id="{id}">{$localize(titleLocaleIdent)}</span>
+        {/if}
+    </div>
+    {#each allData as data}
+        <div class="w-full bg-nwoun p-2 flex items-center rounded-md">
+            <img class="h-4 w-4 mr-2 cursor-pointer" on:click="{() => { window.open(data.link); }}" src="{data.logo}" alt="site logo" />
+            <a href="{data.link}" target="_blank" class="truncate font-medium">{data.title}</a>
+        </div>
+    {/each}
+{/if}
