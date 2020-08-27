@@ -1,8 +1,11 @@
 <script>
 import { localize, axios } from 'utils/imports/core';
-import { svelteCreateEventDispatcher } from 'utils/imports/svelte';
+import { svelteCreateEventDispatcher, svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { infohubLogos } from 'utils/imports/data';
+import { InfohubSourceModal } from 'utils/imports/components';
+
+import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
 
 export let apiEndpoint;
 export let icon = null;
@@ -14,6 +17,10 @@ export let show = false;
 
 let allData = [];
 const dispatch = svelteCreateEventDispatcher();
+const { modalOpen } = svelteGetContext('modal');
+const showModal = () => {
+  modalOpen(InfohubSourceModal, {}, 'infohub.addSource');
+};
 
 $: {
   dispatch('loading', true);
@@ -45,4 +52,9 @@ $: {
             <a href="{data.link}" target="_blank" class="truncate font-medium">{data.title}</a>
         </div>
     {/each}
+    <div class="col-span-1 md:col-span-2">
+      <div class="w-full bg-orange-600 p-2 text-center rounded-md font-bold cursor-pointer" on:click="{() => { showModal(); }}">
+        <span style="background-image: url({faPlusCircle});" class="bg-no-repeat pl-10">{$localize('infohub.addSource')}</span>
+      </div>
+    </div>
 {/if}

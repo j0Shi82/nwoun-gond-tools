@@ -1,9 +1,11 @@
 <script>
 import {
   isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded, localize, routerPush, getLocalizedRoute,
+  AsyncComponentLoader,
 } from 'utils/imports/core';
-import { svelteLifecycleOnMount, svelteTransitionScale } from 'utils/imports/svelte';
+import { svelteLifecycleOnMount, svelteTransitionScale, svelteSetContext } from 'utils/imports/svelte';
 import { menuItems, images } from 'utils/imports/data';
+import { Modal } from 'utils/imports/components';
 
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -14,6 +16,25 @@ import 'assets/style/global.scss';
 
 let showSmallLogo = false;
 let menuOpen = false;
+
+// modal logic
+let modalComponent = null;
+let modalProps = null;
+let modalHeadlineLocaleIdent = 'modal.defaultHeadline';
+
+const modalOpen = (component, props = {}, headlineLocaleIdent = 'modal.defaultHeadline') => {
+  modalComponent = component;
+  modalProps = props;
+  modalHeadlineLocaleIdent = headlineLocaleIdent;
+};
+
+const modalClose = () => {
+  modalComponent = null;
+  modalProps = null;
+};
+
+svelteSetContext('modal', { modalOpen, modalClose });
+// modal logic
 
 setupLocalization();
 
@@ -30,7 +51,7 @@ svelteLifecycleOnMount(() => {
 });
 
 function goHome() {
-  routerPush(getLocalizedRoute('home'));
+  routerPush(getLocalizedRoute('infohub'));
 }
 </script>
 
@@ -52,7 +73,16 @@ function goHome() {
   }
 
 </style>
-    
+
+{#if modalComponent !== null}
+<AsyncComponentLoader 
+  loader="{Modal}"
+  content="{modalComponent}" 
+  props="{modalProps}"
+  headlineLocaleIdent="{modalHeadlineLocaleIdent}"
+  unloader
+/>
+{/if}
 {#if !$isLocalizationLoading}
 <img src="{images.backgroundImage}" id="background" alt="Showing a vmapire" />
 <div id="page-wrapper">
@@ -100,8 +130,8 @@ function goHome() {
           link="{item.link}"
         />
         {/each}
-        <div class="flex md:hidden text-2xl justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
-          <Icon icon={faBars} class="text-2xl"></Icon>
+        <div class="flex md:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+          <Icon data={faBars} scale="1.5" class="w-8"></Icon>
         </div>
       </div>
     </div>

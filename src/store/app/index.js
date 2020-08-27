@@ -5,6 +5,7 @@ const store = {
     isRouting: storeTypeWritable(false), // ongoing route change
     routeName: storeTypeWritable(null), // current route name because spa router only offers path
   },
+  bgOverlay: storeTypeWritable(false),
 };
 
 export default store;

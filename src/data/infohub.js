@@ -29,6 +29,7 @@ const logos = {
   occarticle: 'https://www.overclockersclub.com/favicon.ico',
   occguide: 'https://www.overclockersclub.com/favicon.ico',
   jannew: 'https://jannenw.info/favicon.ico',
+  nwthoughts: 'http://neverwinterthoughts.blogspot.com/favicon.ico',
 };
 
 const sections = [

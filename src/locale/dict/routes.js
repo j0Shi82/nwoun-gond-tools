@@ -1,7 +1,7 @@
 export default {
   en: {
-    home: '/',
+    about: '/about',
     devtracker: '/devtracker',
-    infohub: '/infohub',
+    infohub: '/',
   },
 };

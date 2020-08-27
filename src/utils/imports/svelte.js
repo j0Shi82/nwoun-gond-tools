@@ -1,5 +1,5 @@
 import {
-  onDestroy, onMount, createEventDispatcher, afterUpdate, tick,
+  onDestroy, onMount, createEventDispatcher, afterUpdate, tick, setContext, getContext,
 } from 'svelte';
 import { writable } from 'svelte/store';
 import {
@@ -19,4 +19,6 @@ export {
   writable as storeTypeWritable,
   createEventDispatcher as svelteCreateEventDispatcher,
   tick as svelteTick,
+  setContext as svelteSetContext,
+  getContext as svelteGetContext,
 };

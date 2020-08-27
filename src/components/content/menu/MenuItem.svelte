@@ -26,6 +26,6 @@ function linkClick() {
 </script>
 
 <div id="{id}" class:flex-auto="{flexAuto}" class="{mobile ? mobileClasses : desktopClasses}" on:click="{linkClick}">
-    <Icon icon={icon} class="text-2xl{mobile ? ' w-8' : ''}"></Icon>
+    <Icon data={icon} scale="1.5" class="{mobile ? ' w-8' : ''}"></Icon>
     {#if !condensed}<span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>{/if}
 </div>

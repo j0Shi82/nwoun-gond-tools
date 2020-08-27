@@ -1,7 +1,11 @@
 {
+    "modal": {
+        "defaultDeadline": "Info"
+    },
     "menu": {
         "blog": "UN:Blogged",
         "forum": "Message Board",
+        "about": "About",
         "discord": "Discord",
         "tracker": "DevTracker",
         "infohub": "Game Resources"
@@ -23,6 +27,7 @@
         "guides": "Guides / Blogs",
         "social": "Social Feeds",
         "discussions": "Discussions",
-        "mmonews": "External News"
+        "mmonews": "External News",
+        "addSource": "Add Source"
     }
 }

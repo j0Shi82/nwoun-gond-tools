@@ -1,5 +1,7 @@
 import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { faEdit, faHashtag, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEdit, faHashtag, faInfoCircle, faQuestionCircle,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default [
   {
@@ -28,6 +30,14 @@ export default [
   },
   {
     type: 'page',
+    id: 'infohubLink',
+    textLocaleKey: 'menu.infohub',
+    external: false,
+    link: 'infohub',
+    icon: faInfoCircle,
+  },
+  {
+    type: 'page',
     id: 'trackerLink',
     textLocaleKey: 'menu.tracker',
     external: false,
@@ -36,10 +46,10 @@ export default [
   },
   {
     type: 'page',
-    id: 'infohubLink',
-    textLocaleKey: 'menu.infohub',
+    id: 'aboutLink',
+    textLocaleKey: 'menu.about',
     external: false,
-    link: 'infohub',
-    icon: faInfoCircle,
+    link: 'about',
+    icon: faQuestionCircle,
   },
 ];

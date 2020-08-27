@@ -7,6 +7,7 @@ import { locale, locales } from 'svelte-i18n';
 
 const { routeName, isRouting } = store.app.router;
 const { avatars } = store.devtracker;
+const { bgOverlay } = store.app;
 
 export {
   setRouterIsRouting as storeSetRouterIsRouting,
@@ -17,4 +18,5 @@ export {
   locale as currentLocale,
   locales,
   avatars as devtrackerAvatarList,
+  bgOverlay as appBackgroundOverlayActive,
 };

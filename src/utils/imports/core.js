@@ -4,6 +4,7 @@ import getGuards from 'router/utils/getGuards';
 import Router, { push, wrap } from 'svelte-spa-router';
 import routes from 'router/index';
 import routeLoaded from 'router/routeLoaded';
+import Loadable from 'svelte-loadable';
 
 // locale
 import {
@@ -32,4 +33,5 @@ export {
   isLoading as isLocalizationLoading,
   setupLocalization,
   animateScroll,
+  Loadable as AsyncComponentLoader,
 };
