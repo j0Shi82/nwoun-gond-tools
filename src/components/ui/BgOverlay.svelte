@@ -1,5 +1,5 @@
 <script>
-import { svelteCreateEventDispatcher } from 'utils/imports/svelte';
+import { svelteCreateEventDispatcher, svelteLifecycleOnDestroy } from 'utils/imports/svelte';
 import { appBackgroundOverlayActive } from 'utils/imports/store';
 
 let background;
@@ -14,6 +14,11 @@ $: {
     document.querySelector('body').classList.remove('scroll-off');
   }
 }
+
+svelteLifecycleOnDestroy(() => {
+  document.querySelector('html').classList.remove('scroll-off');
+  document.querySelector('body').classList.remove('scroll-off');
+});
 
 const handleOuterClick = (e) => {
   if (

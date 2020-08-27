@@ -1,5 +1,5 @@
 <script>
-import { axios } from 'utils/imports/core';
+import { axios, localize } from 'utils/imports/core';
 import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { Button, Icon } from 'utils/imports/components';
@@ -14,16 +14,52 @@ let email = '';
 let url = '';
 let desc = '';
 let sending = false;
+let validationErrors = {
+  email: [],
+  url: [],
+  desc: [],
+};
+let generalError = false;
+let success = false;
 
 const send = () => {
+  // check of ion progress
+  if (sending) return;
+
+  // reset all errors and states
+  validationErrors = {
+    email: [],
+    url: [],
+    desc: [],
+  };
+  generalError = false;
   sending = true;
+  success = false;
+
+  // do the request
   axios.post(`${apiServer}/v1/infohub/source`, {
     email, url, desc,
   })
     .then((response) => {
       console.log(response);
+      // reset on successful transmission
+      success = true;
+      email = '';
+      url = '';
+      desc = '';
     })
-    .catch(() => {})
+    .catch((e) => {
+      if (e?.response?.status === 400 && e?.response?.data?.success === false) {
+        validationErrors = {
+          email: [],
+          url: [],
+          desc: [],
+          ...e.response.data.error,
+        };
+      } else {
+        generalError = true;
+      }
+    })
     .finally(() => {
       sending = false;
     });
@@ -32,19 +68,19 @@ const send = () => {
 
 <div>
     <p>
-        Help us create the most comprehensive list of Neverwinter articles, discussions, social posts, and media by adding sources that you feel aren't included in our engine. Please include a direct link to the content, channel, or feed that you would like us to crawl. Otherwise make sure to add a detailed description of what you'd like to have included.
+        {$localize('infohub.sourceModal.info')}
     </p>
     <label class="block mt-2">
-        <span>E-Mail *</span>
-        <input bind:value="{email}" type="email" name="email" class="form-input mt-1 block w-full" placeholder="john@example.com">
+        <span>{$localize('infohub.sourceModal.labels.email')}</span><span class:hidden="{validationErrors.email.length === 0}" class="ml-2 error">{validationErrors.email[0]}</span>
+        <input bind:value="{email}" type="email" name="email" class:error="{validationErrors.email.length > 0}" class="form-input mt-1 block w-full" placeholder="{$localize('infohub.sourceModal.placeholders.email')}">
     </label>
     <label class="block">
-        <span>URL *</span>
-        <input bind:value="{url}" type="text" name="url" class="form-input mt-1 block w-full" placeholder="https://www.homepage.com/neverwinter.rss">
+        <span>{$localize('infohub.sourceModal.labels.url')}</span><span class:hidden="{validationErrors.url.length === 0}" class="ml-2 error">{validationErrors.url[0]}</span>
+        <input bind:value="{url}" type="text" name="url" class:error="{validationErrors.url.length > 0}" class="form-input mt-1 block w-full" placeholder="{$localize('infohub.sourceModal.placeholders.url')}">
     </label>
     <label class="block">
-        <span>Description</span>
-        <textarea bind:value="{desc}" type="email" name="desc" rows="3" class="form-textarea mt-1 block w-full" placeholder="Please enter additional info if possible"></textarea>
+        <span>{$localize('infohub.sourceModal.labels.desc')}</span><span class:hidden="{validationErrors.desc.length === 0}" class="ml-2 error">{validationErrors.desc[0]}</span>
+        <textarea bind:value="{desc}" type="email" name="desc" rows="3" class:error="{validationErrors.desc.length > 0}" class="form-textarea mt-1 block w-full" placeholder="{$localize('infohub.sourceModal.placeholders.desc')}"></textarea>
     </label>
 </div>
 <div class="mt-2 sm:flex sm:flex-row-reverse">
@@ -52,8 +88,10 @@ const send = () => {
         {#if sending}
             <Icon data="{faSyncAlt}" spin />
         {:else}
-            Send
+        {$localize('infohub.sourceModal.buttons.send')}
         {/if}
     </Button>
-    <Button click="{modalClose}" colorClasses="bg-gray-400 text-black border-gray-400">Cancel</Button>
+    <Button click="{modalClose}" colorClasses="bg-gray-400 text-black border-gray-400">{$localize('infohub.sourceModal.buttons.cancel')}</Button>
 </div>
+{#if generalError}<div class="error mt-2 w-full text-center">Oops... look like something went wrong. Please try to send your request again!</div>{/if}
+{#if success}<div class="success mt-2 w-full text-center">Thanks for your help. You may now close this window!</div>{/if}

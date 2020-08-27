@@ -16,3 +16,17 @@ $tagify-dd-color-primary:#b51208;
   --tag-hover: #b51208;
   --tagify-dd-color-primary: #b51208;
 }
+
+input.error {
+  @apply border-red-600 border-2;
+}
+
+span.error,
+div.error {
+  @apply text-red-600 italic;
+}
+
+span.success,
+div.success {
+  @apply text-green-600 italic;
+}

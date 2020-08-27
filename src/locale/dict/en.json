@@ -28,6 +28,26 @@
         "social": "Social Feeds",
         "discussions": "Discussions",
         "mmonews": "External News",
-        "addSource": "Add Source"
+        "addSource": "Add Source",
+        "errors": {
+            "catError": "There was an issue loading this section. Please refresh the page to try again."
+        },
+        "sourceModal": {
+            "info": "Help us create the most comprehensive list of Neverwinter articles, discussions, social posts, and media by adding sources that you feel aren't included in our engine. Please include a direct link to the content, channel, or feed that you would like us to crawl. Otherwise make sure to add a detailed description of what you'd like to have included.",
+            "buttons": {
+                "send": "Send",
+                "cancel": "Cancel"
+            },
+            "labels": {
+                "email": "E-Mail *",
+                "url": "URL",
+                "desc": "Description"
+            },
+            "placeholders": {
+                "email": "john@example.com",
+                "url": "https://www.homepage.com/neverwinter.rss",
+                "desc": "Please enter additional info if possible"
+            }
+        }
     }
 }
