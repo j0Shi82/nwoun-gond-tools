@@ -54,7 +54,7 @@ svelteLifecycleOnMount(() => {
 
 {#if allData.length}
     <div class="col-span-1 md:col-span-2">
-        <span style="background-image: url({infohubLogos.pwe});"  class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="news">{$localize('infohub.news')}</span>
+        <span style="background-image: url({infohubLogos.pwe});"  class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="news">{$localize('infohub.official')}</span>
     </div>
     {#each allData as data}
         <div class="w-full bg-nwoun p-2 flex items-center rounded-md">

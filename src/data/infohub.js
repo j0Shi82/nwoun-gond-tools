@@ -42,13 +42,13 @@ const sections = [
   {
     type: 'news',
     icon: pweLogo,
-    id: 'news',
+    id: 'official',
     count: 10,
   },
   {
     type: 'cat',
     icon: faNewspaper,
-    id: 'mmonews',
+    id: 'news',
     count: 14,
   },
   {
@@ -60,7 +60,7 @@ const sections = [
   {
     type: 'cat',
     icon: faComment,
-    id: 'discussions',
+    id: 'discussion',
     count: 30,
   },
 ];

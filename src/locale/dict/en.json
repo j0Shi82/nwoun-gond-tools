@@ -23,11 +23,11 @@
     },
     "infohub": {
         "filter": "Filter",
-        "news": "Official News",
+        "official": "Official News",
         "guides": "Guides / Blogs",
         "social": "Social Feeds",
-        "discussions": "Discussions",
-        "mmonews": "External News",
+        "discussion": "Discussions",
+        "news": "External News",
         "addSource": "Add Source",
         "errors": {
             "catError": "There was an issue loading this section. Please refresh the page to try again."
@@ -39,8 +39,8 @@
                 "cancel": "Cancel"
             },
             "labels": {
-                "email": "E-Mail *",
-                "url": "URL",
+                "email": "E-Mail",
+                "url": "URL *",
                 "desc": "Description"
             },
             "placeholders": {

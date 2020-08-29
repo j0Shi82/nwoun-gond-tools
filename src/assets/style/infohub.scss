@@ -17,8 +17,9 @@ $tagify-dd-color-primary:#b51208;
   --tagify-dd-color-primary: #b51208;
 }
 
-input.error {
-  @apply border-red-600 border-2;
+input.error,
+textarea.error {
+  @apply border-red-600;
 }
 
 span.error,

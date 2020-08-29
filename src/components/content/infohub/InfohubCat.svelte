@@ -8,7 +8,6 @@ import { InfohubSourceModal, Icon } from 'utils/imports/components';
 import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-export let apiEndpoint;
 export let icon = null;
 export let id;
 export let titleLocaleIdent;
@@ -27,7 +26,7 @@ const showModal = () => {
 $: {
   apiError = false;
   dispatch('loading', true);
-  axios.get(`${apiServer}${apiEndpoint}?limit=${itemCount}&tags=${tags}`).then((response) => {
+  axios.get(`${apiServer}/v1/articles/all?limit=${itemCount}&tags=${tags}&types=${id}`).then((response) => {
     allData = response.data.map((el) => {
       let logo = infohubLogos.pwe;
       if (typeof infohubLogos[el.site] !== 'undefined') logo = infohubLogos[el.site];

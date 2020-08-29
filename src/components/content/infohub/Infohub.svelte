@@ -4,6 +4,7 @@ import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Tagify } from 'utils/imports/plugins';
 import { InfohubNews, InfohubCat, Spinner } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
+import { apiServer } from 'utils/imports/config';
 
 import 'assets/style/infohub.scss';
 
@@ -20,7 +21,7 @@ $: {
 const searchIcon = infohubSections.filter((el) => el.type === 'filter')[0].icon;
 
 function getTags() {
-  axios.get('http://localhost:8080/v1/infoaggregates/discussiontags').then((response) => {
+  axios.get(`${apiServer}/v1/articles/discussiontags`).then((response) => {
     tags = response.data;
     if (tagify !== null) {
       tagify.settings.whitelist.splice(0, tags.map((el) => el.term).length, ...tags.map((el) => el.term));
@@ -87,7 +88,6 @@ svelteLifecycleOnMount(() => {
       {/if}
       {#each infohubSections.filter((el) => el.type === 'cat') as section, i}
         <InfohubCat 
-          apiEndpoint="{`/v1/infoaggregates/${section.id}`}"
           icon="{section.icon}"
           id="{section.id}"
           titleLocaleIdent="{`infohub.${section.id}`}"
