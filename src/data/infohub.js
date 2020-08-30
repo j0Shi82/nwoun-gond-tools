@@ -7,14 +7,15 @@ import faSearch from 'assets/media/fontawesome/search.svg';
 import faComment from 'assets/media/fontawesome/comment.svg';
 import faBookMedical from 'assets/media/fontawesome/book-medical.svg';
 import faNewspaper from 'assets/media/fontawesome/newspaper.svg';
+import faVideo from 'assets/media/fontawesome/video.svg';
 
 const logos = {
   pwe: pweLogo,
   arcgamesforum: pweLogo,
   nwreddit: redditLogo,
-  pc: pcLogo,
-  xbox: xboxLogo,
-  ps4: ps4Logo,
+  arcgamespc: pcLogo,
+  arcgamesxbox: xboxLogo,
+  arcgamesps4: ps4Logo,
   mop: 'https://massivelyop.com/wp-content/uploads/2015/03/150mo.png',
   mmobomb: 'https://www.anook.com/uploads/profiles/big/50f9aa07f1be6.png',
   bleedingcool: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAZlBMVEUAAAD///8BAQH8/PwDAwNISEgaGhpOTk4MDAxtbW2np6eZmZmhoaGBgYHm5ub4+PjNzc0/Pz+Ojo7V1dXd3d2tra0yMjJ0dHR8fHxUVFQ6OjrExMS0tLRcXFzv7+8fHx8TExMnJyc2lRAPAAAAt0lEQVQYlSWQRxbDIAxER2C6cQP3mCT3v2QE0Urva1RGEAItBLrun1kXQh9Vx6gV1UAckpYlXaiam0Y5qp5u/aJQJe7m8lRoBh4K3BdzptEnWln/0AXMl6NyLSQ3JuvKYHfcw2NLnrS5geP4xugbok0PB/YAC0M0qLf66BJwJgY78QK+NN4Kn2KAk+TgjNGZJiBKBbzaYJPI10tkik8/lTE/3r+rTXsu/WGttmKbq+/mumtfEEL8AHXkCOJ2NNrTAAAAAElFTkSuQmCC',
@@ -30,6 +31,7 @@ const logos = {
   occguide: 'https://www.overclockersclub.com/favicon.ico',
   jannew: 'https://jannenw.info/favicon.ico',
   nwthoughts: 'http://neverwinterthoughts.blogspot.com/favicon.ico',
+  youtube: 'https://www.youtube.com/favicon.ico',
 };
 
 const sections = [
@@ -37,31 +39,31 @@ const sections = [
     type: 'filter',
     icon: faSearch,
     id: 'filter',
-    count: 20,
   },
   {
-    type: 'news',
+    type: 'articles',
     icon: pweLogo,
     id: 'official',
-    count: 10,
   },
   {
-    type: 'cat',
+    type: 'articles',
     icon: faNewspaper,
     id: 'news',
-    count: 14,
   },
   {
-    type: 'cat',
+    type: 'articles',
     icon: faBookMedical,
     id: 'guides',
-    count: 10,
   },
   {
-    type: 'cat',
+    type: 'articles',
     icon: faComment,
     id: 'discussion',
-    count: 30,
+  },
+  {
+    type: 'articles',
+    icon: faVideo,
+    id: 'media',
   },
 ];
 

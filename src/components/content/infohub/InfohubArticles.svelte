@@ -2,21 +2,23 @@
 import { localize, axios } from 'utils/imports/core';
 import { svelteCreateEventDispatcher, svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
-import { infohubLogos } from 'utils/imports/data';
+import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { InfohubSourceModal, Icon } from 'utils/imports/components';
 
 import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-export let icon = null;
-export let id;
-export let titleLocaleIdent;
+export let types = '';
 export let tags;
-export let itemCount = 20;
 export let show = false;
 
 let apiError = false;
 let allData = [];
+const sectionIcons = infohubSections.reduce((aggr, cur) => {
+  // eslint-disable-next-line no-param-reassign
+  aggr[cur.id] = cur.icon;
+  return aggr;
+}, {});
 const dispatch = svelteCreateEventDispatcher();
 const { modalOpen } = svelteGetContext('modal');
 const showModal = () => {
@@ -26,11 +28,14 @@ const showModal = () => {
 $: {
   apiError = false;
   dispatch('loading', true);
-  axios.get(`${apiServer}/v1/articles/all?limit=${itemCount}&tags=${tags}&types=${id}`).then((response) => {
+  axios.get(`${apiServer}/v1/articles/all?limit=100&tags=${tags}&types=${types}`).then((response) => {
     allData = response.data.map((el) => {
-      let logo = infohubLogos.pwe;
-      if (typeof infohubLogos[el.site] !== 'undefined') logo = infohubLogos[el.site];
-      return { ...el, logo };
+      const logos = [];
+      el.site.split(',').forEach((site) => {
+        if (typeof infohubLogos[site] !== 'undefined') logos.push(infohubLogos[site]);
+      });
+      if (logos.length === 0) logos.push(infohubLogos.pwe);
+      return { ...el, logos };
     });
     dispatch('loading', response.data.length ? false : null);
   }).catch(() => {
@@ -41,18 +46,14 @@ $: {
 </script>
 
 {#if (allData.length || apiError) && show}
-    <div class="col-span-1 md:col-span-2">
-        {#if icon !== null}
-        <span style="background-image: url({icon});"  class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="{id}">{$localize(titleLocaleIdent)}</span>
-        {:else}
-        <span class="font-bold text-2xl" id="{id}">{$localize(titleLocaleIdent)}</span>
-        {/if}
-    </div>
     {#each allData as data}
-        <div class="w-full bg-nwoun p-2 flex items-center rounded-md">
-            <img class="h-4 w-4 mr-2 cursor-pointer" on:click="{() => { window.open(data.link); }}" src="{data.logo}" alt="site logo" />
-            <a href="{data.link}" target="_blank" class="truncate font-medium">{data.title}</a>
-        </div>
+      <div class="flex-auto w-full bg-nwoun p-2 flex items-center rounded-md cursor-pointer" on:click="{() => { window.open(data.link); }}">
+        <div class="flex-none h-4 w-4 mr-2 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({sectionIcons[data.type]});"></div>
+        {#each data.logos as logo}
+          <img class="flex-none h-4 w-4 mr-2 cursor-pointer" src="{logo}" alt="site logo" />
+        {/each}
+        <span class="truncate font-medium">{data.title}</span>
+      </div>
     {/each}
     {#if apiError}
       <div class="col-span-1 md:col-span-2">

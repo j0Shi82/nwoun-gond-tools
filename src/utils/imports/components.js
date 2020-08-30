@@ -4,8 +4,7 @@ import MenuItem from 'components/content/menu/MenuItem.svelte';
 
 import DevtrackerPost from 'components/content/devtracker/DevtrackerPost.svelte';
 
-import InfohubNews from 'components/content/infohub/InfohubNews.svelte';
-import InfohubCat from 'components/content/infohub/InfohubCat.svelte';
+import InfohubArticles from 'components/content/infohub/InfohubArticles.svelte';
 // import InfohubSourceModal from 'components/content/infohub/InfohubSourceModal.svelte';
 
 import Button from 'components/ui/Button.svelte';
@@ -21,8 +20,7 @@ export {
   Button,
   Spinner,
   DevtrackerPost,
-  InfohubNews,
-  InfohubCat,
+  InfohubArticles,
   Modal,
   InfohubSourceModal,
   BackgroundOverlay,
