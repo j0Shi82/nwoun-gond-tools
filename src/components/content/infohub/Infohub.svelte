@@ -2,7 +2,7 @@
 import { axios, animateScroll, localize } from 'utils/imports/core';
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Tagify } from 'utils/imports/plugins';
-import { InfohubArticles, Spinner } from 'utils/imports/components';
+import { InfohubArticles } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
 import { apiServer } from 'utils/imports/config';
 
@@ -11,7 +11,6 @@ import 'assets/style/infohub.scss';
 let tags = [];
 let tagList = '';
 let tagify = null;
-let loading = true;
 const articleSections = infohubSections.filter((el) => el.type === 'articles');
 const sectionStates = articleSections.map(() => true);
 
@@ -81,16 +80,9 @@ svelteLifecycleOnMount(() => {
       <div class="col-span-1 md:col-span-2" id="discussionTagFilter">
         <input />
       </div>
-      {#if loading}
-        <div class="col-span-1 md:col-span-2">
-          <Spinner />
-        </div>
-      {/if}
       <InfohubArticles 
         tags="{tagList}"
         types="{types}"
-        on:loading="{(event) => { loading = event.detail; }}"
-        show="{!loading}"
       />
     </div>
     <div class="col-span-1 hidden md:block">
@@ -103,12 +95,10 @@ svelteLifecycleOnMount(() => {
           </div>
           <div class="border-black border-b-4 my-4"></div>
           {#each articleSections as section, i}
-            {#if !loading}
               <div 
                 class:opacity-25="{!sectionStates[i]}" 
                 class="pb-1/1 w-full bg-contain bg-center bg-no-repeat cursor-pointer mb-1" style="background-image: url({section.icon});" on:click="{() => handleSectionStates(i)}">
               </div>
-            {/if}
           {/each}
         </div>
     </div>
@@ -116,11 +106,9 @@ svelteLifecycleOnMount(() => {
 
 <div class="menu-bottom bottom-0 left-0 w-full justify-between items-center flex fixed md:hidden h-12 z-20 bg-nwoun p-1">
   {#each infohubSections as section, i}
-    {#if !loading}
       <div class="w-10">
         <div class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" style="background-image: url({section.icon});" on:click="{() => animateScroll.scrollTo({ element: `#${section.id}`, offset: -50 })}">
         </div>
       </div>
-    {/if}
   {/each}
 </div>
