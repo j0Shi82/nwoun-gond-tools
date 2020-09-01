@@ -105,9 +105,23 @@ svelteLifecycleOnMount(() => {
 </div>
 
 <div class="menu-bottom bottom-0 left-0 w-full justify-between items-center flex fixed md:hidden h-12 z-20 bg-nwoun p-1">
-  {#each infohubSections as section, i}
+  <div class="w-10">
+    <div 
+      class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" 
+      style="background-image: url({searchIcon});"
+      on:click="{() => animateScroll.scrollTo({ element: `#filter`, offset: -50 })}"
+    >
+    </div>
+  </div>
+  <div class="border-black border-r-4 mx-4 h-full flex-0"></div>
+  {#each articleSections as section, i}
       <div class="w-10">
-        <div class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" style="background-image: url({section.icon});" on:click="{() => animateScroll.scrollTo({ element: `#${section.id}`, offset: -50 })}">
+        <div 
+          class:opacity-25="{!sectionStates[i]}" 
+          class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" 
+          style="background-image: url({section.icon});" 
+          on:click="{() => handleSectionStates(i)}"
+        >
         </div>
       </div>
   {/each}
