@@ -30,11 +30,11 @@ const showModal = () => {
 
 // main data fetching function, pushes to data if page > 2 and replaces if page === 1
 const getData = (page) => {
-  if (loading) return;
+  if (loading || finished) return;
   apiError = false;
   loading = true;
   if (page === 1) firstLoading = true;
-  axios.get(`${apiServer}/v1/articles/all?limit=100&page=${page}tags=${tags}&types=${types}`).then((response) => {
+  axios.get(`${apiServer}/v1/articles/all?limit=100&page=${page}&tags=${tags}&types=${types}`).then((response) => {
     const newData = response.data.map((el) => {
       const logos = [];
       el.site.split(',').forEach((site) => {
@@ -54,6 +54,7 @@ const getData = (page) => {
     }
   }).catch(() => {
     apiError = true;
+    finished = true;
   }).finally(() => {
     firstLoading = false;
     loading = false;
@@ -63,6 +64,8 @@ const getData = (page) => {
 // reset curPage whenever tags or types change
 // is there a better way?
 $: {
+  finished = false;
+  curPage = 1;
   if (tags && types) {
     getData(1);
   } else {
@@ -74,7 +77,7 @@ $: {
 $: getData(curPage);
 
 const getObserver = () => new IntersectionObserver((entries) => {
-  if (entries[0].isIntersecting) {
+  if (entries[0].isIntersecting && !loading && !finished) {
     curPage += 1;
   }
 }, {
@@ -113,6 +116,13 @@ $: {
       </div>
       {/if}
     {/each}
+    {#if allData.length < 50}
+      <div class="col-span-1 md:col-span-2">
+        <div class="w-full bg-orange-600 p-2 text-center rounded-md font-bold cursor-pointer" on:click="{() => { showModal(); }}">
+          <span style="background-image: url({faPlusCircle});" class="bg-no-repeat pl-10">{$localize('infohub.addSource')}</span>
+        </div>
+      </div>
+      {/if}
     {#if apiError}
       <div class="col-span-1 md:col-span-2">
         <div class="w-full p-2 rounded-md font-bold">
