@@ -12,9 +12,11 @@ export let types = '';
 export let tags;
 
 let apiError = false;
-let loading = true;
+let loading = false;
+let firstLoading = true;
+let finished = false;
 let allData = [];
-let spinner;
+let spinner = null;
 let curPage = 1;
 const sectionIcons = infohubSections.reduce((aggr, cur) => {
   // eslint-disable-next-line no-param-reassign
@@ -26,41 +28,14 @@ const showModal = () => {
   modalOpen(InfohubSourceModal, {}, 'infohub.addSource');
 };
 
-const getObserver = () => new IntersectionObserver((entries) => {
-  if (entries[0].isIntersecting) {
-    curPage += 1;
-    axios.get(`${apiServer}/v1/articles/all?limit=100&page=${curPage}tags=${tags}&types=${types}`).then((response) => {
-      allData.push(...response.data.map((el) => {
-        const logos = [];
-        el.site.split(',').forEach((site) => {
-          if (typeof infohubLogos[site] !== 'undefined') logos.push(infohubLogos[site]);
-        });
-        if (logos.length === 0) logos.push(infohubLogos.pwe);
-        return { ...el, logos };
-      }));
-      allData = allData;
-    }).catch(() => {
-      apiError = true;
-    }).finally(() => {
-      loading = false;
-    });
-  }
-});
-
-$: {
-  if (typeof spinner !== 'undefined') {
-    const spinnerObserver = getObserver();
-    spinnerObserver.observe(spinner);
-  }
-}
-
-$: {
+// main data fetching function, pushes to data if page > 2 and replaces if page === 1
+const getData = (page) => {
+  if (loading) return;
   apiError = false;
   loading = true;
-  curPage = 1;
-  allData = [];
-  axios.get(`${apiServer}/v1/articles/all?limit=100&tags=${tags}&types=${types}`).then((response) => {
-    allData = response.data.map((el) => {
+  if (page === 1) firstLoading = true;
+  axios.get(`${apiServer}/v1/articles/all?limit=100&page=${page}tags=${tags}&types=${types}`).then((response) => {
+    const newData = response.data.map((el) => {
       const logos = [];
       el.site.split(',').forEach((site) => {
         if (typeof infohubLogos[site] !== 'undefined') logos.push(infohubLogos[site]);
@@ -68,20 +43,59 @@ $: {
       if (logos.length === 0) logos.push(infohubLogos.pwe);
       return { ...el, logos };
     });
+
+    if (newData.length === 0) finished = true;
+
+    if (page > 1) {
+      allData.push(...newData);
+      allData = allData;
+    } else {
+      allData = newData;
+    }
   }).catch(() => {
     apiError = true;
   }).finally(() => {
+    firstLoading = false;
     loading = false;
   });
+};
+
+// reset curPage whenever tags or types change
+// is there a better way?
+$: {
+  if (tags && types) {
+    getData(1);
+  } else {
+    getData(1);
+  }
+}
+
+// when params change, fetch data again
+$: getData(curPage);
+
+const getObserver = () => new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    curPage += 1;
+  }
+}, {
+  rootMargin: '500px',
+});
+
+// rercreate observer every time the sponner gets updated
+$: {
+  if (spinner !== null && !loading && !finished) {
+    const spinnerObserver = getObserver();
+    spinnerObserver.observe(spinner);
+  }
 }
 </script>
 
-{#if loading}
+{#if firstLoading}
 <div class="col-span-1 md:col-span-2">
   <Spinner />
 </div>
 {/if}
-{#if (allData.length || apiError) && !loading}
+{#if (allData.length || apiError) && !firstLoading}
     {#each allData as data, i}
       <div class="flex-auto w-full bg-nwoun p-2 flex items-center rounded-md cursor-pointer" on:click="{() => { window.open(data.link); }}">
         <div class="flex-none h-4 w-4 mr-2 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({sectionIcons[data.type]});"></div>
@@ -107,7 +121,9 @@ $: {
         </div>
       </div>
     {/if}
+    {#if !finished}
     <div class="col-span-1 md:col-span-2" bind:this="{spinner}">
       <Spinner />
     </div>
+    {/if}
 {/if}
