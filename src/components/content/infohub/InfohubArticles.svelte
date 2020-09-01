@@ -1,6 +1,6 @@
 <script>
 import { localize, axios } from 'utils/imports/core';
-import { svelteGetContext, svelteLifecycleOnMount } from 'utils/imports/svelte';
+import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { InfohubSourceModal, Icon, Spinner } from 'utils/imports/components';
@@ -26,9 +26,38 @@ const showModal = () => {
   modalOpen(InfohubSourceModal, {}, 'infohub.addSource');
 };
 
+const getObserver = () => new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    curPage += 1;
+    axios.get(`${apiServer}/v1/articles/all?limit=100&page=${curPage}tags=${tags}&types=${types}`).then((response) => {
+      allData.push(...response.data.map((el) => {
+        const logos = [];
+        el.site.split(',').forEach((site) => {
+          if (typeof infohubLogos[site] !== 'undefined') logos.push(infohubLogos[site]);
+        });
+        if (logos.length === 0) logos.push(infohubLogos.pwe);
+        return { ...el, logos };
+      }));
+      allData = allData;
+    }).catch(() => {
+      apiError = true;
+    }).finally(() => {
+      loading = false;
+    });
+  }
+});
+
+$: {
+  if (typeof spinner !== 'undefined') {
+    const spinnerObserver = getObserver();
+    spinnerObserver.observe(spinner);
+  }
+}
+
 $: {
   apiError = false;
   loading = true;
+  curPage = 1;
   allData = [];
   axios.get(`${apiServer}/v1/articles/all?limit=100&tags=${tags}&types=${types}`).then((response) => {
     allData = response.data.map((el) => {
@@ -45,37 +74,13 @@ $: {
     loading = false;
   });
 }
-
-svelteLifecycleOnMount(() => {
-  const spinnerObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
-      curPage += 1;
-      axios.get(`${apiServer}/v1/articles/all?limit=100&page=${curPage}tags=${tags}&types=${types}`).then((response) => {
-        allData.push(...response.data.map((el) => {
-          const logos = [];
-          el.site.split(',').forEach((site) => {
-            if (typeof infohubLogos[site] !== 'undefined') logos.push(infohubLogos[site]);
-          });
-          if (logos.length === 0) logos.push(infohubLogos.pwe);
-          return { ...el, logos };
-        }));
-        allData = allData;
-      }).catch(() => {
-        apiError = true;
-      }).finally(() => {
-        loading = false;
-      });
-    }
-  });
-
-  spinnerObserver.observe(spinner);
-
-  return () => {
-    spinnerObserver.unobserve(spinner);
-  };
-});
 </script>
 
+{#if loading}
+<div class="col-span-1 md:col-span-2">
+  <Spinner />
+</div>
+{/if}
 {#if (allData.length || apiError) && !loading}
     {#each allData as data, i}
       <div class="flex-auto w-full bg-nwoun p-2 flex items-center rounded-md cursor-pointer" on:click="{() => { window.open(data.link); }}">
@@ -102,7 +107,7 @@ svelteLifecycleOnMount(() => {
         </div>
       </div>
     {/if}
+    <div class="col-span-1 md:col-span-2" bind:this="{spinner}">
+      <Spinner />
+    </div>
 {/if}
-<div class="col-span-1 md:col-span-2" bind:this="{spinner}">
-  <Spinner />
-</div>
