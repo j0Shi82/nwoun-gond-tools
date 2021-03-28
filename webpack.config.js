@@ -1,5 +1,4 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const WebpackModuleNomodulePlugin = require('webpack-module-nomodule-plugin');
@@ -38,6 +37,9 @@ const makeConfig = (target) => ({
       {
         test: /\.(?:svelte|m?js)$/,
         include: [path.resolve(__dirname, 'src'), sveltePath],
+        resolve: {
+          fullySpecified: false,
+        },
         use: {
           loader: 'babel-loader',
           options: {
@@ -50,7 +52,7 @@ const makeConfig = (target) => ({
         use: {
           loader: 'svelte-loader',
           options: {
-            emitCss: true,
+            emitCss: false,
             hotReload: true,
             preprocess: sveltePreprocess({
               postcss: true,
@@ -77,7 +79,7 @@ const makeConfig = (target) => ({
           {
             loader: 'postcss-loader',
             options: {
-              config: {
+              postcssOptions: {
                 ctx: {
                   target,
                 },
@@ -104,9 +106,6 @@ const makeConfig = (target) => ({
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
-    }),
-    new Visualizer({
-      filename: './statistics.html',
     }),
     new HtmlWebpackPlugin({
       title: 'Neverwinter Uncensored',
