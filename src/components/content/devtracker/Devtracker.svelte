@@ -83,7 +83,7 @@ svelteLifecycleOnMount(() => {
     on:change="{() => { curPage = 0; }}" 
     bind:value="{curDev}" 
     disabled="{curID !== '0'}" 
-    class="block w-full form-select" 
+    class="block w-full form-select bg-gray-300 border-red-700 border-2 rounded-md bg-opacity-50 font-bold text-nwoun" 
     id="grid-state"
   >
     <option value="" selected>-- Developer --</option>
@@ -95,7 +95,7 @@ svelteLifecycleOnMount(() => {
     on:change="{() => { curPage = 0; }}" 
     bind:value="{curID}" 
     disabled="{curDev !== ''}" 
-    class="block w-full form-select mt-2" 
+    class="block w-full form-select bg-gray-300 border-red-700 border-2 rounded-md bg-opacity-50 font-bold text-nwoun mt-2" 
     id="grid-state"
   >
     <option value="0" selected>-- Hot Topics --</option>

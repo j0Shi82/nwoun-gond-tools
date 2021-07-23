@@ -1,8 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const Visualizer = require('webpack-visualizer-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const WebpackModuleNomodulePlugin = require('webpack-module-nomodule-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 
@@ -12,7 +10,7 @@ const babelConfig = require('./babel.config');
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
-const makeConfig = (target) => ({
+module.exports = {
   entry: {
     bundle: ['./src/main.js'],
   },
@@ -30,8 +28,8 @@ const makeConfig = (target) => ({
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: `[name].[contenthash].${target}.js`,
-    chunkFilename: `[name].[chunkhash].[contenthash].${target}.js`,
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[chunkhash].[contenthash].js',
   },
   module: {
     rules: [
@@ -41,7 +39,7 @@ const makeConfig = (target) => ({
         use: {
           loader: 'babel-loader',
           options: {
-            ...babelConfig.env[target],
+            ...babelConfig,
           },
         },
       },
@@ -76,13 +74,6 @@ const makeConfig = (target) => ({
           },
           {
             loader: 'postcss-loader',
-            options: {
-              config: {
-                ctx: {
-                  target,
-                },
-              },
-            },
           },
           {
             loader: 'sass-loader',
@@ -105,14 +96,10 @@ const makeConfig = (target) => ({
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
-    new Visualizer({
-      filename: './statistics.html',
-    }),
     new HtmlWebpackPlugin({
       title: 'Neverwinter Uncensored',
       template: './src/index.template.html',
     }),
-    prod ? new WebpackModuleNomodulePlugin(target, 'minimal') : () => {},
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, 'public'), to: path.resolve(__dirname, 'dist') },
@@ -121,6 +108,4 @@ const makeConfig = (target) => ({
   ],
   devtool: prod ? 'source-map' : 'source-map',
   target: 'web',
-});
-
-module.exports = prod ? [makeConfig('modern'), makeConfig('legacy')] : makeConfig('legacy');
+};

@@ -16,12 +16,11 @@ const purgecss = require('@fullhuman/postcss-purgecss')({
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
-// eslint-disable-next-line no-unused-vars
-const getPlugins = (target) => [
-  tailwindcss,
-  autoprefixer(),
-  ...(prod ? [purgecss] : []),
-  postcssDiscardDuplicates,
-];
-
-module.exports = ({ options = { target: 'modern' } }) => ({ plugins: getPlugins(options.target) });
+module.exports = {
+  plugins: [
+    tailwindcss,
+    autoprefixer(),
+    ...(prod ? [purgecss] : []),
+    postcssDiscardDuplicates,
+  ],
+};
