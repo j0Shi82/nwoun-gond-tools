@@ -16,7 +16,11 @@ module.exports = {
   },
   devServer: {
     host: '0.0.0.0',
-    contentBase: [path.join(__dirname, 'dist'), path.join(__dirname, 'public')],
+    static: [{
+      directory: path.join(__dirname, 'dist'),
+    }, {
+      directory: path.join(__dirname, 'public'),
+    }],
   },
   resolve: {
     alias: {

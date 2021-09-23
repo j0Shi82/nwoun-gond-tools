@@ -1,7 +1,8 @@
 // routing
 import getLocalizedRoute from 'locale/utils/routeHelper';
 import getGuards from 'router/utils/getGuards';
-import Router, { push, wrap } from 'svelte-spa-router';
+import Router, { push } from 'svelte-spa-router';
+import { wrap } from 'svelte-spa-router/wrap';
 import routes from 'router/index';
 import routeLoaded from 'router/routeLoaded';
 import Loadable from 'svelte-loadable';
