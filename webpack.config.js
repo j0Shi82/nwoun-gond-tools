@@ -52,8 +52,15 @@ module.exports = {
         use: {
           loader: 'svelte-loader',
           options: {
+            dev: true,
+            compilerOptions: {
+              dev: true,
+            },
             emitCss: true,
             hotReload: true,
+            hotOptions: {
+              optimistic: true,
+            },
             preprocess: sveltePreprocess({
               postcss: true,
             }),

@@ -5,6 +5,8 @@ import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { InfohubSourceModal, Icon, Spinner } from 'utils/imports/components';
 
+import format from 'date-fns/format';
+
 import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
@@ -105,7 +107,10 @@ $: {
         {#each data.logos as logo}
           <img class="flex-none h-4 w-4 mr-2 cursor-pointer" src="{logo}" alt="site logo" />
         {/each}
-        <span class="truncate font-medium">{data.title}</span>
+        <div class="truncate font-medium flex-grow relative mr-3">
+          <span>{data.title}</span>
+        </div>
+        <span class="font-medium justify-self-end whitespace-nowrap">{ format(new Date(data.ts * 1000), 'dd MMM') }</span>
       </div>
       <!-- insert add sources popup in midle of data -->
       {#if (i + 1) % 50 === 0}
