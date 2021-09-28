@@ -71,6 +71,13 @@ $: {
   get(requestUri);
 }
 
+function scrollToTop() {
+  window.scrollTo({
+    top: document.querySelector('#header').offsetHeight + 1,
+    left: 0,
+  });
+}
+
 svelteLifecycleOnMount(() => {
   curPage = 0;
   getDevlist();
@@ -106,15 +113,15 @@ svelteLifecycleOnMount(() => {
   </select>
 </div>
 <div id="pages" class="m-2 flex justify-between">
-  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; }}" />
-  {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;"  colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; }}" />{/if}
+  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
+  {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;"  colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
 </div>
 {#each apiData as data}
 <DevtrackerPost postData="{data}" avatarSrc="{avatarData[data.dev_id] ? avatarData[data.dev_id] : null}" />
 {/each}
 <div id="pages" class="m-2 flex justify-between">
-  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; }}" />
-  <Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; }}" />
+  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
+  <Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />
 </div>
 {:else}
 <Spinner />
