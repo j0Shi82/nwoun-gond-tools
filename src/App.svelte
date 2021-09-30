@@ -3,7 +3,9 @@ import {
   isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded, localize,
   AsyncComponentLoader,
 } from 'utils/imports/core';
-import { svelteLifecycleOnMount, svelteTransitionScale, svelteSetContext } from 'utils/imports/svelte';
+import {
+  svelteLifecycleOnMount, svelteTransitionScale, svelteSetContext, svelteTick,
+} from 'utils/imports/svelte';
 import { menuItems, images } from 'utils/imports/data';
 import { Modal } from 'utils/imports/components';
 
@@ -43,16 +45,25 @@ svelteSetContext('modal', { modalOpen, modalClose });
 
 setupLocalization();
 
-svelteLifecycleOnMount(() => {
-  const listener = () => {
-    showSmallLogo = window.scrollY > 144;
-  };
+const observer = new IntersectionObserver(((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      showSmallLogo = false;
+    } else {
+      showSmallLogo = true;
+    }
+  });
+}));
 
-  window.addEventListener('scroll', listener);
+svelteLifecycleOnMount(() => () => {
+  observer.unobserve(document.querySelector('#header'));
+});
 
-  return () => {
-    window.removeEventListener('scroll', listener);
-  };
+isLocalizationLoading.subscribe(async (value) => {
+  if (!value) {
+    await svelteTick();
+    observer.observe(document.querySelector('#header'));
+  }
 });
 
 function scrollToTop() {

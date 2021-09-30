@@ -6,5 +6,4 @@ yarn.lock
 .vscode
 coverage
 *.log
-.yarn
-.yarnrc.yml
+.yarn/cache

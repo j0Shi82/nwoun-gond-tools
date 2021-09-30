@@ -1,4 +1,4 @@
-import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faWordpress, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
   /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
@@ -20,6 +20,14 @@ export default [
   //   link: 'https://forum.nwo-uncensored.com',
   //   icon: faEdit,
   // },
+  {
+    type: 'talk',
+    id: 'repoLink',
+    textLocaleKey: 'menu.repo',
+    external: true,
+    link: 'https://github.com/j0Shi82/nwoun-homepage-index',
+    icon: faGithub,
+  },
   {
     type: 'talk',
     id: 'discordLink',

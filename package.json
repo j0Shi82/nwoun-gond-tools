@@ -1,6 +1,13 @@
 {
-  "name": "nwoun-homepage-index",
+  "description": "nwo-uncensored.com hompegae based on Svelte and Tailwind",
+  "version": "1.0.0",
   "license": "GPL-3.0-or-later",
+  "authors": [
+    {
+      "name": "j0Shi82",
+      "email": "j0shi.webdev@gmail.com"
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "@babel/plugin-transform-runtime": "^7.15.0",
@@ -80,5 +87,5 @@
       "yarn lint"
     ]
   },
-  "packageManager": "yarn@3.1.0-rc.6"
+  "packageManager": "yarn@3.1.0-rc.8"
 }
