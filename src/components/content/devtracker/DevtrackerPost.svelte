@@ -21,13 +21,13 @@ function visitForum(data) {
 
 <style>
   .condensed {
-    max-height: 12rem;
+    max-height: 10rem;
   }
 </style>
 
-<div class="flex flex-col md:flex-row items-center md:items-start rounded-md bg-red-700 p-2 m-2">
+<div class="flex flex-col md:flex-row items-center md:items-start rounded-md bg-red-700 p-2 m-2 border-2 border-black">
     <div class="w-full md:w-auto flex-none flex md:flex-col md:mr-2">
-      <div class="flex-none w-12 h-12 md:w-32 md:h-32 rounded-full overflow-hidden border-black border-2">
+      <div class="flex-none w-12 h-12 mx-auto rounded-full overflow-hidden border-black border-2">
         <img src="{avatarSrc !== '' ? avatarSrc : 'https://www.arcgames.com/images/account/user.jpg'}" alt="avatar" />
       </div>
       <div class="flex-auto flex flex-col justify-center">
@@ -38,10 +38,12 @@ function visitForum(data) {
     <div class="w-full flex-none md:flex-auto cursor-pointer">
         <div class="w-full border-black border-b-2 text-lg font-bold text-center md:text-left" on:click="{() => visitForum(postData)}">{postData.discussion_name}</div>
         <div bind:this="{bodyEl}" class="relative italic overflow-hidden" style="word-break: break-word;" class:condensed="{!showAll}">
-            <div on:click="{() => visitForum(postData)}">{@html postData.body}</div>
+            <div class="mt-2" on:click="{() => visitForum(postData)}">{@html postData.body}</div>
             {#if overflow && !showAll}
-            <div class="absolute w-full bottom-0">
-                <Button text="Show More..." click="{() => { showAll = true; }}" />
+            <div class="absolute w-full bottom-0 pt-10 bg-gradient-to-t from-red-700 to-transparent">
+                <div class="w-1/1 sm:w-1/2 md:w-1/4 float-right border-l-8 border-t-8 border-red-700">
+                  <Button colorClasses="border-black text-nwoun bg-black" text="Show More..." click="{() => { showAll = true; }}" />
+                </div>
             </div>
             {/if}
         </div>

@@ -1,6 +1,6 @@
-import { faWordpress, faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faWordpress, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
-  faEdit, faHashtag, faInfoCircle, faQuestionCircle,
+  /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default [
@@ -12,13 +12,21 @@ export default [
     link: 'https://blog.nwo-uncensored.com',
     icon: faWordpress,
   },
+  // {
+  //   type: 'talk',
+  //   id: 'forumLink',
+  //   textLocaleKey: 'menu.forum',
+  //   external: true,
+  //   link: 'https://forum.nwo-uncensored.com',
+  //   icon: faEdit,
+  // },
   {
     type: 'talk',
-    id: 'forumLink',
-    textLocaleKey: 'menu.forum',
+    id: 'repoLink',
+    textLocaleKey: 'menu.repo',
     external: true,
-    link: 'https://forum.nwo-uncensored.com',
-    icon: faEdit,
+    link: 'https://github.com/j0Shi82/nwoun-homepage-index',
+    icon: faGithub,
   },
   {
     type: 'talk',

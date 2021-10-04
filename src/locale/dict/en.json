@@ -7,8 +7,9 @@
         "forum": "Message Board",
         "about": "About",
         "discord": "Discord",
+        "repo": "Source",
         "tracker": "DevTracker",
-        "infohub": "Game Resources"
+        "infohub": "Content Hub"
     },
     "header": {
         "subtitle": "Neverwinter's #1 independent news source and community from 2015 - 2019!"

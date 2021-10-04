@@ -1,7 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const WebpackModuleNomodulePlugin = require('webpack-module-nomodule-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 
@@ -11,13 +10,17 @@ const babelConfig = require('./babel.config');
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
-const makeConfig = (target) => ({
+module.exports = {
   entry: {
     bundle: ['./src/main.js'],
   },
   devServer: {
     host: '0.0.0.0',
-    contentBase: [path.join(__dirname, 'dist'), path.join(__dirname, 'public')],
+    static: [{
+      directory: path.join(__dirname, 'dist'),
+    }, {
+      directory: path.join(__dirname, 'public'),
+    }],
   },
   resolve: {
     alias: {
@@ -29,8 +32,8 @@ const makeConfig = (target) => ({
   },
   output: {
     path: `${__dirname}/dist`,
-    filename: `[name].[contenthash].${target}.js`,
-    chunkFilename: `[name].[chunkhash].[contenthash].${target}.js`,
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[chunkhash].[contenthash].js',
   },
   module: {
     rules: [
@@ -43,7 +46,7 @@ const makeConfig = (target) => ({
         use: {
           loader: 'babel-loader',
           options: {
-            ...babelConfig.env[target],
+            ...babelConfig,
           },
         },
       },
@@ -52,8 +55,15 @@ const makeConfig = (target) => ({
         use: {
           loader: 'svelte-loader',
           options: {
-            emitCss: false,
+            dev: true,
+            compilerOptions: {
+              dev: true,
+            },
+            emitCss: true,
             hotReload: true,
+            hotOptions: {
+              optimistic: true,
+            },
             preprocess: sveltePreprocess({
               postcss: true,
             }),
@@ -78,13 +88,6 @@ const makeConfig = (target) => ({
           },
           {
             loader: 'postcss-loader',
-            options: {
-              postcssOptions: {
-                ctx: {
-                  target,
-                },
-              },
-            },
           },
           {
             loader: 'sass-loader',
@@ -111,7 +114,6 @@ const makeConfig = (target) => ({
       title: 'Neverwinter Uncensored',
       template: './src/index.template.html',
     }),
-    prod ? new WebpackModuleNomodulePlugin(target, 'minimal') : () => {},
     new CopyPlugin({
       patterns: [
         { from: path.resolve(__dirname, 'public'), to: path.resolve(__dirname, 'dist') },
@@ -120,6 +122,4 @@ const makeConfig = (target) => ({
   ],
   devtool: prod ? 'source-map' : 'source-map',
   target: 'web',
-});
-
-module.exports = prod ? [makeConfig('modern'), makeConfig('legacy')] : makeConfig('legacy');
+};

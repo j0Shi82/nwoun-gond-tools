@@ -1,19 +1,13 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-const customForms = require('@tailwindcss/custom-forms');
-// eslint-disable-next-line import/no-extraneous-dependencies
-const colorAlpha = require('tailwind-color-alpha');
+const customForms = require('@tailwindcss/forms');
 
 module.exports = {
   plugins: [
-    colorAlpha(),
     customForms,
   ],
   purge: [
     './src/**/*.svelte',
   ],
-  future: {
-    removeDeprecatedGapUtilities: true,
-  },
   theme: {
     extend: {
       colors: {
@@ -26,16 +20,5 @@ module.exports = {
         '2/3': '66.66667%',
       },
     },
-    customForms: (theme) => ({
-      default: {
-        select: {
-          backgroundColor: theme('colors.black'),
-          borderWidth: theme('borderWidth.2'),
-          color: theme('colors.nwoun'),
-          borderColor: theme('colors.nwoun'),
-          fontWeight: theme('fontWeight.bold'),
-        },
-      },
-    }),
   },
 };

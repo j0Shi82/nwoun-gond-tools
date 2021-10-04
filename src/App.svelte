@@ -1,9 +1,11 @@
 <script>
 import {
-  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded, localize, routerPush, getLocalizedRoute,
+  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded, localize,
   AsyncComponentLoader,
 } from 'utils/imports/core';
-import { svelteLifecycleOnMount, svelteTransitionScale, svelteSetContext } from 'utils/imports/svelte';
+import {
+  svelteLifecycleOnMount, svelteTransitionScale, svelteSetContext, svelteTick,
+} from 'utils/imports/svelte';
 import { menuItems, images } from 'utils/imports/data';
 import { Modal } from 'utils/imports/components';
 
@@ -22,6 +24,11 @@ let modalComponent = null;
 let modalProps = null;
 let modalHeadlineLocaleIdent = 'modal.defaultHeadline';
 
+$: smallLogoStyle = {
+  classes: showSmallLogo ? 'py-2 ml-2' : '',
+  style: showSmallLogo ? 'width: 180px; transition: width 500ms;' : 'width: 0px; transition: width 500ms;',
+};
+
 const modalOpen = (component, props = {}, headlineLocaleIdent = 'modal.defaultHeadline') => {
   modalComponent = component;
   modalProps = props;
@@ -38,20 +45,33 @@ svelteSetContext('modal', { modalOpen, modalClose });
 
 setupLocalization();
 
-svelteLifecycleOnMount(() => {
-  const listener = () => {
-    showSmallLogo = window.scrollY > 144;
-  };
+const observer = new IntersectionObserver(((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      showSmallLogo = false;
+    } else {
+      showSmallLogo = true;
+    }
+  });
+}));
 
-  window.addEventListener('scroll', listener);
-
-  return () => {
-    window.removeEventListener('scroll', listener);
-  };
+svelteLifecycleOnMount(() => () => {
+  observer.unobserve(document.querySelector('#header'));
 });
 
-function goHome() {
-  routerPush(getLocalizedRoute('infohub'));
+isLocalizationLoading.subscribe(async (value) => {
+  if (!value) {
+    await svelteTick();
+    observer.observe(document.querySelector('#header'));
+  }
+});
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    left: 0,
+    behavior: 'smooth',
+  });
 }
 </script>
 
@@ -85,16 +105,16 @@ function goHome() {
 {/if}
 {#if !$isLocalizationLoading}
 <img src="{images.backgroundImage}" id="background" alt="Showing a vmapire" />
-<div id="page-wrapper">
+<div id="page-wrapper" style="min-height: 120vh">
   <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
-    <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32 cursor-pointer" alt="logo of Neverwinter Uncensored" on:click="{goHome}" />
+    <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
     <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">{$localize('header.subtitle')}</div>
   </div>
   <div id="sticky" class="sticky z-20 top-0 bg-nwoun">
     <div id="mainMenu" class=" flex justify-between w-full h-12 ">
-      <div style="width: 150px;" class="py-2 ml-2">
+      <div style="{smallLogoStyle.style}" class="{smallLogoStyle.classes}" on:click="{scrollToTop}">
         {#if showSmallLogo}
-          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBanner}" class="h-full w-auto cursor-pointer" on:click="{goHome}" alt="small logo of Neverwinter Uncensored" />
+          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBanner}" class="h-full w-auto cursor-pointer" on:click="{scrollToTop}" alt="small logo of Neverwinter Uncensored" />
         {/if}
       </div>
       {#each menuItems.filter((i) => i.type !== 'talk') as item}
