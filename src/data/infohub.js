@@ -17,7 +17,7 @@ const logos = {
   arcgamesxbox: xboxLogo,
   arcgamesps4: ps4Logo,
   mop: 'https://massivelyop.com/wp-content/uploads/2015/03/150mo.png',
-  mmobomb: 'https://www.anook.com/uploads/profiles/big/50f9aa07f1be6.png',
+  mmobomb: 'https://www.mmobomb.com/favicon/safari-pinned-tab.svg',
   bleedingcool: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAZlBMVEUAAAD///8BAQH8/PwDAwNISEgaGhpOTk4MDAxtbW2np6eZmZmhoaGBgYHm5ub4+PjNzc0/Pz+Ojo7V1dXd3d2tra0yMjJ0dHR8fHxUVFQ6OjrExMS0tLRcXFzv7+8fHx8TExMnJyc2lRAPAAAAt0lEQVQYlSWQRxbDIAxER2C6cQP3mCT3v2QE0Urva1RGEAItBLrun1kXQh9Vx6gV1UAckpYlXaiam0Y5qp5u/aJQJe7m8lRoBh4K3BdzptEnWln/0AXMl6NyLSQ3JuvKYHfcw2NLnrS5geP4xugbok0PB/YAC0M0qLf66BJwJgY78QK+NN4Kn2KAk+TgjNGZJiBKBbzaYJPI10tkik8/lTE/3r+rTXsu/WGttmKbq+/mumtfEEL8AHXkCOJ2NNrTAAAAAElFTkSuQmCC',
   mmorpg: 'https://imgur.com/73lKT87.png',
   destructoid: 'https://www.destructoid.com/sites/_default/img/top-nav/destructoid-logo.png',
@@ -30,7 +30,7 @@ const logos = {
   occarticle: 'https://www.overclockersclub.com/favicon.ico',
   occguide: 'https://www.overclockersclub.com/favicon.ico',
   jannew: 'https://jannenw.info/favicon.ico',
-  nwthoughts: 'http://neverwinterthoughts.blogspot.com/favicon.ico',
+  nwthoughts: 'https://neverwinterthoughts.blogspot.com/favicon.ico',
   youtube: 'https://www.youtube.com/favicon.ico',
 };
 
