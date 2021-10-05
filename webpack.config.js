@@ -31,7 +31,7 @@ module.exports = {
     modules: ['src', 'node_modules'],
   },
   output: {
-    path: `${__dirname}/dist`,
+    path: prod ? `${__dirname}/dist/nwoun-hompage-index` : `${__dirname}/dist`,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[chunkhash].[contenthash].js',
   },
@@ -113,6 +113,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Neverwinter Uncensored',
       template: './src/index.template.html',
+      filename: prod ? '../index.html' : 'index.html',
     }),
     new CopyPlugin({
       patterns: [
@@ -120,6 +121,6 @@ module.exports = {
       ],
     }),
   ],
-  devtool: prod ? 'source-map' : 'source-map',
+  devtool: prod ? false : 'source-map',
   target: 'web',
 };
