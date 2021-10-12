@@ -32,6 +32,8 @@ const logos = {
   jannew: 'https://jannenw.info/favicon.ico',
   nwthoughts: 'https://neverwinterthoughts.blogspot.com/favicon.ico',
   youtube: 'https://www.youtube.com/favicon.ico',
+  razer: 'https://hybrismedianonprods1.blob.core.windows.net/sys-master-phoenix-images-container/h6c/h6b/9559620911134/razer-ths-logo.svg',
+  cloakalliance: 'https://s3.amazonaws.com/files.enjin.com/452103/site_logo/avatar.png',
 };
 
 const sections = [
