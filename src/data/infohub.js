@@ -37,6 +37,7 @@ const logos = {
   screenrant: 'https://screenrant.com/public/build/images/favicon-96x96.6841d3db.png',
   igc: 'https://i1.wp.com/invisioncommunity.co.uk/wp-content/uploads/2020/01/cropped-igc-site-icon-1.png',
   gamepur: 'https://www.gamepur.com/wp-content/uploads/2020/01/cropped-gamepur_favicon-1-150x150.png',
+  gamerant: 'https://gamerant.com/public/build/images/favicon-48x48.dd8046e7.png',
 };
 
 const sections = [
