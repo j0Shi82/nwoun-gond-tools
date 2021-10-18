@@ -34,6 +34,10 @@ const logos = {
   youtube: 'https://www.youtube.com/favicon.ico',
   razer: 'https://hybrismedianonprods1.blob.core.windows.net/sys-master-phoenix-images-container/h6c/h6b/9559620911134/razer-ths-logo.svg',
   cloakalliance: 'https://s3.amazonaws.com/files.enjin.com/452103/site_logo/avatar.png',
+  screenrant: 'https://screenrant.com/public/build/images/favicon-96x96.6841d3db.png',
+  igc: 'https://i1.wp.com/invisioncommunity.co.uk/wp-content/uploads/2020/01/cropped-igc-site-icon-1.png',
+  gamepur: 'https://www.gamepur.com/wp-content/uploads/2020/01/cropped-gamepur_favicon-1-150x150.png',
+  gamerant: 'https://gamerant.com/public/build/images/favicon-48x48.dd8046e7.png',
 };
 
 const sections = [
