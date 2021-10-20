@@ -105,7 +105,7 @@ function scrollToTop() {
 {/if}
 {#if !$isLocalizationLoading}
 <img src="{images.backgroundImage}" id="background" alt="Showing a vmapire" />
-<div id="page-wrapper" style="min-height: 120vh">
+<div id="page-wrapper" style="min-height: 150vh">
   <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
     <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
     <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">{$localize('header.subtitle')}</div>
@@ -150,7 +150,7 @@ function scrollToTop() {
           link="{item.link}"
         />
         {/each}
-        <div class="flex md:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+        <div class="flex lg:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
           <Icon data={faBars} scale="1.5" class="w-8"></Icon>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { faWordpress, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
-  /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle,
+  /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle, faGavel,
 } from '@fortawesome/free-solid-svg-icons';
 
 export default [
@@ -51,6 +51,14 @@ export default [
     external: false,
     link: 'devtracker',
     icon: faHashtag,
+  },
+  {
+    type: 'page',
+    id: 'auctionLink',
+    textLocaleKey: 'menu.auction',
+    external: false,
+    link: 'auction',
+    icon: faGavel,
   },
   {
     type: 'page',

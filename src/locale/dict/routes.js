@@ -3,5 +3,6 @@ export default {
     about: '/about',
     devtracker: '/devtracker',
     infohub: '/',
+    auction: '/auction',
   },
 };

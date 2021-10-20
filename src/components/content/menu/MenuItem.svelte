@@ -13,8 +13,8 @@ export let link;
 export let condensed = false;
 export let flexAuto = true;
 
-const mobileClasses = 'flex md:hidden h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
-const desktopClasses = 'hidden md:flex justify-start h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
+const mobileClasses = 'flex lg:hidden h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
+const desktopClasses = 'hidden lg:flex justify-start h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
 
 function linkClick() {
   if (linkType === 'external') {

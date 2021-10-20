@@ -9,7 +9,8 @@
         "discord": "Discord",
         "repo": "Source",
         "tracker": "DevTracker",
-        "infohub": "Content Hub"
+        "infohub": "Content Hub",
+        "auction": "Auction Data"
     },
     "header": {
         "subtitle": "Neverwinter's #1 independent news source and community from 2015 - 2019!"

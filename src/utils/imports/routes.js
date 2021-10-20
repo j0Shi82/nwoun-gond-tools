@@ -7,7 +7,8 @@ const applyCodeSplittingToRoute = ChunkGenerator(ChunkComponent);
 const AboutRoute = applyCodeSplittingToRoute(() => import('components/content/about/About.svelte'));
 const DevtrackerRoute = applyCodeSplittingToRoute(() => import('components/content/devtracker/Devtracker.svelte'));
 const InfohubRoute = applyCodeSplittingToRoute(() => import('components/content/infohub/Infohub.svelte'));
+const AuctionDataRoute = applyCodeSplittingToRoute(() => import('components/content/auction/AuctionData.svelte'));
 
 export {
-  AboutRoute, DevtrackerRoute, InfohubRoute,
+  AboutRoute, DevtrackerRoute, InfohubRoute, AuctionDataRoute,
 };
