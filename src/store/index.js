@@ -6,4 +6,7 @@ export default {
   devtracker: {
     avatars: storeTypeWritable({}),
   },
+  infohub: {
+    apiError: storeTypeWritable(false),
+  },
 };

@@ -1,15 +1,19 @@
 <script>
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
-import { Button, Spinner, DevtrackerPost } from 'utils/imports/components';
+import {
+  Button, Spinner, DevtrackerPost, Icon,
+} from 'utils/imports/components';
 import { devtrackerAvatarList } from 'utils/imports/store';
-import { axios } from 'utils/imports/core';
+import { localize, axios } from 'utils/imports/core';
 import { apiServer } from 'utils/imports/config';
 
 let apiData = [];
 let devData = [];
 let topicData = [];
 let loading = true;
-let error = false;
+let apiError = false;
 let curPage = 0;
 let curDev = '';
 let curID = '0';
@@ -60,7 +64,7 @@ function get(uri) {
         });
     })
     .catch(() => {
-      error = true;
+      apiError = true;
     })
     .finally(() => {
       loading = false;
@@ -85,44 +89,53 @@ svelteLifecycleOnMount(() => {
 });
 </script>
 
-{#if !loading}
-<div id="form" class="m-2 mb-0">
-  <select 
-    on:change="{() => { curPage = 0; }}" 
-    bind:value="{curDev}" 
-    disabled="{curID !== '0'}" 
-    class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" 
-    id="grid-state"
-  >
-    <option value="" selected>-- Developer --</option>
-    {#each devData as data}
-      <option value="{data.dev_id}">{data.dev_name} ({data.post_count})</option>
-    {/each}
-  </select>
-  <select 
-    on:change="{() => { curPage = 0; }}" 
-    bind:value="{curID}" 
-    disabled="{curDev !== ''}" 
-    class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black mt-2 h-12" 
-    id="grid-state"
-  >
-    <option value="0" selected>-- Hot Topics --</option>
-    {#each topicData as data}
-      <option value="{data.discussion_id}">{data.discussion_name} ({data.post_count})</option>
-    {/each}
-  </select>
-</div>
-<div id="pages" class="m-2 flex justify-between">
-  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
-  {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;"  colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
-</div>
-{#each apiData as data}
-<DevtrackerPost postData="{data}" avatarSrc="{avatarData[data.dev_id] ? avatarData[data.dev_id] : null}" />
-{/each}
-<div id="pages" class="m-2 flex justify-between">
-  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
-    {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
-</div>
+{#if !apiError}
+  {#if !loading}
+  <div id="form" class="m-2 mb-0">
+    <select 
+      on:change="{() => { curPage = 0; }}" 
+      bind:value="{curDev}" 
+      disabled="{curID !== '0'}" 
+      class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" 
+      id="grid-state"
+    >
+      <option value="" selected>-- Developer --</option>
+      {#each devData as data}
+        <option value="{data.dev_id}">{data.dev_name} ({data.post_count})</option>
+      {/each}
+    </select>
+    <select 
+      on:change="{() => { curPage = 0; }}" 
+      bind:value="{curID}" 
+      disabled="{curDev !== ''}" 
+      class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black mt-2 h-12" 
+      id="grid-state"
+    >
+      <option value="0" selected>-- Hot Topics --</option>
+      {#each topicData as data}
+        <option value="{data.discussion_id}">{data.discussion_name} ({data.post_count})</option>
+      {/each}
+    </select>
+  </div>
+  <div id="pages" class="m-2 flex justify-between">
+    <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
+    {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;"  colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
+  </div>
+  {#each apiData as data}
+  <DevtrackerPost postData="{data}" avatarSrc="{avatarData[data.dev_id] ? avatarData[data.dev_id] : null}" />
+  {/each}
+  <div id="pages" class="m-2 flex justify-between">
+    <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
+      {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
+  </div>
+  {:else}
+  <Spinner />
+  {/if}
 {:else}
-<Spinner />
+  <div class="col-span-1 md:col-span-2">
+    <div class="w-full p-2 rounded-md font-bold  flex justify-center items-center">
+      <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun flex-shrink-0"></Icon>
+      <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
+    </div>
+  </div>
 {/if}

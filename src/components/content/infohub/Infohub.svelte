@@ -1,10 +1,13 @@
 <script>
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+
 import { axios, animateScroll, localize } from 'utils/imports/core';
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Tagify } from 'utils/imports/plugins';
-import { InfohubArticles } from 'utils/imports/components';
+import { InfohubArticles, Icon } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
 import { apiServer } from 'utils/imports/config';
+import { infohubApiError } from 'utils/imports/store';
 
 import 'assets/style/infohub.scss';
 
@@ -28,10 +31,14 @@ function getTags() {
     if (tagify !== null) {
       tagify.settings.whitelist.splice(0, tags.map((el) => el.term).length, ...tags.map((el) => el.term));
     }
-  });
+  })
+    .catch(() => {
+      infohubApiError.set(true);
+    });
 }
 
 svelteLifecycleOnMount(() => {
+  infohubApiError.set(false);
   getTags();
   tagify = new Tagify(
     document.querySelector('#discussionTagFilter input'),
@@ -74,16 +81,25 @@ svelteLifecycleOnMount(() => {
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">
     <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
-      <div class="col-span-1 md:col-span-2">
+      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubApiError}">
         <span style="background-image: url({searchIcon});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="filter">{$localize('infohub.filter')}</span>
       </div>
-      <div class="col-span-1 md:col-span-2" id="discussionTagFilter">
+      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubApiError}" id="discussionTagFilter">
         <input />
       </div>
-      <InfohubArticles 
-        tags="{tagList}"
-        types="{types}"
-      />
+      {#if !$infohubApiError}
+        <InfohubArticles 
+          tags="{tagList}"
+          types="{types}"
+        />
+      {:else}
+        <div class="col-span-1 md:col-span-2">
+          <div class="w-full p-2 rounded-md font-bold flex justify-center items-center">
+            <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun pr-2 flex-shrink-0"></Icon>
+            <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
+          </div>
+        </div>
+      {/if}
     </div>
     <div class="col-span-1 hidden md:block">
         <div class="sticky sticky-right mx-auto" style="max-width: 48px;">
@@ -103,7 +119,6 @@ svelteLifecycleOnMount(() => {
         </div>
     </div>
 </div>
-
 <div class="menu-bottom bottom-0 left-0 w-full justify-between items-center flex fixed md:hidden h-12 z-20 bg-nwoun p-1">
   <div class="w-10">
     <div 

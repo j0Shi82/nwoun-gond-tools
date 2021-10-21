@@ -3,17 +3,16 @@ import { localize, axios } from 'utils/imports/core';
 import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
-import { InfohubSourceModal, Icon, Spinner } from 'utils/imports/components';
+import { infohubApiError } from 'utils/imports/store';
+import { InfohubSourceModal, Spinner } from 'utils/imports/components';
 
 import format from 'date-fns/format';
 
 import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 export let types = '';
 export let tags;
 
-let apiError = false;
 let loading = false;
 let firstLoading = true;
 let finished = false;
@@ -33,7 +32,7 @@ const showModal = () => {
 // main data fetching function, pushes to data if page > 2 and replaces if page === 1
 const getData = (page) => {
   if (loading || finished) return;
-  apiError = false;
+  infohubApiError.set(false);
   loading = true;
   if (page === 1) firstLoading = true;
   axios.get(`${apiServer}/v1/articles/all?limit=100&page=${page}&tags=${tags}&types=${types}`).then((response) => {
@@ -55,7 +54,7 @@ const getData = (page) => {
       allData = newData;
     }
   }).catch(() => {
-    apiError = true;
+    infohubApiError.set(true);
     finished = true;
   }).finally(() => {
     firstLoading = false;
@@ -100,7 +99,7 @@ $: {
   <Spinner />
 </div>
 {/if}
-{#if (allData.length || apiError) && !firstLoading}
+{#if (allData.length) && !firstLoading}
     {#each allData as data, i}
       <div class="flex-auto w-full bg-nwoun p-2 flex items-center rounded-md cursor-pointer" on:click="{() => { window.open(data.link); }}">
         <div class="flex-none h-4 w-4 mr-2 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({sectionIcons[data.type]});"></div>
@@ -128,14 +127,6 @@ $: {
         </div>
       </div>
       {/if}
-    {#if apiError}
-      <div class="col-span-1 md:col-span-2">
-        <div class="w-full p-2 rounded-md font-bold">
-          <Icon data="{faExclamationTriangle}" scale="1" class="text-nwoun"></Icon>
-          <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
-        </div>
-      </div>
-    {/if}
     {#if !finished}
     <div class="col-span-1 md:col-span-2" bind:this="{spinner}">
       <Spinner />
