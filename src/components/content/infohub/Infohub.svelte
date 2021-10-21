@@ -10,6 +10,7 @@ import { apiServer } from 'utils/imports/config';
 import { infohubApiError } from 'utils/imports/store';
 
 import 'assets/style/infohub.scss';
+import 'assets/style/tagify.scss';
 
 let tags = [];
 let tagList = '';
