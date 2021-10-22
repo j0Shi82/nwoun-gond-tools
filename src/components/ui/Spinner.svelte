@@ -1,5 +1,6 @@
 <script>
   export let style = '';
+  export let scaleClasses = 'h-64 w-64';
 </script>
 
 <style lang="scss">
@@ -20,6 +21,6 @@
     }
 </style>
     
-<div {style} class="w-full overflow-hidden">
-    <div class="loader ease-linear rounded-full border-8 border-t-8 border-nwoun h-64 w-64 m-auto"></div>
+<div {style} class="w-full overflow-hidden flex items-center justify-center">
+    <div class="loader ease-linear rounded-full border-8 border-t-8 border-nwoun {scaleClasses} m-auto"></div>
 </div>

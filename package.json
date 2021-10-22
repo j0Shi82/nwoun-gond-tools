@@ -64,6 +64,7 @@
     "autoprefixer": "^10.3.6",
     "axios": "^0.21.4",
     "browser-update": "^3.3.30",
+    "chart.js": "^3.5.1",
     "core-js": "^3.18.1",
     "date-fns": "^2.24.0",
     "express": "^4.17.1",

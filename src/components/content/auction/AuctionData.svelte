@@ -1,12 +1,69 @@
 <script>
-import { faGem, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faGem, faTimesCircle, faPlus, faMinus, faExclamationTriangle,
+} from '@fortawesome/free-solid-svg-icons';
 import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Spinner, Icon } from 'utils/imports/components';
-import { axios } from 'utils/imports/core';
+import { axios, localize } from 'utils/imports/core';
 import { dateFormatRelative } from 'utils/imports/helpers';
 import { apiServer } from 'utils/imports/config';
+
+import {
+  Chart,
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
+  CategoryScale,
+  LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
+  Title,
+  Tooltip,
+  SubTitle,
+} from 'chart.js';
+
+Chart.register(
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
+  CategoryScale,
+  LinearScale,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
+  Title,
+  Tooltip,
+  SubTitle,
+);
 
 import 'assets/style/tagify.scss';
 
@@ -18,8 +75,137 @@ let searchElement = null;
 let searchText = '';
 let catElement = null;
 let categories = [];
+let openItemDef = null;
+const charts = {};
+const chartData = {};
+
+const data = {
+  labels: [],
+  datasets: [
+    {
+      label: 'Price',
+      data: [],
+      borderColor: 'rgb(200, 200, 200)',
+      backgroundColor: 'rgb(200, 200, 200)',
+      yAxisID: 'y',
+    },
+    {
+      label: 'Count',
+      data: [],
+      borderColor: 'rgb(50, 50, 50)',
+      backgroundColor: 'rgb(50, 50, 50)',
+      yAxisID: 'y1',
+    },
+  ],
+};
+
+const config = {
+  type: 'line',
+  data,
+  options: {
+    responsive: false,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
+    stacked: false,
+    plugins: {
+      title: {
+        display: false,
+      },
+      legend: {
+        labels: {
+          color: 'rgb(0,0,0)',
+        },
+      },
+    },
+    scales: {
+      xAxes: {
+        grid: {
+          borderColor: 'rgb(0,0,0)',
+          color: 'rgb(0,0,0)',
+        },
+        ticks: {
+          color: 'rgb(0,0,0)',
+        },
+      },
+      y: {
+        type: 'linear',
+        display: true,
+        position: 'left',
+        grid: {
+          borderColor: 'rgb(0,0,0)',
+          color: 'rgb(0,0,0)',
+        },
+        ticks: {
+          color: 'rgb(200,200,200)',
+          callback(value) {
+            const lookup = [
+              { value: 1, symbol: '' },
+              { value: 1e3, symbol: 'k' },
+              { value: 1e6, symbol: 'M' },
+              { value: 1e9, symbol: 'G' },
+              { value: 1e12, symbol: 'T' },
+              { value: 1e15, symbol: 'P' },
+              { value: 1e18, symbol: 'E' },
+            ];
+            const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+            const item = lookup.slice().reverse().find((f) => value >= f.value);
+            return item ? (value / item.value).toFixed(1).replace(rx, '$1') + item.symbol : '0';
+          },
+        },
+      },
+      y1: {
+        type: 'linear',
+        display: true,
+        position: 'right',
+        grid: {
+          drawOnChartArea: false, // only want the grid lines for one axis to show up
+          borderColor: 'rgb(0,0,0)',
+          color: 'rgb(0,0,0)',
+        },
+        ticks: {
+          color: 'rgb(50,50,50)',
+        },
+      },
+    },
+  },
+};
+
+function getDetailData(itemDef) {
+  if (chartData[itemDef]) return Promise.resolve({ data: chartData[itemDef] });
+  return axios.get(`${apiServer}/v1/auctions/itemdetails?item_def=${itemDef}&server=GLOBAL`);
+}
+
+function toggle(itemDef) {
+  if (typeof charts[openItemDef] !== 'undefined') {
+    charts[openItemDef].destroy();
+    charts[openItemDef] = undefined;
+  }
+  if (chartData[itemDef] === false) {
+    chartData[itemDef] = undefined;
+  }
+  if (openItemDef === itemDef) {
+    openItemDef = null;
+  } else {
+    openItemDef = itemDef;
+    if (typeof charts[openItemDef] === 'undefined') {
+      getDetailData(itemDef).then(({ data: detailData }) => {
+        const curConfig = { ...config };
+        chartData[itemDef] = detailData;
+        curConfig.data.datasets[0].data = detailData.map((auction) => ({ x: auction.InsertedDate, y: auction.AvgLow }));
+        curConfig.data.datasets[1].data = detailData.map((auction) => ({ x: auction.InsertedDate, y: auction.AvgCount }));
+        charts[openItemDef] = new Chart(document.getElementById(`Chart_${openItemDef}`), curConfig);
+        charts[openItemDef].resize();
+      }).catch(() => {
+        chartData[itemDef] = false;
+      });
+    }
+  }
+}
 
 function searchChange() {
+  if (openItemDef !== null) toggle(openItemDef);
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
       && (catElement.value === '' || el.Categories.includes(catElement.value)),
@@ -29,6 +215,7 @@ function searchChange() {
 }
 
 function searchReset() {
+  if (openItemDef !== null) toggle(openItemDef);
   searchElement.innerText = '';
   searchText = searchElement.innerText;
   searchChange();
@@ -108,18 +295,41 @@ svelteLifecycleOnMount(() => {
           </thead>
           <tbody class="bg-red-700 divide-y divide-black">
             {#each filteredData as data, i}
-            <tr class="item-row {data.Quality}">
+            <tr id={data.ItemDef} class="item-row {data.Quality}">
               <td class="px-1 py-1 truncate item-name">
+                <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggle(data.ItemDef)}>
+                  {#if openItemDef === data.ItemDef}
+                    <Icon data={faMinus} scale="1.5" class="text-black"></Icon>
+                  {:else}
+                    <Icon data={faPlus} scale="1.5" class="text-black"></Icon>
+                  {/if}
+                </div>
                 {data.ItemName}
               </td>
               <td class="px-1 py-1 whitespace-nowrap text-right item-price">
-                {Intl.NumberFormat().format(data.Low)} <Icon data={faGem} scale="1.5" class="text-black w-4"></Icon>
+                {Intl.NumberFormat().format(data.Low)} <Icon data={faGem} scale="1.5" class="text-black"></Icon>
               </td>
               <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-count">
                 {Intl.NumberFormat().format(data.Count)}
               </td>
               <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-date">
                 {dateFormatRelative(new Date(data.Inserted * 1000), new Date())}
+              </td>
+            </tr>
+            <tr class="item-row {data.Quality}" class:hidden={openItemDef !== data.ItemDef}>
+              <td colspan="5" class="relative">
+                {#if chartData[openItemDef] === false}
+                <div class="absolute top-0 left-0 w-full p-2 rounded-md font-bold flex justify-center items-center" style="height: 400px">
+                  <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun flex-shrink-0 pr-2"></Icon>
+                  <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
+                </div>
+                {:else if typeof charts[openItemDef] === 'undefined'}
+                  <Spinner style="position: absolute; height: 400px;" />
+                {/if}
+                <div style="position: relative; height: 400px;" class="flex justify-center items-center">
+                  <canvas id={`Chart_${data.ItemDef}`} class:hidden={charts[openItemDef] === 'undefined'}></canvas>
+                </div>
+                <div ></div>
               </td>
             </tr>
             {/each}
@@ -178,6 +388,10 @@ td {
     min-width: 125px;
     max-width: 125px;
   }
+}
+
+canvas {
+  max-height: 400px !important;
 }
 
 </style>
