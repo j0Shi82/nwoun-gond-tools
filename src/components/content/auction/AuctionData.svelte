@@ -5,7 +5,7 @@ import {
 import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
-import { Spinner, Icon } from 'utils/imports/components';
+import { Spinner, Icon, Button } from 'utils/imports/components';
 import { axios, localize } from 'utils/imports/core';
 import { dateFormatRelative } from 'utils/imports/helpers';
 import { apiServer } from 'utils/imports/config';
@@ -37,6 +37,8 @@ import {
   Tooltip,
   SubTitle,
 } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import { enUS } from 'date-fns/locale';
 
 Chart.register(
   ArcElement,
@@ -76,6 +78,8 @@ let searchText = '';
 let catElement = null;
 let categories = [];
 let openItemDef = null;
+let curPage = 0;
+const curResultsCount = 21;
 const charts = {};
 const chartData = {};
 
@@ -121,6 +125,15 @@ const config = {
     },
     scales: {
       xAxes: {
+        type: 'time',
+        time: {
+          minUnit: 'day',
+        },
+        adapters: {
+          date: {
+            locale: enUS,
+          },
+        },
         grid: {
           borderColor: 'rgb(0,0,0)',
           color: 'rgb(0,0,0)',
@@ -193,23 +206,25 @@ function toggle(itemDef) {
       getDetailData(itemDef).then(({ data: detailData }) => {
         const curConfig = { ...config };
         chartData[itemDef] = detailData;
-        curConfig.data.datasets[0].data = detailData.map((auction) => ({ x: auction.InsertedDate, y: auction.AvgLow }));
-        curConfig.data.datasets[1].data = detailData.map((auction) => ({ x: auction.InsertedDate, y: auction.AvgCount }));
+        curConfig.data.datasets[0].data = detailData.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgLow }));
+        curConfig.data.datasets[1].data = detailData.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgCount }));
         charts[openItemDef] = new Chart(document.getElementById(`Chart_${openItemDef}`), curConfig);
         charts[openItemDef].resize();
-      }).catch(() => {
+      }).catch((e) => {
+        console.log(e);
         chartData[itemDef] = false;
       });
     }
   }
 }
 
-function searchChange() {
+function searchChange(page = 0) {
   if (openItemDef !== null) toggle(openItemDef);
+  curPage = page;
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
-      && (catElement.value === '' || el.Categories.includes(catElement.value)),
-  );
+      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),
+  ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
 
   searchText = searchElement.innerText;
 }
@@ -221,23 +236,24 @@ function searchReset() {
   searchChange();
 }
 
+$: {
+  if (searchElement && catElement) searchChange(curPage);
+}
+
 function getItemData() {
   loading = true;
   axios.get(`${apiServer}/v1/auctions/items`)
     .then((response) => {
       itemData = response.data;
       categories = itemData.reduce((aggr, cur) => {
+        if (!cur.Categories) return aggr;
         cur.Categories.forEach((el) => {
           if (!aggr.includes(el)) aggr.push(el);
         });
         return aggr;
       }, []);
       categories.sort();
-      if (searchElement.innerText.length > 2) {
-        filteredData = itemData.filter((el) => RegExp(searchElement.innerText, 'i').test(el.ItemName));
-      } else {
-        filteredData = itemData;
-      }
+      filteredData = itemData.filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
     })
     .catch(() => {
       error = true;
@@ -256,14 +272,14 @@ svelteLifecycleOnMount(() => {
   <div id="search" class="auction-tagify flex flex-grow mr-2">
     <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
     <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
-      <span contenteditable="" bind:this={searchElement} on:input={searchChange} tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false"></span>
+      <span contenteditable="" bind:this={searchElement} on:input={() => searchChange(0) } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false"></span>
       <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={searchText.length < 3}>
         <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
       </div>
     </tags>
   </div>
   <div>
-    <select on:change={searchChange} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state">
+    <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state">
       <option value="">-- Category --</option>
       {#each categories as cat}
         <option>{cat}</option>
@@ -273,8 +289,8 @@ svelteLifecycleOnMount(() => {
 </div>
 {#if !loading}
 <div class="flex flex-col">
-  <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-    <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+  <div>
+    <div class="align-middle inline-block min-w-full">
       <div class="shadow overflow-hidden bg-red-700 border-black border-2 rounded-md">
         <table class="min-w-full divide-y divide-black">
           <thead class="bg-red-700">
@@ -339,6 +355,10 @@ svelteLifecycleOnMount(() => {
     </div>
   </div>
 </div>
+<div id="pages" class="my-2 flex justify-between">
+  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); curPage -= 1; }}" />
+    {#if curResultsCount > 20}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); curPage += 1; }}" />{/if}
+</div>
 {:else}
 <Spinner />
 {/if}
@@ -349,29 +369,34 @@ svelteLifecycleOnMount(() => {
     @apply font-bold;
   }
 
+  &.White,
+  &.Common {
+    @apply bg-gray-100;
+  }
+
   &.Green,
   &.Uncommon {
-    @apply bg-green-500;
+    @apply bg-green-600;
   }
 
   &.Blue,
   &.Rare {
-    @apply bg-blue-500;
+    @apply bg-blue-600;
   }
 
   &.Purple,
   &.Epic {
-    @apply bg-purple-500;
+    @apply bg-purple-600;
   }
 
   &.Orange,
   &.Legendary {
-    @apply bg-yellow-500;
+    @apply bg-yellow-600;
   }
 
   &.Mythic,
   &.Teal {
-    @apply bg-green-100;
+    background-color: cyan;
   }
 }
 
@@ -382,11 +407,16 @@ td {
     @apply sm:max-w-none;
   }
 
-  &.item-price,
-  &.item-count {
+  &.item-price {
     width: 125px;
     min-width: 125px;
     max-width: 125px;
+  }
+
+  &.item-count {
+    width: 80px;
+    min-width: 80px;
+    max-width: 80px;
   }
 }
 
