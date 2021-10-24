@@ -5,27 +5,41 @@ import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {
   Button, Spinner, DevtrackerPost, Icon,
 } from 'utils/imports/components';
-import { devtrackerAvatarList } from 'utils/imports/store';
-import { localize, axios } from 'utils/imports/core';
+import { devtrackerAvatarList, currentRouteQuerystring } from 'utils/imports/store';
+import {
+  localize, axios, routerPush, getLocalizedRoute,
+} from 'utils/imports/core';
 import { apiServer } from 'utils/imports/config';
 
+const qs = new URLSearchParams($currentRouteQuerystring);
 let apiData = [];
 let devData = [];
 let topicData = [];
 let loading = true;
 let apiError = false;
-let curPage = 0;
-let curDev = '';
-let curID = '0';
+let curPage = qs.has('start_page') ? parseInt(qs.get('start_page'), 10) : 0;
+let curDev = qs.has('dev') ? parseInt(qs.get('dev'), 10) : '';
+let curID = qs.has('discussion_id') ? qs.get('discussion_id') : '0';
 let curPostCount = 500;
+
+function buildQs() {
+  const params = [];
+  if (curPage > 0) params.push(`start_page=${curPage}`);
+  if (curDev !== '') params.push(`dev=${curDev}`);
+  if (curID !== '0') params.push(`discussion_id=${curID}`);
+  return params.length ? `?${params.join('&')}` : '';
+}
+
 $: {
   curPostCount = 500;
-  if (curDev !== '') curPostCount = devData.filter((dev) => dev.dev_id === curDev)[0].post_count;
-  if (curID !== '0') curPostCount = topicData.filter((topic) => topic.discussion_id === curID)[0].post_count;
+  if (curDev !== '' && devData.length) curPostCount = devData.filter((dev) => dev.dev_id === curDev)[0].post_count;
+  if (curID !== '0' && topicData.length) curPostCount = topicData.filter((topic) => topic.discussion_id === curID)[0].post_count;
 }
+
 let requestUri = `${apiServer}/v1/devtracker/list?start_page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
 $: {
   requestUri = `${apiServer}/v1/devtracker/list?start_page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
+  routerPush(getLocalizedRoute('devtracker') + buildQs());
 }
 const avatarData = $devtrackerAvatarList;
 
@@ -83,7 +97,6 @@ function scrollToTop() {
 }
 
 svelteLifecycleOnMount(() => {
-  curPage = 0;
   getDevlist();
   getTopics();
 });
@@ -91,7 +104,7 @@ svelteLifecycleOnMount(() => {
 
 {#if !apiError}
   {#if !loading}
-  <div id="form" class="m-2 mb-0">
+  <div id="form" class="mt-2">
     <select 
       on:change="{() => { curPage = 0; }}" 
       bind:value="{curDev}" 
@@ -117,14 +130,14 @@ svelteLifecycleOnMount(() => {
       {/each}
     </select>
   </div>
-  <div id="pages" class="m-2 flex justify-between">
+  <div id="pages" class="my-2 flex justify-between">
     <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
     {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;"  colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
   </div>
   {#each apiData as data}
   <DevtrackerPost postData="{data}" avatarSrc="{avatarData[data.dev_id] ? avatarData[data.dev_id] : null}" />
   {/each}
-  <div id="pages" class="m-2 flex justify-between">
+  <div id="pages" class="my-2 flex justify-between">
     <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { curPage -= 1; scrollToTop(); }}" />
       {#if (curPage + 1) * 20 < curPostCount}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { curPage += 1; scrollToTop(); }}" />{/if}
   </div>
