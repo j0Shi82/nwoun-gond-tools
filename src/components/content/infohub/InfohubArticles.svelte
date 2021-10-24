@@ -1,5 +1,7 @@
 <script>
-import { localize, axios } from 'utils/imports/core';
+import {
+  localize, axios, routerPush, getLocalizedRoute,
+} from 'utils/imports/core';
 import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
@@ -12,6 +14,7 @@ import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
 
 export let types = '';
 export let tags;
+export let requestBlock = true;
 
 let loading = false;
 let firstLoading = true;
@@ -62,20 +65,35 @@ const getData = (page) => {
   });
 };
 
+function buildQs() {
+  const params = [];
+  if (tags) params.push(`tags=${tags}`);
+  if (types.split(',').length < 5) params.push(`types=${types}`);
+  return params.length ? `?${params.join('&')}` : '';
+}
+
 // reset curPage whenever tags or types change
 // is there a better way?
 $: {
   finished = false;
   curPage = 1;
-  if (tags && types) {
-    getData(1);
-  } else {
-    getData(1);
+  if (!requestBlock) {
+    if (tags && types) {
+      getData(1);
+    } else {
+      getData(1);
+    }
   }
+  routerPush(getLocalizedRoute('infohub') + buildQs());
 }
 
 // when params change, fetch data again
-$: getData(curPage);
+$: {
+  if (!requestBlock) {
+    getData(curPage);
+    routerPush(getLocalizedRoute('infohub') + buildQs());
+  }
+}
 
 const getObserver = () => new IntersectionObserver((entries) => {
   if (entries[0].isIntersecting && !loading && !finished) {

@@ -18,6 +18,10 @@ import setupLocalization from 'locale/i18n';
 import axios from 'axios';
 import * as animateScroll from 'svelte-scrollto';
 
+const instance = axios.create({
+  timeout: 5000,
+});
+
 export {
   getLocalizedRoute,
   getGuards as getRouteGuards,
@@ -29,7 +33,7 @@ export {
   wrap as routeWrapper,
   _ as localize,
   date as formatDate,
-  axios,
+  instance as axios,
   time as formatTime,
   register as registerLocaleDict,
   init as initLocalization,

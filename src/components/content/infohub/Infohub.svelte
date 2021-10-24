@@ -7,7 +7,7 @@ import { Tagify } from 'utils/imports/plugins';
 import { InfohubArticles, Icon } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
 import { apiServer } from 'utils/imports/config';
-import { infohubApiError } from 'utils/imports/store';
+import { infohubApiError, currentRouteQuerystring } from 'utils/imports/store';
 
 import 'assets/style/infohub.scss';
 import 'assets/style/tagify.scss';
@@ -15,8 +15,11 @@ import 'assets/style/tagify.scss';
 let tags = [];
 let tagList = '';
 let tagify = null;
+let tagsLoaded = false;
+
+const qs = new URLSearchParams($currentRouteQuerystring);
 const articleSections = infohubSections.filter((el) => el.type === 'articles');
-const sectionStates = articleSections.map(() => true);
+const sectionStates = articleSections.map((el) => !qs.has('types') || (qs.has('types') && qs.get('types').split(',').includes(el.id)));
 
 $: types = sectionStates.map((el, i) => (el ? articleSections[i].id : false)).filter((el) => el !== false).join(',');
 
@@ -31,10 +34,16 @@ function getTags() {
     tags = response.data;
     if (tagify !== null) {
       tagify.settings.whitelist.splice(0, tags.map((el) => el.term).length, ...tags.map((el) => el.term));
+      if (qs.has('tags')) {
+        tagify.addTags(tags.filter((el) => qs.get('tags').split(',').includes(el.id)).map((el) => el.term));
+      }
     }
   })
     .catch(() => {
       infohubApiError.set(true);
+    })
+    .finally(() => {
+      tagsLoaded = true;
     });
 }
 
@@ -90,6 +99,7 @@ svelteLifecycleOnMount(() => {
       </div>
       {#if !$infohubApiError}
         <InfohubArticles 
+          requestBlock="{!tagsLoaded}"
           tags="{tagList}"
           types="{types}"
         />
