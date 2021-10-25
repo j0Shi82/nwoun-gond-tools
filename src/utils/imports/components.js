@@ -10,7 +10,7 @@ import InfohubArticles from 'components/content/infohub/InfohubArticles.svelte';
 import Button from 'components/ui/Button.svelte';
 import Spinner from 'components/ui/Spinner.svelte';
 import BackgroundOverlay from 'components/ui/BgOverlay.svelte';
-// import Modal from 'components/ui/Modal.svelte';
+import StandardError from 'components/ui/StandardError.svelte';
 
 const Modal = () => import(/* webpackChunkName: "Modal" */ 'components/ui/Modal.svelte');
 const InfohubSourceModal = () => import(/* webpackChunkName: "InfohubSourceModal" */ 'components/content/infohub/InfohubSourceModal.svelte');
@@ -22,6 +22,7 @@ export {
   DevtrackerPost,
   InfohubArticles,
   Modal,
+  StandardError,
   InfohubSourceModal,
   BackgroundOverlay,
   FaIcon,

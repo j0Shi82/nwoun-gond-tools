@@ -7,6 +7,6 @@ export default {
     avatars: storeTypeWritable({}),
   },
   infohub: {
-    apiError: storeTypeWritable(false),
+    firstloadError: storeTypeWritable(false),
   },
 };

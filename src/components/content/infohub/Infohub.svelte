@@ -7,7 +7,7 @@ import { Tagify } from 'utils/imports/plugins';
 import { InfohubArticles, Icon } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
 import { apiServer } from 'utils/imports/config';
-import { infohubApiError, currentRouteQuerystring } from 'utils/imports/store';
+import { infohubFirstloadError, currentRouteQuerystring } from 'utils/imports/store';
 
 import 'assets/style/infohub.scss';
 import 'assets/style/tagify.scss';
@@ -40,7 +40,7 @@ function getTags() {
     }
   })
     .catch(() => {
-      infohubApiError.set(true);
+      infohubFirstloadError.set(true);
     })
     .finally(() => {
       tagsLoaded = true;
@@ -48,7 +48,7 @@ function getTags() {
 }
 
 svelteLifecycleOnMount(() => {
-  infohubApiError.set(false);
+  infohubFirstloadError.set(false);
   getTags();
   tagify = new Tagify(
     document.querySelector('#discussionTagFilter input'),
@@ -91,13 +91,13 @@ svelteLifecycleOnMount(() => {
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">
     <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
-      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubApiError}">
+      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError}">
         <span style="background-image: url({searchIcon});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="filter">{$localize('infohub.filter')}</span>
       </div>
-      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubApiError}" id="discussionTagFilter">
+      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError}" id="discussionTagFilter">
         <input />
       </div>
-      {#if !$infohubApiError}
+      {#if !$infohubFirstloadError}
         <InfohubArticles 
           requestBlock="{!tagsLoaded}"
           tags="{tagList}"
@@ -107,7 +107,7 @@ svelteLifecycleOnMount(() => {
         <div class="col-span-1 md:col-span-2">
           <div class="w-full p-2 rounded-md font-bold flex justify-center items-center">
             <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun pr-2 flex-shrink-0"></Icon>
-            <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
+            <span class="text-nwoun">{$localize('errors.catError')}</span>
           </div>
         </div>
       {/if}

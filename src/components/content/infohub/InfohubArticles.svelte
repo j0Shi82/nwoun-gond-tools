@@ -5,8 +5,8 @@ import {
 import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
-import { infohubApiError } from 'utils/imports/store';
-import { InfohubSourceModal, Spinner } from 'utils/imports/components';
+import { infohubFirstloadError } from 'utils/imports/store';
+import { InfohubSourceModal, Spinner, StandardError } from 'utils/imports/components';
 
 import format from 'date-fns/format';
 
@@ -19,6 +19,7 @@ export let requestBlock = true;
 let loading = false;
 let firstLoading = true;
 let finished = false;
+let loadError = false;
 let allData = [];
 let spinner = null;
 let curPage = 1;
@@ -35,7 +36,8 @@ const showModal = () => {
 // main data fetching function, pushes to data if page > 2 and replaces if page === 1
 const getData = (page) => {
   if (loading || finished) return;
-  infohubApiError.set(false);
+  infohubFirstloadError.set(false);
+  loadError = false;
   loading = true;
   if (page === 1) firstLoading = true;
   axios.get(`${apiServer}/v1/articles/all?limit=100&page=${page}&tags=${tags}&types=${types}`).then((response) => {
@@ -57,7 +59,8 @@ const getData = (page) => {
       allData = newData;
     }
   }).catch(() => {
-    infohubApiError.set(true);
+    if (curPage === 1) infohubFirstloadError.set(true);
+    if (curPage > 1) loadError = true;
     finished = true;
   }).finally(() => {
     firstLoading = false;
@@ -114,7 +117,7 @@ $: {
 
 {#if firstLoading}
 <div class="col-span-1 md:col-span-2">
-  <Spinner />
+  <Spinner style="margin-bottom:150vh" />
 </div>
 {/if}
 {#if (allData.length) && !firstLoading}
@@ -149,5 +152,10 @@ $: {
     <div class="col-span-1 md:col-span-2" bind:this="{spinner}">
       <Spinner />
     </div>
+    {/if}
+    {#if loadError}
+      <div class="col-span-1 md:col-span-2">
+        <StandardError type="cta" callback={() => { finished = false; loadError = false; getData(curPage); }} />
+      </div>
     {/if}
 {/if}
