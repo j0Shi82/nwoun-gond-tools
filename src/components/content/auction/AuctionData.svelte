@@ -5,7 +5,9 @@ import {
 import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
-import { Spinner, Icon, Button } from 'utils/imports/components';
+import {
+  Spinner, Icon, Button, StandardError,
+} from 'utils/imports/components';
 import {
   axios, localize, routerLocalizedPush,
 } from 'utils/imports/core';
@@ -282,99 +284,103 @@ svelteLifecycleOnMount(() => {
 });
 </script>
 
-<div class="flex justify-between items-center mb-2">
-  <div id="search" class="auction-tagify flex flex-grow mr-2">
-    <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
-    <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
-      <span contenteditable="" bind:this={searchElement} on:input={() => searchChange(0) } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
-      <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={searchText.length < 3}>
-        <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
-      </div>
-    </tags>
+{#if error}
+  <StandardError />
+{:else}
+  <div class="flex justify-between items-center mb-2">
+    <div id="search" class="auction-tagify flex flex-grow mr-2">
+      <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
+      <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
+        <span contenteditable="" bind:this={searchElement} on:input={() => searchChange(0) } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
+        <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={searchText.length < 3}>
+          <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
+        </div>
+      </tags>
+    </div>
+    <div>
+      <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state">
+        <option value="">-- Category --</option>
+        {#each categories as cat}
+          <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
+        {/each}
+      </select>
+    </div>
   </div>
-  <div>
-    <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state">
-      <option value="">-- Category --</option>
-      {#each categories as cat}
-        <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
-      {/each}
-    </select>
-  </div>
-</div>
-{#if !loading}
-<div class="flex flex-col">
-  <div>
-    <div class="align-middle inline-block min-w-full">
-      <div class="shadow overflow-hidden bg-red-700 border-black border-2 rounded-md">
-        <table class="min-w-full divide-y divide-black">
-          <thead class="bg-red-700">
-            <tr>
-              <th scope="col" class="px-1 py-3 text-left font-bold text-lg uppercase tracking-wider">
-                Item
-              </th>
-              <th scope="col" class="px-1 py-3 font-bold text-lg uppercase tracking-wider text-right">
-                Price
-              </th>
-              <th scope="col" class="hidden md:table-cell px-1 py-3 font-bold text-lg uppercase tracking-wider text-right">
-                Count
-              </th>
-              <th scope="col" class="hidden md:table-cell px-1 py-3 font-bold text-lg uppercase tracking-wider text-right">
-                Updated
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-red-700 divide-y divide-black">
-            {#each filteredData as data, i}
-            <tr id={data.ItemDef} class="item-row {data.Quality}">
-              <td class="px-1 py-1 truncate item-name">
-                <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggle(data.ItemDef)}>
-                  {#if openItemDef === data.ItemDef}
-                    <Icon data={faMinus} scale="1.5" class="text-black"></Icon>
-                  {:else}
-                    <Icon data={faPlus} scale="1.5" class="text-black"></Icon>
+  {#if !loading}
+  <div class="flex flex-col">
+    <div>
+      <div class="align-middle inline-block min-w-full">
+        <div class="shadow overflow-hidden bg-red-700 border-black border-2 rounded-md">
+          <table class="min-w-full divide-y divide-black">
+            <thead class="bg-red-700">
+              <tr>
+                <th scope="col" class="px-1 py-3 text-left font-bold text-lg uppercase tracking-wider">
+                  Item
+                </th>
+                <th scope="col" class="px-1 py-3 font-bold text-lg uppercase tracking-wider text-right">
+                  Price
+                </th>
+                <th scope="col" class="hidden md:table-cell px-1 py-3 font-bold text-lg uppercase tracking-wider text-right">
+                  Count
+                </th>
+                <th scope="col" class="hidden md:table-cell px-1 py-3 font-bold text-lg uppercase tracking-wider text-right">
+                  Updated
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-red-700 divide-y divide-black">
+              {#each filteredData as data, i}
+              <tr id={data.ItemDef} class="item-row {data.Quality}">
+                <td class="px-1 py-1 truncate item-name">
+                  <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggle(data.ItemDef)}>
+                    {#if openItemDef === data.ItemDef}
+                      <Icon data={faMinus} scale="1.5" class="text-black"></Icon>
+                    {:else}
+                      <Icon data={faPlus} scale="1.5" class="text-black"></Icon>
+                    {/if}
+                  </div>
+                  {data.ItemName}
+                </td>
+                <td class="px-1 py-1 whitespace-nowrap text-right item-price">
+                  {Intl.NumberFormat().format(data.Low)} <Icon data={faGem} scale="1.5" class="text-black"></Icon>
+                </td>
+                <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-count">
+                  {Intl.NumberFormat().format(data.Count)}
+                </td>
+                <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-date">
+                  {dateFormatRelative(new Date(data.Inserted * 1000), new Date())}
+                </td>
+              </tr>
+              <tr class="item-row {data.Quality}" class:hidden={openItemDef !== data.ItemDef}>
+                <td colspan="5" class="relative">
+                  {#if chartData[openItemDef] === false}
+                  <div class="absolute top-0 left-0 w-full p-2 rounded-md font-bold flex justify-center items-center" style="height: 400px">
+                    <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun flex-shrink-0 pr-2"></Icon>
+                    <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
+                  </div>
+                  {:else if typeof charts[openItemDef] === 'undefined'}
+                    <Spinner style="position: absolute; height: 400px;" />
                   {/if}
-                </div>
-                {data.ItemName}
-              </td>
-              <td class="px-1 py-1 whitespace-nowrap text-right item-price">
-                {Intl.NumberFormat().format(data.Low)} <Icon data={faGem} scale="1.5" class="text-black"></Icon>
-              </td>
-              <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-count">
-                {Intl.NumberFormat().format(data.Count)}
-              </td>
-              <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-date">
-                {dateFormatRelative(new Date(data.Inserted * 1000), new Date())}
-              </td>
-            </tr>
-            <tr class="item-row {data.Quality}" class:hidden={openItemDef !== data.ItemDef}>
-              <td colspan="5" class="relative">
-                {#if chartData[openItemDef] === false}
-                <div class="absolute top-0 left-0 w-full p-2 rounded-md font-bold flex justify-center items-center" style="height: 400px">
-                  <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun flex-shrink-0 pr-2"></Icon>
-                  <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
-                </div>
-                {:else if typeof charts[openItemDef] === 'undefined'}
-                  <Spinner style="position: absolute; height: 400px;" />
-                {/if}
-                <div style="position: relative; height: 400px;" class="flex justify-center items-center">
-                  <canvas id={`Chart_${data.ItemDef}`} class:hidden={charts[openItemDef] === 'undefined'}></canvas>
-                </div>
-                <div ></div>
-              </td>
-            </tr>
-            {/each}
-          </tbody>
-        </table>
+                  <div style="position: relative; height: 400px;" class="flex justify-center items-center">
+                    <canvas id={`Chart_${data.ItemDef}`} class:hidden={charts[openItemDef] === 'undefined'}></canvas>
+                  </div>
+                  <div ></div>
+                </td>
+              </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
-</div>
-<div id="pages" class="my-2 flex justify-between">
-  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage -= 1); }}" />
-    {#if curResultsCount > (10 * (curPage + 1))}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage += 1); }}" />{/if}
-</div>
-{:else}
-<Spinner />
+  <div id="pages" class="my-2 flex justify-between">
+    <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage -= 1); }}" />
+      {#if curResultsCount > (10 * (curPage + 1))}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage += 1); }}" />{/if}
+  </div>
+  {:else}
+  <Spinner />
+  {/if}
 {/if}
 
 <style lang="scss">
