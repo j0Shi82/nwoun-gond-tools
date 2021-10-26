@@ -136,7 +136,7 @@ svelteLifecycleOnMount(() => {
       </tags>
     </div>
     <div>
-      <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state">
+      <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">-- Category --</option>
         {#each categories as cat}
           <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
