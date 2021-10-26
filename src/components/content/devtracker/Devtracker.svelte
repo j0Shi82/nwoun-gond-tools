@@ -87,9 +87,9 @@ async function searchReload(resetPage = false) {
 }
 
 $: {
-  if (spinner !== null && !loading && !finished) {
+  if (spinner !== null) {
     const spinnerObserver = getInfiniteScrollingObserver(() => {
-      if (!loading && !finished) {
+      if (!loading) {
         curPage += 1;
         getDevPosts();
       }

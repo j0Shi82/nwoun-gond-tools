@@ -104,9 +104,9 @@ $: {
 
 // rercreate observer every time the sponner gets updated
 $: {
-  if (spinner !== null && !loading && !finished) {
+  if (spinner !== null) {
     const spinnerObserver = getInfiniteScrollingObserver(() => {
-      if (!loading && !finished) {
+      if (!loading) {
         curPage += 1;
       }
     });
