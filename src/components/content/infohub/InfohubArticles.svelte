@@ -6,6 +6,7 @@ import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { infohubFirstloadError } from 'utils/imports/store';
+import { buildQueryStrings } from 'utils/imports/helpers';
 import { InfohubSourceModal, Spinner, StandardError } from 'utils/imports/components';
 
 import format from 'date-fns/format';
@@ -68,11 +69,15 @@ const getData = (page) => {
   });
 };
 
-function buildQs() {
-  const params = [];
-  if (tags) params.push(`tags=${tags}`);
-  if (types.split(',').length < 5) params.push(`types=${types}`);
-  return params.length ? `?${params.join('&')}` : '';
+function pushRoute() {
+  routerLocalizedPush('infohub', buildQueryStrings([
+    {
+      element: tags, type: 'value', comp: tags, name: 'tags',
+    },
+    {
+      element: types, type: 'value', comp: types.split(',').length < 5, name: 'types',
+    },
+  ]));
 }
 
 // reset curPage whenever tags or types change
@@ -87,14 +92,14 @@ $: {
       getData(1);
     }
   }
-  routerLocalizedPush('infohub', buildQs());
+  pushRoute();
 }
 
 // when params change, fetch data again
 $: {
   if (!requestBlock) {
     getData(curPage);
-    routerLocalizedPush('infohub', buildQs());
+    pushRoute();
   }
 }
 

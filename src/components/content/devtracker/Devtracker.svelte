@@ -8,6 +8,7 @@ import {
   axios, routerLocalizedPush,
 } from 'utils/imports/core';
 import { apiServer } from 'utils/imports/config';
+import { buildQueryStrings } from 'utils/imports/helpers';
 
 const qs = new URLSearchParams($currentRouteQuerystring);
 let apiData = [];
@@ -23,13 +24,6 @@ let curDev = qs.has('dev') ? parseInt(qs.get('dev'), 10) : '';
 let curID = qs.has('discussion_id') ? qs.get('discussion_id') : '0';
 let curPostCount = 500;
 
-function buildQs() {
-  const params = [];
-  if (curDev !== '') params.push(`dev=${curDev}`);
-  if (curID !== '0') params.push(`discussion_id=${curID}`);
-  return params.length ? `?${params.join('&')}` : '';
-}
-
 $: {
   curPostCount = 500;
   if (curDev !== '' && devData.length) curPostCount = devData.filter((dev) => dev.dev_id === curDev)[0].post_count;
@@ -39,7 +33,14 @@ $: {
 let requestUri = `${apiServer}/v1/devtracker/list?page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
 $: {
   requestUri = `${apiServer}/v1/devtracker/list?page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
-  routerLocalizedPush('devtracker', buildQs());
+  routerLocalizedPush('devtracker', buildQueryStrings([
+    {
+      element: curDev, type: 'value', comp: curDev !== '', name: 'dev',
+    },
+    {
+      element: curID, type: 'value', comp: curID !== '0', name: 'discussion_id',
+    },
+  ]));
 }
 const avatarData = $devtrackerAvatarList;
 

@@ -12,7 +12,7 @@ import {
   axios, localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { currentRouteQuerystring } from 'utils/imports/store';
-import { dateFormatRelative } from 'utils/imports/helpers';
+import { dateFormatRelative, buildQueryStrings } from 'utils/imports/helpers';
 import { apiServer } from 'utils/imports/config';
 import { getAuctionChart } from 'utils/imports/plugins';
 
@@ -63,17 +63,17 @@ function toggle(itemDef) {
   }
 }
 
-function buildQs() {
-  const params = [];
-  if (searchElement.innerText.length > 2) params.push(`s=${searchElement.innerText}`);
-  if (catElement.value !== '') params.push(`cat=${catElement.value}`);
-  return params.length ? `?${params.join('&')}` : '';
-}
-
 function searchChange(page = 0) {
   if (openItemDef !== null) toggle(openItemDef);
   curPage = page;
-  routerLocalizedPush('auction', buildQs());
+  routerLocalizedPush('auction', buildQueryStrings([
+    {
+      element: searchElement, type: 'innerText', comp: searchElement.innerText.length > 2, name: 's',
+    },
+    {
+      element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
+    },
+  ]));
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
       && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),
