@@ -6,7 +6,10 @@ import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Spinner, Icon, Button } from 'utils/imports/components';
-import { axios, localize } from 'utils/imports/core';
+import {
+  axios, localize, routerPush, getLocalizedRoute,
+} from 'utils/imports/core';
+import { currentRouteQuerystring } from 'utils/imports/store';
 import { dateFormatRelative } from 'utils/imports/helpers';
 import { apiServer } from 'utils/imports/config';
 
@@ -69,6 +72,7 @@ Chart.register(
 
 import 'assets/style/tagify.scss';
 
+const qs = new URLSearchParams($currentRouteQuerystring);
 let loading = true;
 let error = false;
 let itemData = [];
@@ -79,7 +83,7 @@ let catElement = null;
 let categories = [];
 let openItemDef = null;
 let curPage = 0;
-const curResultsCount = 21;
+let curResultsCount = 0;
 const charts = {};
 const chartData = {};
 
@@ -210,21 +214,32 @@ function toggle(itemDef) {
         curConfig.data.datasets[1].data = detailData.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgCount }));
         charts[openItemDef] = new Chart(document.getElementById(`Chart_${openItemDef}`), curConfig);
         charts[openItemDef].resize();
-      }).catch((e) => {
-        console.log(e);
+      }).catch(() => {
         chartData[itemDef] = false;
       });
     }
   }
 }
 
+function buildQs() {
+  const params = [];
+  if (searchElement.innerText.length > 2) params.push(`s=${searchElement.innerText}`);
+  if (catElement.value !== '') params.push(`cat=${catElement.value}`);
+  return params.length ? `?${params.join('&')}` : '';
+}
+
 function searchChange(page = 0) {
   if (openItemDef !== null) toggle(openItemDef);
   curPage = page;
+  routerPush(getLocalizedRoute('auction') + buildQs());
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
       && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),
   ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
+  curResultsCount = itemData.filter(
+    (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
+      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),
+  ).length;
 
   searchText = searchElement.innerText;
 }
@@ -234,10 +249,6 @@ function searchReset() {
   searchElement.innerText = '';
   searchText = searchElement.innerText;
   searchChange();
-}
-
-$: {
-  if (searchElement && catElement) searchChange(curPage);
 }
 
 function getItemData() {
@@ -252,8 +263,11 @@ function getItemData() {
         });
         return aggr;
       }, []);
-      categories.sort();
-      filteredData = itemData.filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
+      filteredData = itemData.filter(
+        (el) => (qs.get('s') === null || RegExp(qs.get('s'), 'i').test(el.ItemName))
+      && (qs.get('cat') === null || (el.Categories && el.Categories.includes(qs.get('cat')))),
+      ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
+      curResultsCount = itemData.length;
     })
     .catch(() => {
       error = true;
@@ -272,7 +286,7 @@ svelteLifecycleOnMount(() => {
   <div id="search" class="auction-tagify flex flex-grow mr-2">
     <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
     <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
-      <span contenteditable="" bind:this={searchElement} on:input={() => searchChange(0) } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false"></span>
+      <span contenteditable="" bind:this={searchElement} on:input={() => searchChange(0) } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
       <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={searchText.length < 3}>
         <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
       </div>
@@ -282,7 +296,7 @@ svelteLifecycleOnMount(() => {
     <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state">
       <option value="">-- Category --</option>
       {#each categories as cat}
-        <option>{cat}</option>
+        <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
       {/each}
     </select>
   </div>
@@ -356,8 +370,8 @@ svelteLifecycleOnMount(() => {
   </div>
 </div>
 <div id="pages" class="my-2 flex justify-between">
-  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); curPage -= 1; }}" />
-    {#if curResultsCount > 20}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); curPage += 1; }}" />{/if}
+  <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage -= 1); }}" />
+    {#if curResultsCount > (10 * (curPage + 1))}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage += 1); }}" />{/if}
 </div>
 {:else}
 <Spinner />
@@ -404,7 +418,9 @@ td {
   &.truncate {
     max-width: calc(85vw - 125px);
 
-    @apply sm:max-w-none;
+    @screen md {
+      max-width: calc(85vw - 125px - 80px - 235px);
+    }
   }
 
   &.item-price {
@@ -417,6 +433,12 @@ td {
     width: 80px;
     min-width: 80px;
     max-width: 80px;
+  }
+
+  &.item-date {
+    width: 235px;
+    min-width: 235px;
+    max-width: 235px;
   }
 }
 
