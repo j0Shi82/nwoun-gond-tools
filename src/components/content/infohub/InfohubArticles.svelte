@@ -1,12 +1,11 @@
 <script>
 import {
-  localize, axios, routerLocalizedPush,
+  localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { svelteGetContext } from 'utils/imports/svelte';
-import { apiServer } from 'utils/imports/config';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { infohubFirstloadError } from 'utils/imports/store';
-import { buildQueryStrings } from 'utils/imports/helpers';
+import { buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
 import { InfohubSourceModal, Spinner, StandardError } from 'utils/imports/components';
 
 import format from 'date-fns/format';
@@ -17,13 +16,6 @@ export let types = '';
 export let tags;
 export let requestBlock = true;
 
-let loading = false;
-let firstLoading = true;
-let finished = false;
-let loadError = false;
-let allData = [];
-let spinner = null;
-let curPage = 1;
 const sectionIcons = infohubSections.reduce((aggr, cur) => {
   // eslint-disable-next-line no-param-reassign
   aggr[cur.id] = cur.icon;
@@ -34,14 +26,21 @@ const showModal = () => {
   modalOpen(InfohubSourceModal, {}, 'infohub.addSource');
 };
 
-// main data fetching function, pushes to data if page > 2 and replaces if page === 1
+let loading = false;
+let firstLoading = true;
+let finished = false;
+let loadError = false;
+let allData = [];
+let spinner = null;
+let curPage = 1;
+
 const getData = (page) => {
   if (loading || finished) return;
   infohubFirstloadError.set(false);
   loadError = false;
   loading = true;
   if (page === 1) firstLoading = true;
-  axios.get(`${apiServer}/v1/articles/all?limit=100&page=${page}&tags=${tags}&types=${types}`).then((response) => {
+  makeApiCall({ type: 'articles/all', params: { page, types, tags }, returnData: false }).then((response) => {
     const newData = response.data.map((el) => {
       const logos = [];
       el.site.split(',').forEach((site) => {

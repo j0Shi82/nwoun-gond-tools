@@ -1,26 +1,25 @@
 <script>
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-import { axios, animateScroll, localize } from 'utils/imports/core';
+import { animateScroll, localize } from 'utils/imports/core';
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Tagify } from 'utils/imports/plugins';
 import { InfohubArticles, Icon } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
-import { apiServer } from 'utils/imports/config';
+import { makeApiCall } from 'utils/imports/helpers';
 import { infohubFirstloadError, currentRouteQuerystring } from 'utils/imports/store';
 
 import 'assets/style/infohub.scss';
 import 'assets/style/tagify.scss';
 
-let tags = [];
-let tagList = '';
-let tagify = null;
-let tagsLoaded = false;
-
 const qs = new URLSearchParams($currentRouteQuerystring);
 const articleSections = infohubSections.filter((el) => el.type === 'articles');
 const sectionStates = articleSections.map((el) => !qs.has('types') || (qs.has('types') && qs.get('types').split(',').includes(el.id)));
 
+let tags = [];
+let tagList = '';
+let tagify = null;
+let tagsLoaded = false;
 $: types = sectionStates.map((el, i) => (el ? articleSections[i].id : false)).filter((el) => el !== false).join(',');
 
 const handleSectionStates = (index) => {
@@ -30,15 +29,16 @@ const handleSectionStates = (index) => {
 const searchIcon = infohubSections.filter((el) => el.type === 'filter')[0].icon;
 
 function getTags() {
-  axios.get(`${apiServer}/v1/articles/discussiontags`).then((response) => {
-    tags = response.data;
-    if (tagify !== null) {
-      tagify.settings.whitelist.splice(0, tags.map((el) => el.term).length, ...tags.map((el) => el.term));
-      if (qs.has('tags')) {
-        tagify.addTags(tags.filter((el) => qs.get('tags').split(',').includes(el.id)).map((el) => el.term));
+  makeApiCall({ type: 'articles/dicussiontags', returnData: false })
+    .then((response) => {
+      tags = response.data;
+      if (tagify !== null) {
+        tagify.settings.whitelist.splice(0, tags.map((el) => el.term).length, ...tags.map((el) => el.term));
+        if (qs.has('tags')) {
+          tagify.addTags(tags.filter((el) => qs.get('tags').split(',').includes(el.id)).map((el) => el.term));
+        }
       }
-    }
-  })
+    })
     .catch(() => {
       infohubFirstloadError.set(true);
     })

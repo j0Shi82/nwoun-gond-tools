@@ -9,16 +9,17 @@ import {
   Spinner, Icon, Button, StandardError,
 } from 'utils/imports/components';
 import {
-  axios, localize, routerLocalizedPush,
+  localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { currentRouteQuerystring } from 'utils/imports/store';
-import { dateFormatRelative, buildQueryStrings } from 'utils/imports/helpers';
-import { apiServer } from 'utils/imports/config';
+import { dateFormatRelative, buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
 import { getAuctionChart } from 'utils/imports/plugins';
 
 import 'assets/style/tagify.scss';
 
 const qs = new URLSearchParams($currentRouteQuerystring);
+const charts = {};
+const chartData = {};
 let loading = true;
 let error = false;
 let itemData = [];
@@ -30,12 +31,10 @@ let categories = [];
 let openItemDef = null;
 let curPage = 0;
 let curResultsCount = 0;
-const charts = {};
-const chartData = {};
 
 function getDetailData(itemDef) {
   if (chartData[itemDef]) return Promise.resolve({ data: chartData[itemDef] });
-  return axios.get(`${apiServer}/v1/auctions/itemdetails?item_def=${itemDef}&server=GLOBAL`);
+  return makeApiCall({ type: 'auctions/itemdetails', params: { itemDef }, returnData: false });
 }
 
 function toggle(itemDef) {
@@ -55,8 +54,7 @@ function toggle(itemDef) {
         chartData[itemDef] = detailData;
         charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData);
         charts[openItemDef].resize();
-      }).catch((e) => {
-        console.log(e);
+      }).catch(() => {
         chartData[itemDef] = false;
       });
     }
@@ -95,7 +93,7 @@ function searchReset() {
 
 function getItemData() {
   loading = true;
-  axios.get(`${apiServer}/v1/auctions/items`)
+  makeApiCall({ type: 'auctions/items', returnData: false })
     .then((response) => {
       itemData = response.data;
       categories = itemData.reduce((aggr, cur) => {
