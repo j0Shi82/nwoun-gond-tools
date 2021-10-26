@@ -5,7 +5,7 @@ import {
 import { svelteGetContext } from 'utils/imports/svelte';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { infohubFirstloadError } from 'utils/imports/store';
-import { buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
+import { buildQueryStrings, makeApiCall, getInfiniteScrollingObserver } from 'utils/imports/helpers';
 import { InfohubSourceModal, Spinner, StandardError } from 'utils/imports/components';
 
 import format from 'date-fns/format';
@@ -102,18 +102,14 @@ $: {
   }
 }
 
-const getObserver = () => new IntersectionObserver((entries) => {
-  if (entries[0].isIntersecting && !loading && !finished) {
-    curPage += 1;
-  }
-}, {
-  rootMargin: '500px',
-});
-
 // rercreate observer every time the sponner gets updated
 $: {
   if (spinner !== null && !loading && !finished) {
-    const spinnerObserver = getObserver();
+    const spinnerObserver = getInfiniteScrollingObserver(() => {
+      if (!loading && !finished) {
+        curPage += 1;
+      }
+    });
     spinnerObserver.observe(spinner);
   }
 }

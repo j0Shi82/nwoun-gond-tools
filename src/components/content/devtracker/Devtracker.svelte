@@ -8,7 +8,7 @@ import {
   axios, routerLocalizedPush,
 } from 'utils/imports/core';
 import { apiServer } from 'utils/imports/config';
-import { buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
+import { buildQueryStrings, makeApiCall, getInfiniteScrollingObserver } from 'utils/imports/helpers';
 
 const qs = new URLSearchParams($currentRouteQuerystring);
 const avatarData = $devtrackerAvatarList;
@@ -43,7 +43,7 @@ function getDevPosts() {
     .then((response) => {
       const newData = response.data;
 
-      if (newData.length < 10) finished = true;
+      if (newData.length < 20) finished = true;
 
       newData
         .map((el) => el.dev_id)
@@ -86,19 +86,14 @@ async function searchReload(resetPage = false) {
   getDevPosts();
 }
 
-const getObserver = () => new IntersectionObserver((entries) => {
-  if (entries[0].isIntersecting && !loading && !finished) {
-    curPage += 1;
-    getDevPosts();
-  }
-}, {
-  rootMargin: '500px',
-});
-
-// rercreate observer every time the sponner gets updated
 $: {
   if (spinner !== null && !loading && !finished) {
-    const spinnerObserver = getObserver();
+    const spinnerObserver = getInfiniteScrollingObserver(() => {
+      if (!loading && !finished) {
+        curPage += 1;
+        getDevPosts();
+      }
+    });
     spinnerObserver.observe(spinner);
   }
 }
