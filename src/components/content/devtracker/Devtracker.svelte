@@ -5,7 +5,7 @@ import {
 } from 'utils/imports/components';
 import { devtrackerAvatarList, currentRouteQuerystring } from 'utils/imports/store';
 import {
-  axios, routerPush, getLocalizedRoute,
+  axios, routerLocalizedPush,
 } from 'utils/imports/core';
 import { apiServer } from 'utils/imports/config';
 
@@ -39,7 +39,7 @@ $: {
 let requestUri = `${apiServer}/v1/devtracker/list?page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
 $: {
   requestUri = `${apiServer}/v1/devtracker/list?page=${curPage}&dev=${curDev}&discussion_id=${curID}`;
-  routerPush(getLocalizedRoute('devtracker') + buildQs());
+  routerLocalizedPush('devtracker', buildQs());
 }
 const avatarData = $devtrackerAvatarList;
 

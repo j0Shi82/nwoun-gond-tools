@@ -1,6 +1,6 @@
 <script>
 import {
-  localize, routerPush, getLocalizedRoute, routerActive,
+  localize, routerLocalizedPush, getLocalizedRoute, routerActive,
 } from 'utils/imports/core';
 import { Icon } from 'utils/imports/components';
 
@@ -22,7 +22,7 @@ function linkClick() {
   }
 
   if (linkType === 'internal') {
-    routerPush(getLocalizedRoute(link));
+    routerLocalizedPush(link);
   }
 }
 </script>

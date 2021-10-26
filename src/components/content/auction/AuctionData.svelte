@@ -7,7 +7,7 @@ import faSearch from 'assets/media/fontawesome/search.svg';
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Spinner, Icon, Button } from 'utils/imports/components';
 import {
-  axios, localize, routerPush, getLocalizedRoute,
+  axios, localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { currentRouteQuerystring } from 'utils/imports/store';
 import { dateFormatRelative } from 'utils/imports/helpers';
@@ -231,7 +231,7 @@ function buildQs() {
 function searchChange(page = 0) {
   if (openItemDef !== null) toggle(openItemDef);
   curPage = page;
-  routerPush(getLocalizedRoute('auction') + buildQs());
+  routerLocalizedPush('auction', buildQs());
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
       && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),

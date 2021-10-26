@@ -18,6 +18,8 @@ import setupLocalization from 'locale/i18n';
 import axios from 'axios';
 import * as animateScroll from 'svelte-scrollto';
 
+const routerLocalizedPush = (routeName, queryString = '') => push(getLocalizedRoute(routeName) + queryString);
+
 const instance = axios.create({
   timeout: 5000,
 });
@@ -30,6 +32,7 @@ export {
   routeLoaded as routerOnRouteLoaded,
   active as routerActive,
   push as routerPush,
+  routerLocalizedPush,
   wrap as routeWrapper,
   _ as localize,
   date as formatDate,

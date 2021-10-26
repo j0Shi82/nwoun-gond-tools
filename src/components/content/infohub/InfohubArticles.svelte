@@ -1,6 +1,6 @@
 <script>
 import {
-  localize, axios, routerPush, getLocalizedRoute,
+  localize, axios, routerLocalizedPush,
 } from 'utils/imports/core';
 import { svelteGetContext } from 'utils/imports/svelte';
 import { apiServer } from 'utils/imports/config';
@@ -87,14 +87,14 @@ $: {
       getData(1);
     }
   }
-  routerPush(getLocalizedRoute('infohub') + buildQs());
+  routerLocalizedPush('infohub', buildQs());
 }
 
 // when params change, fetch data again
 $: {
   if (!requestBlock) {
     getData(curPage);
-    routerPush(getLocalizedRoute('infohub') + buildQs());
+    routerLocalizedPush('infohub', buildQs());
   }
 }
 
