@@ -14,63 +14,7 @@ import {
 import { currentRouteQuerystring } from 'utils/imports/store';
 import { dateFormatRelative } from 'utils/imports/helpers';
 import { apiServer } from 'utils/imports/config';
-
-import {
-  Chart,
-  ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  BarController,
-  BubbleController,
-  DoughnutController,
-  LineController,
-  PieController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
-  CategoryScale,
-  LinearScale,
-  LogarithmicScale,
-  RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
-  Legend,
-  Title,
-  Tooltip,
-  SubTitle,
-} from 'chart.js';
-import 'chartjs-adapter-date-fns';
-import { enUS } from 'date-fns/locale';
-
-Chart.register(
-  ArcElement,
-  LineElement,
-  BarElement,
-  PointElement,
-  BarController,
-  BubbleController,
-  DoughnutController,
-  LineController,
-  PieController,
-  PolarAreaController,
-  RadarController,
-  ScatterController,
-  CategoryScale,
-  LinearScale,
-  LogarithmicScale,
-  RadialLinearScale,
-  TimeScale,
-  TimeSeriesScale,
-  Decimation,
-  Filler,
-  Legend,
-  Title,
-  Tooltip,
-  SubTitle,
-);
+import { getAuctionChart } from 'utils/imports/plugins';
 
 import 'assets/style/tagify.scss';
 
@@ -88,108 +32,6 @@ let curPage = 0;
 let curResultsCount = 0;
 const charts = {};
 const chartData = {};
-
-const data = {
-  labels: [],
-  datasets: [
-    {
-      label: 'Price',
-      data: [],
-      borderColor: 'rgb(200, 200, 200)',
-      backgroundColor: 'rgb(200, 200, 200)',
-      yAxisID: 'y',
-    },
-    {
-      label: 'Count',
-      data: [],
-      borderColor: 'rgb(50, 50, 50)',
-      backgroundColor: 'rgb(50, 50, 50)',
-      yAxisID: 'y1',
-    },
-  ],
-};
-
-const config = {
-  type: 'line',
-  data,
-  options: {
-    responsive: false,
-    interaction: {
-      mode: 'index',
-      intersect: false,
-    },
-    stacked: false,
-    plugins: {
-      title: {
-        display: false,
-      },
-      legend: {
-        labels: {
-          color: 'rgb(0,0,0)',
-        },
-      },
-    },
-    scales: {
-      xAxes: {
-        type: 'time',
-        time: {
-          minUnit: 'day',
-        },
-        adapters: {
-          date: {
-            locale: enUS,
-          },
-        },
-        grid: {
-          borderColor: 'rgb(0,0,0)',
-          color: 'rgb(0,0,0)',
-        },
-        ticks: {
-          color: 'rgb(0,0,0)',
-        },
-      },
-      y: {
-        type: 'linear',
-        display: true,
-        position: 'left',
-        grid: {
-          borderColor: 'rgb(0,0,0)',
-          color: 'rgb(0,0,0)',
-        },
-        ticks: {
-          color: 'rgb(200,200,200)',
-          callback(value) {
-            const lookup = [
-              { value: 1, symbol: '' },
-              { value: 1e3, symbol: 'k' },
-              { value: 1e6, symbol: 'M' },
-              { value: 1e9, symbol: 'G' },
-              { value: 1e12, symbol: 'T' },
-              { value: 1e15, symbol: 'P' },
-              { value: 1e18, symbol: 'E' },
-            ];
-            const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-            const item = lookup.slice().reverse().find((f) => value >= f.value);
-            return item ? (value / item.value).toFixed(1).replace(rx, '$1') + item.symbol : '0';
-          },
-        },
-      },
-      y1: {
-        type: 'linear',
-        display: true,
-        position: 'right',
-        grid: {
-          drawOnChartArea: false, // only want the grid lines for one axis to show up
-          borderColor: 'rgb(0,0,0)',
-          color: 'rgb(0,0,0)',
-        },
-        ticks: {
-          color: 'rgb(50,50,50)',
-        },
-      },
-    },
-  },
-};
 
 function getDetailData(itemDef) {
   if (chartData[itemDef]) return Promise.resolve({ data: chartData[itemDef] });
@@ -210,13 +52,11 @@ function toggle(itemDef) {
     openItemDef = itemDef;
     if (typeof charts[openItemDef] === 'undefined') {
       getDetailData(itemDef).then(({ data: detailData }) => {
-        const curConfig = { ...config };
         chartData[itemDef] = detailData;
-        curConfig.data.datasets[0].data = detailData.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgLow }));
-        curConfig.data.datasets[1].data = detailData.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgCount }));
-        charts[openItemDef] = new Chart(document.getElementById(`Chart_${openItemDef}`), curConfig);
+        charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData);
         charts[openItemDef].resize();
-      }).catch(() => {
+      }).catch((e) => {
+        console.log(e);
         chartData[itemDef] = false;
       });
     }
@@ -356,7 +196,7 @@ svelteLifecycleOnMount(() => {
                   {#if chartData[openItemDef] === false}
                   <div class="absolute top-0 left-0 w-full p-2 rounded-md font-bold flex justify-center items-center" style="height: 400px">
                     <Icon data="{faExclamationTriangle}" scale="{2}" class="text-nwoun flex-shrink-0 pr-2"></Icon>
-                    <span class="text-nwoun">{$localize('infohub.errors.catError')}</span>
+                    <span class="text-nwoun">{$localize('errors.catError')}</span>
                   </div>
                   {:else if typeof charts[openItemDef] === 'undefined'}
                     <Spinner style="position: absolute; height: 400px;" />
