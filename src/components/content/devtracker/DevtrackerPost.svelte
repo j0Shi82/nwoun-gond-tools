@@ -1,6 +1,8 @@
 <script>
 import { formatDate, formatTime } from 'utils/imports/core';
-import { Button } from 'utils/imports/components';
+import { Button, Icon } from 'utils/imports/components';
+
+import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 export let avatarSrc = null;
 export let postData;
@@ -17,6 +19,16 @@ function visitForum(data) {
   const href = parseInt(data.comment_id, 10) !== 0 ? `https://forum.arcgames.com/neverwinter/discussion/comment/${data.comment_id}` : `https://forum.arcgames.com/neverwinter/discussion/${data.discussion_id}`;
   window.open(href);
 }
+
+function scrollToTop() {
+  if (window.scrollY > document.querySelector('#header').offsetHeight) {
+    window.scrollTo({
+      behavior: 'smooth',
+      top: document.querySelector('#header').offsetHeight + 1,
+      left: 0,
+    });
+  }
+}
 </script>
 
 <style>
@@ -25,7 +37,10 @@ function visitForum(data) {
   }
 </style>
 
-<div class="flex flex-col md:flex-row items-center md:items-start rounded-md bg-red-700 p-2 my-2 border-2 border-black">
+<div class="flex flex-col md:flex-row items-center md:items-start rounded-md bg-red-700 p-2 my-2 border-2 border-black relative">
+    <div class="absolute top-0 right-0 text-red-700 bg-black cursor-pointer border-b-4 border-l-4 border-red-700" on:click={scrollToTop} style="width:34px; height: 34px; border-bottom-left-radius: 100%;">
+      <Icon data={faChevronUp} class="absolute" style="top: 3px; right:5px;" />
+    </div>
     <div class="w-full md:w-auto flex-none flex md:flex-col md:mr-2">
       <div class="flex-none w-12 h-12 mx-auto rounded-full overflow-hidden border-black border-2">
         <img src="{avatarSrc !== '' ? avatarSrc : 'https://www.arcgames.com/images/account/user.jpg'}" alt="avatar" />
