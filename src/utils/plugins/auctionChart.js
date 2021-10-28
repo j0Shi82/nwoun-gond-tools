@@ -69,7 +69,7 @@ const config = {
           color: 'rgb(0,0,0)',
         },
         ticks: {
-          color: 'rgb(200,200,200)',
+          color: 'rgb(0,0,0)',
           callback(value) {
             const lookup = [
               { value: 1, symbol: '' },
@@ -96,7 +96,7 @@ const config = {
           color: 'rgb(0,0,0)',
         },
         ticks: {
-          color: 'rgb(50,50,50)',
+          color: 'rgb(0,0,0)',
         },
       },
     },

@@ -148,7 +148,7 @@ svelteLifecycleOnMount(() => {
   <div class="flex flex-col">
     <div>
       <div class="align-middle inline-block min-w-full">
-        <div class="shadow overflow-hidden bg-red-700 border-black border-2 rounded-md">
+        <div class="shadow overflow-hidden border-black border-2 rounded-md">
           <table class="min-w-full divide-y divide-black">
             <thead class="bg-red-700">
               <tr>
@@ -166,7 +166,7 @@ svelteLifecycleOnMount(() => {
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-red-700 divide-y divide-black">
+            <tbody class="bg-white divide-y divide-black">
               {#each filteredData as data, i}
               <tr id={data.ItemDef} class="item-row {data.Quality}">
                 <td class="px-1 py-1 truncate item-name">
@@ -234,22 +234,22 @@ svelteLifecycleOnMount(() => {
 
   &.Green,
   &.Uncommon {
-    @apply bg-green-600;
+    @apply bg-green-500;
   }
 
   &.Blue,
   &.Rare {
-    @apply bg-blue-600;
+    @apply bg-blue-500;
   }
 
   &.Purple,
   &.Epic {
-    @apply bg-purple-600;
+    @apply bg-purple-500;
   }
 
   &.Orange,
   &.Legendary {
-    @apply bg-yellow-600;
+    @apply bg-yellow-500;
   }
 
   &.Mythic,
