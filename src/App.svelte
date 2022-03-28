@@ -104,7 +104,7 @@ function scrollToTop() {
 />
 {/if}
 {#if !$isLocalizationLoading}
-<img src="{images.backgroundImage}" id="background" alt="Showing a vmapire" />
+<img src="{images.backgroundImage}" id="background" alt="Showing a vampire" />
 <div id="page-wrapper">
   <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
     <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
