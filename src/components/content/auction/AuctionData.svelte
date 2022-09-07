@@ -27,9 +27,11 @@ let filteredData = [];
 let searchElement = null;
 let searchText = '';
 let catElement = null;
+let qualityElement = null;
 let categories = [];
-let openItemDef = null;
-let curPage = 0;
+let qualities = [];
+let openItemDef = qs.get('open') || null;
+let curPage = parseInt(qs.get('page')) || 0;
 let curResultsCount = 0;
 
 function getDetailData(itemDef) {
@@ -59,6 +61,23 @@ function toggle(itemDef) {
       });
     }
   }
+  routerLocalizedPush('auction', buildQueryStrings([
+    {
+      element: searchElement, type: 'innerText', comp: searchElement.innerText.length > 2, name: 's',
+    },
+    {
+      element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
+    },
+    {
+      element: qualityElement, type: 'attrValue', comp: qualityElement.value !== '', name: 'quality',
+    },
+    {
+      element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
+    },
+    {
+      element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
+    },
+  ]));
 }
 
 function searchChange(page = 0) {
@@ -71,14 +90,25 @@ function searchChange(page = 0) {
     {
       element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
     },
+    {
+      element: qualityElement, type: 'attrValue', comp: qualityElement.value !== '', name: 'quality',
+    },
+    {
+      element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
+    },
+    {
+      element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
+    },
   ]));
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
-      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),
+      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value)))
+      && (qualityElement.value === '' || (el.Quality && el.Quality === qualityElement.value)),
   ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
   curResultsCount = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
-      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value))),
+      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value)))
+      && (qualityElement.value === '' || (el.Quality && el.Quality === qualityElement.value)),
   ).length;
 
   searchText = searchElement.innerText;
@@ -103,9 +133,15 @@ function getItemData() {
         });
         return aggr;
       }, []);
+      qualities = itemData.reduce((aggr, cur) => {
+        if (!cur.Quality) return aggr;
+        if (!aggr.includes(cur.Quality)) aggr.push(cur.Quality);
+        return aggr;
+      }, []);
       filteredData = itemData.filter(
         (el) => (qs.get('s') === null || RegExp(qs.get('s'), 'i').test(el.ItemName))
-      && (qs.get('cat') === null || (el.Categories && el.Categories.includes(qs.get('cat')))),
+      && (qs.get('cat') === null || (el.Categories && el.Categories.includes(qs.get('cat'))))
+      && (qs.get('quality') === null || (el.Quality && el.Quality === qs.get('quality'))),
       ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
       curResultsCount = itemData.length;
     })
@@ -114,6 +150,17 @@ function getItemData() {
     })
     .finally(() => {
       loading = false;
+      if (openItemDef !== null) {
+        if (typeof charts[openItemDef] === 'undefined') {
+          getDetailData(openItemDef).then(({ data: detailData }) => {
+            chartData[openItemDef] = detailData;
+            charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData);
+            charts[openItemDef].resize();
+          }).catch(() => {
+            chartData[openItemDef] = false;
+          });
+        }
+      }
     });
 }
 
@@ -140,6 +187,16 @@ svelteLifecycleOnMount(() => {
         <option value="">-- Category --</option>
         {#each categories as cat}
           <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
+        {/each}
+      </select>
+    </div>
+  </div>
+  <div class="flex justify-between items-center mb-2">
+    <div>
+      <select on:change={() => searchChange(0)} bind:this={qualityElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
+        <option value="">-- Quality --</option>
+        {#each qualities as quality}
+          <option selected={ qs.get('quality') === quality ? 'selected' : ''}>{quality}</option>
         {/each}
       </select>
     </div>
