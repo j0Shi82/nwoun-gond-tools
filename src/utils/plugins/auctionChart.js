@@ -10,6 +10,11 @@ const data = {
       borderColor: 'rgb(200, 200, 200)',
       backgroundColor: 'rgb(200, 200, 200)',
       yAxisID: 'y',
+      trendlineLinear: {
+        colorMin: "rgb(200, 200, 200)",
+        lineStyle: "dotted",
+        width: 2,
+      }
     },
     {
       label: 'Count',
@@ -17,6 +22,11 @@ const data = {
       borderColor: 'rgb(50, 50, 50)',
       backgroundColor: 'rgb(50, 50, 50)',
       yAxisID: 'y1',
+      trendlineLinear: {
+        colorMin: "rgb(50, 50, 50)",
+        lineStyle: "dotted",
+        width: 2,
+      }
     },
   ],
 };

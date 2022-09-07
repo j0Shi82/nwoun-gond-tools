@@ -7,3 +7,4 @@ yarn.lock
 coverage
 *.log
 .yarn/cache
+.yarn/install-state.gz

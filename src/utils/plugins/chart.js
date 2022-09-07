@@ -26,6 +26,7 @@ import {
   // SubTitle,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
+import chartTrendline from 'chartjs-plugin-trendline';
 
 Chart.register(
   // ArcElement,
@@ -53,5 +54,6 @@ Chart.register(
   Tooltip,
   // SubTitle,
 );
+Chart.register(chartTrendline);
 
 export default Chart;
