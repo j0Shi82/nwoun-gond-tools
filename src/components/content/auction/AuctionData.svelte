@@ -54,7 +54,7 @@ function toggle(itemDef) {
     if (typeof charts[openItemDef] === 'undefined') {
       getDetailData(itemDef).then(({ data: detailData }) => {
         chartData[itemDef] = detailData;
-        charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData);
+        charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData.filter((d) => d.Count > 0), itemData.find((el) => el.ItemDef === itemDef).Quality);
         charts[openItemDef].resize();
       }).catch(() => {
         chartData[itemDef] = false;
@@ -154,7 +154,7 @@ function getItemData() {
         if (typeof charts[openItemDef] === 'undefined') {
           getDetailData(openItemDef).then(({ data: detailData }) => {
             chartData[openItemDef] = detailData;
-            charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData);
+            charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData.filter((d) => d.Count > 0), itemData.find((el) => el.ItemDef === openItemDef).Quality);
             charts[openItemDef].resize();
           }).catch(() => {
             chartData[openItemDef] = false;
