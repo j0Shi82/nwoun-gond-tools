@@ -6,7 +6,7 @@ export default ({
 }) => {
   let requestUrl = null;
   const {
-    page, tags, types, curPage, curDev, curID, itemDef,
+    page, tags, types, curPage, curDev, curID, itemDef, start, end,
   } = params;
   switch (type) {
     case 'articles/all':
@@ -28,7 +28,7 @@ export default ({
       requestUrl = `${apiServer}/v1/auctions/itemdetails?item_def=${itemDef}&server=GLOBAL`;
       break;
     case 'auctions/items':
-      requestUrl = `${apiServer}/v1/auctions/items`;
+      requestUrl = `${apiServer}/v1/auctions/items?start=${start}&end=${end}`;
       break;
     default:
       requestUrl = null;

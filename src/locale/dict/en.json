@@ -52,5 +52,11 @@
                 "desc": "Please enter additional info if possible"
             }
         }
+    },
+    "auction": {
+        "search": {
+            "dateStart": "Pick Start Date",
+            "dateEnd": "Pick End Date"
+        }
     }
 }

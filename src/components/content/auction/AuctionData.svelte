@@ -12,8 +12,8 @@ import {
   localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { currentRouteQuerystring } from 'utils/imports/store';
-import { dateFormatRelative, buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
-import { getAuctionChart } from 'utils/imports/plugins';
+import { dateFormat, dateFormatRelative, buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
+import { getAuctionChart, Easepick } from 'utils/imports/plugins';
 
 import 'assets/style/tagify.scss';
 
@@ -28,15 +28,53 @@ let searchElement = null;
 let searchText = '';
 let catElement = null;
 let qualityElement = null;
+let pickerStartElement = null;
+let pickerEndElement = null;
+let pickerStart = null;
+let pickerEnd = null;
+let pickerStartDate = qs.get('start') ? new Date(qs.get('start')) : null;
+let pickerEndDate = qs.get('end') ? new Date(qs.get('end')) : null;
 let categories = [];
 let qualities = [];
 let openItemDef = qs.get('open') || null;
 let curPage = parseInt(qs.get('page')) || 0;
 let curResultsCount = 0;
 
+function updateURLQueryParams() {
+  routerLocalizedPush('auction', buildQueryStrings([
+    {
+      element: searchElement, type: 'innerText', comp: searchElement.innerText.length > 2, name: 's',
+    },
+    {
+      element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
+    },
+    {
+      element: qualityElement, type: 'attrValue', comp: qualityElement.value !== '', name: 'quality',
+    },
+    {
+      element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
+    },
+    {
+      element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
+    },
+    {
+      element: dateFormat(pickerStartDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerStartDate !== null, name: 'start',
+    },
+    {
+      element: dateFormat(pickerEndDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerEndDate !== null, name: 'end',
+    },
+  ]));
+}
+
 function getDetailData(itemDef) {
   if (chartData[itemDef]) return Promise.resolve({ data: chartData[itemDef] });
-  return makeApiCall({ type: 'auctions/itemdetails', params: { itemDef }, returnData: false });
+  return makeApiCall({ 
+    type: 'auctions/itemdetails', 
+    params: { 
+      itemDef
+    }, 
+    returnData: false 
+  });
 }
 
 function toggle(itemDef) {
@@ -54,52 +92,24 @@ function toggle(itemDef) {
     if (typeof charts[openItemDef] === 'undefined') {
       getDetailData(itemDef).then(({ data: detailData }) => {
         chartData[itemDef] = detailData;
-        charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData.filter((d) => d.Count > 0), itemData.find((el) => el.ItemDef === itemDef).Quality);
+        charts[openItemDef] = getAuctionChart(
+          `Chart_${openItemDef}`, 
+          detailData.filter((el) => (pickerStartDate === null || (new Date(el.InsertedDate) >= pickerStartDate))
+            && (pickerEndDate === null || (new Date(el.InsertedDate) <= pickerEndDate))),
+          itemData.find((el) => el.ItemDef === itemDef).Quality);
         charts[openItemDef].resize();
       }).catch(() => {
         chartData[itemDef] = false;
       });
     }
   }
-  routerLocalizedPush('auction', buildQueryStrings([
-    {
-      element: searchElement, type: 'innerText', comp: searchElement.innerText.length > 2, name: 's',
-    },
-    {
-      element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
-    },
-    {
-      element: qualityElement, type: 'attrValue', comp: qualityElement.value !== '', name: 'quality',
-    },
-    {
-      element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
-    },
-    {
-      element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
-    },
-  ]));
+  updateURLQueryParams()
 }
 
 function searchChange(page = 0) {
   if (openItemDef !== null) toggle(openItemDef);
   curPage = page;
-  routerLocalizedPush('auction', buildQueryStrings([
-    {
-      element: searchElement, type: 'innerText', comp: searchElement.innerText.length > 2, name: 's',
-    },
-    {
-      element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
-    },
-    {
-      element: qualityElement, type: 'attrValue', comp: qualityElement.value !== '', name: 'quality',
-    },
-    {
-      element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
-    },
-    {
-      element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
-    },
-  ]));
+  updateURLQueryParams()
   filteredData = itemData.filter(
     (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
       && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value)))
@@ -123,7 +133,14 @@ function searchReset() {
 
 function getItemData() {
   loading = true;
-  makeApiCall({ type: 'auctions/items', returnData: false })
+  makeApiCall({ 
+    type: 'auctions/items', 
+    params: { 
+      start: pickerStartDate ? dateFormat(pickerStartDate, "yyyy-MM-dd") : '1970-01-01', 
+      end: pickerEndDate  ? dateFormat(pickerEndDate, "yyyy-MM-dd") : '2070-01-01'
+    }, 
+    returnData: false 
+  })
     .then((response) => {
       itemData = response.data;
       categories = itemData.reduce((aggr, cur) => {
@@ -144,6 +161,7 @@ function getItemData() {
       && (qs.get('quality') === null || (el.Quality && el.Quality === qs.get('quality'))),
       ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
       curResultsCount = itemData.length;
+      // searchChange(0);
     })
     .catch(() => {
       error = true;
@@ -154,7 +172,11 @@ function getItemData() {
         if (typeof charts[openItemDef] === 'undefined') {
           getDetailData(openItemDef).then(({ data: detailData }) => {
             chartData[openItemDef] = detailData;
-            charts[openItemDef] = getAuctionChart(`Chart_${openItemDef}`, detailData.filter((d) => d.Count > 0), itemData.find((el) => el.ItemDef === openItemDef).Quality);
+            charts[openItemDef] = getAuctionChart(
+              `Chart_${openItemDef}`, 
+              detailData.filter((el) => (pickerStartDate === null || (new Date(el.InsertedDate) >= pickerStartDate))
+                && (pickerEndDate === null || (new Date(el.InsertedDate) <= pickerEndDate))),
+              itemData.find((el) => el.ItemDef === openItemDef).Quality);
             charts[openItemDef].resize();
           }).catch(() => {
             chartData[openItemDef] = false;
@@ -166,6 +188,48 @@ function getItemData() {
 
 svelteLifecycleOnMount(() => {
   getItemData();
+  pickerStart = new Easepick.create({
+    element: pickerStartElement,
+    date: pickerStartDate,
+    css: [
+        "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css"
+    ],
+    zIndex: 10,
+    setup(picker) {
+      picker.on('select', (e) => {
+        const { date } = e.detail;
+        pickerStartDate = date;
+        if (openItemDef !== null) toggle(openItemDef);
+        getItemData()
+      });
+      picker.on('clear', () => {
+        pickerStartDate = null;
+        if (openItemDef !== null) toggle(openItemDef);
+        getItemData()
+      });
+    },
+  })
+  pickerEnd = new Easepick.create({
+    element: pickerEndElement,
+    date: pickerEndDate,
+    css: [
+        "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css"
+    ],
+    zIndex: 10,
+    setup(picker) {
+      picker.on('select', (e) => {
+        const { date } = e.detail;
+        pickerEndDate = date;
+        if (openItemDef !== null) toggle(openItemDef);
+        getItemData()
+      });
+      picker.on('clear', () => {
+        pickerEndDate = null;
+        if (openItemDef !== null) toggle(openItemDef);
+        getItemData()
+      });
+    },
+  })
 });
 </script>
 
@@ -185,13 +249,29 @@ svelteLifecycleOnMount(() => {
     <div>
       <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">-- Category --</option>
-        {#each categories as cat}
+        {#each categories.sort() as cat}
           <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
         {/each}
       </select>
     </div>
   </div>
   <div class="flex justify-between items-center mb-2">
+    <div class="w-full mr-2 relative">
+      <input type="text" bind:this={pickerStartElement} readonly class="w-full border-nwoun bg-transparent cursor-pointer" placeholder="{$localize('auction.search.dateStart')}" />
+      {#if pickerStartDate }
+      <div  on:click="{() => pickerStart.clear()}" class="absolute right-1 top-1 cursor-pointer">
+        <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
+      </div>
+      {/if}
+    </div>
+    <div class="w-full mr-2 relative">
+      <input type="text" bind:this={pickerEndElement} readonly class="w-full border-nwoun bg-transparent cursor-pointer" placeholder="{$localize('auction.search.dateEnd')}" />
+      {#if pickerEndDate }
+      <div on:click="{() => pickerStart.clear()}" on:click="{() => pickerEnd.clear() }" class="absolute right-1 top-1 cursor-pointer">
+        <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
+      </div>
+      {/if}
+    </div>
     <div>
       <select on:change={() => searchChange(0)} bind:this={qualityElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">-- Quality --</option>
