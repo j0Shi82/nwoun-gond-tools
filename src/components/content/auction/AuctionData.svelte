@@ -25,7 +25,6 @@ let error = false;
 let itemData = [];
 let filteredData = [];
 let searchElement = null;
-let searchText = '';
 let catElement = null;
 let qualityElement = null;
 let pickerStartElement = null;
@@ -38,6 +37,9 @@ let categories = [];
 let qualities = [];
 let openItemDef = qs.get('open') || null;
 let curPage = parseInt(qs.get('page')) || 0;
+let curCat = qs.get('cat') || '';
+let curQuality = qs.get('quality') || '';
+let curSearchTerm = qs.get('s') || '';
 let curResultsCount = 0;
 
 function updateURLQueryParams() {
@@ -111,23 +113,21 @@ function searchChange(page = 0) {
   curPage = page;
   updateURLQueryParams()
   filteredData = itemData.filter(
-    (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
-      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value)))
-      && (qualityElement.value === '' || (el.Quality && el.Quality === qualityElement.value)),
+    (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
+      && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+      && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
   ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
   curResultsCount = itemData.filter(
-    (el) => (searchElement.innerText.length < 3 || RegExp(searchElement.innerText, 'i').test(el.ItemName))
-      && (catElement.value === '' || (el.Categories && el.Categories.includes(catElement.value)))
-      && (qualityElement.value === '' || (el.Quality && el.Quality === qualityElement.value)),
+    (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
+      && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+      && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
   ).length;
-
-  searchText = searchElement.innerText;
 }
 
 function searchReset() {
   if (openItemDef !== null) toggle(openItemDef);
   searchElement.innerText = '';
-  searchText = searchElement.innerText;
+  curSearchTerm = searchElement.innerText;
   searchChange();
 }
 
@@ -156,12 +156,15 @@ function getItemData() {
         return aggr;
       }, []);
       filteredData = itemData.filter(
-        (el) => (qs.get('s') === null || RegExp(qs.get('s'), 'i').test(el.ItemName))
-      && (qs.get('cat') === null || (el.Categories && el.Categories.includes(qs.get('cat'))))
-      && (qs.get('quality') === null || (el.Quality && el.Quality === qs.get('quality'))),
+        (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
+          && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+          && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
       ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
-      curResultsCount = itemData.length;
-      // searchChange(0);
+      curResultsCount = itemData.filter(
+        (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
+          && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+          && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
+      ).length;
     })
     .catch(() => {
       error = true;
@@ -240,17 +243,17 @@ svelteLifecycleOnMount(() => {
     <div id="search" class="auction-tagify flex flex-grow mr-2">
       <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
       <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
-        <span contenteditable="" bind:this={searchElement} on:input={() => searchChange(0) } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
-        <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={searchText.length < 3}>
+        <span contenteditable="" bind:this={searchElement} on:input={(e) => { curSearchTerm = e.target.innerText; searchChange(0); } } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
+        <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={curSearchTerm.length < 3}>
           <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
         </div>
       </tags>
     </div>
     <div>
-      <select on:change={() => searchChange(0)} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
+      <select on:change={(e) => { curCat = e.target.value; searchChange(0); }} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">-- Category --</option>
         {#each categories.sort() as cat}
-          <option selected={ qs.get('cat') === cat ? 'selected' : ''}>{cat}</option>
+          <option selected={ curCat === cat ? 'selected' : ''}>{cat}</option>
         {/each}
       </select>
     </div>
@@ -273,10 +276,10 @@ svelteLifecycleOnMount(() => {
       {/if}
     </div>
     <div>
-      <select on:change={() => searchChange(0)} bind:this={qualityElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
+      <select on:change={(e) => { curQuality = e.target.value; searchChange(0); }} bind:this={qualityElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">-- Quality --</option>
         {#each qualities as quality}
-          <option selected={ qs.get('quality') === quality ? 'selected' : ''}>{quality}</option>
+          <option selected={ curQuality === quality ? 'selected' : ''}>{quality}</option>
         {/each}
       </select>
     </div>
