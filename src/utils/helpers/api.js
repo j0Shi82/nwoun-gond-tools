@@ -30,6 +30,9 @@ export default ({
     case 'auctions/items':
       requestUrl = `${apiServer}/v1/auctions/items?start=${start}&end=${end}`;
       break;
+      case 'auctions/engine':
+        requestUrl = `${apiServer}/v1/auctions/engine`;
+        break;
     default:
       requestUrl = null;
   }

@@ -1,6 +1,6 @@
 <script>
 import {
-  faGem, faTimesCircle, faPlus, faMinus, faExclamationTriangle,
+  faGem, faTimesCircle, faPlus, faMinus, faExclamationTriangle, faCircleCheck, faBan,
 } from '@fortawesome/free-solid-svg-icons';
 import faSearch from 'assets/media/fontawesome/search.svg';
 
@@ -41,6 +41,7 @@ let curCat = qs.get('cat') || '';
 let curQuality = qs.get('quality') || '';
 let curSearchTerm = qs.get('s') || '';
 let curResultsCount = 0;
+let crawlEngineData = null;
 
 function updateURLQueryParams() {
   routerLocalizedPush('auction', buildQueryStrings([
@@ -189,7 +190,7 @@ function getItemData() {
     });
 }
 
-svelteLifecycleOnMount(() => {
+svelteLifecycleOnMount(async () => {
   getItemData();
   pickerStart = new Easepick.create({
     element: pickerStartElement,
@@ -233,12 +234,48 @@ svelteLifecycleOnMount(() => {
       });
     },
   })
+  crawlEngineData = await makeApiCall({ 
+    type: 'auctions/engine', 
+    returnData: true
+  });
 });
 </script>
 
 {#if error}
   <StandardError />
 {:else}
+  {#if crawlEngineData}
+  <div class="mb-2">
+    {#if crawlEngineData.IsActive}
+    <div class="p-2 border-2 border-green-700 rounded-lg">
+      <div class="flex items-center justify-center">
+        <Icon data="{faCircleCheck}" scale="{1}" class="text-green-700 mr-2"></Icon>
+        <div>The crawl engine is up and running, updating <span class="font-bold">{ parseInt(crawlEngineData.ItemsPerDay) }</span> of <span class="font-bold">{ parseInt(crawlEngineData.TotalItems) }</span> items ({(parseInt(crawlEngineData.ItemsPerDay)/parseInt(crawlEngineData.TotalItems)*100).toFixed(2)}%) per day.</div>
+      </div>
+      <div class="text-center font-bold text-lg text-nwoun underline">
+        <a href="https://www.patreon.com/nwoun" target="_blank">HELP US IMPROVING THIS NUMBER!</a>
+      </div>
+    </div>
+    {:else}
+    <div class="p-2 border-2 border-red-700 rounded-lg">
+      <div class="flex items-center justify-center">
+        <Icon data="{faBan}" scale="{1}" class="text-red-700 mr-2"></Icon>
+        <div>The crawl engine is offline, but has updated <span class="font-bold">{ parseInt(crawlEngineData.ItemsPerDay) }</span> of <span class="font-bold">{ parseInt(crawlEngineData.TotalItems) }</span> items ({(parseInt(crawlEngineData.ItemsPerDay)/parseInt(crawlEngineData.TotalItems)*100).toFixed(2)}%) in the last 24 hours.</div>
+      </div>
+      <div class="text-center font-bold text-lg text-nwoun underline">
+        <a href="https://www.patreon.com/nwoun" target="_blank">HELP US RUNNING THE ENGINE MORE HOURS PER DAY!</a>
+      </div>
+    </div>
+    {/if}
+  </div>
+  {:else}
+  <div class="mb-2 p-2 border-2 border-gray-700 rounded-lg">
+    <div class="text-center">Fetching crawl engine stats...</div>
+    <div class="text-center font-bold text-lg text-nwoun underline">
+      <a href="https://www.patreon.com/nwoun" target="_blank">HELP US RUNNING THE ENGINE!</a>
+    </div>
+  </div>
+  {/if}
   <div class="flex justify-between items-center mb-2">
     <div id="search" class="auction-tagify flex flex-grow mr-2">
       <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
