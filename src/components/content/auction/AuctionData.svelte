@@ -40,7 +40,6 @@ let curCat = qs.get('cat') || '';
 let curQuality = qs.get('quality') || '';
 let curSearchTerm = qs.get('s') || '';
 let curResultsCount = 0;
-let crawlEngineData = null;
 
 function updateURLQueryParams() {
   routerLocalizedPush('auction', buildQueryStrings([
@@ -228,10 +227,6 @@ svelteLifecycleOnMount(async () => {
       });
     },
   })
-  crawlEngineData = await makeApiCall({ 
-    type: 'auctions/engine', 
-    returnData: true
-  });
 });
 </script>
 
