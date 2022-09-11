@@ -5,7 +5,7 @@ module.exports = {
   plugins: [
     customForms,
   ],
-  purge: [
+  content: [
     './src/**/*.svelte',
   ],
   theme: {
