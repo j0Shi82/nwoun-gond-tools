@@ -55,8 +55,48 @@
     },
     "auction": {
         "search": {
+            "a11y": {
+                "placeholder": "Search"
+            },
             "dateStart": "Pick Start Date",
-            "dateEnd": "Pick End Date"
+            "dateEnd": "Pick End Date",
+            "categorySelect": "-- Category --",
+            "qualitySelect": "-- Quality --",
+            "qualities": {
+                "White": "Common",
+                "Green": "Uncommon",
+                "Blue": "Rare",
+                "Purple": "Epic",
+                "Legendary": "Legendary",
+                "Mythic": "Mythic",
+                "Grey": "Trash"
+            },
+            "table": {
+                "header": {
+                    "item": "ITEM",
+                    "pirce": "PRICE",
+                    "count": "COUNT",
+                    "updated": "UPDATED"
+                }
+            },
+            "buttons": {
+                "next": "Next",
+                "prev": "Prev"
+            }
+        },
+        "engine": {
+            "up": {
+                "data": "The crawl engine is up and running, updating <span class=\"font-bold\">{itemsPerDay}</span> of <span class=\"font-bold\">{totalItems}</span> items ({percentage}%) per day.",
+                "help": "HELP US IMPROVING THIS NUMBER!"
+            },
+            "down": {
+                "data": "The crawl engine is offline, but has updated <span class=\"font-bold\">{itemsPerDay}</span> of <span class=\"font-bold\">{totalItems}</span> items ({percentage}%) in the last 24 hours.",
+                "help": "HELP US RUNNING THE ENGINE MORE HOURS PER DAY!"
+            },
+            "loading": {
+                "data": "Fetching crawl engine stats...",
+                "help": "HELP US RUNNING THE ENGINE!"
+            }
         }
     }
 }

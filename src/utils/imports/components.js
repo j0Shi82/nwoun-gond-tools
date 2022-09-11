@@ -7,6 +7,8 @@ import DevtrackerPost from 'components/content/devtracker/DevtrackerPost.svelte'
 import InfohubArticles from 'components/content/infohub/InfohubArticles.svelte';
 // import InfohubSourceModal from 'components/content/infohub/InfohubSourceModal.svelte';
 
+import AuctionDataEngineInfo from 'components/content/auction/AuctionDataEngineInfo.svelte';
+
 import Button from 'components/ui/Button.svelte';
 import Spinner from 'components/ui/Spinner.svelte';
 import BackgroundOverlay from 'components/ui/BgOverlay.svelte';
@@ -24,6 +26,7 @@ export {
   Modal,
   StandardError,
   InfohubSourceModal,
+  AuctionDataEngineInfo,
   BackgroundOverlay,
   FaIcon,
   FaIcon as FontAwesomeIcon,

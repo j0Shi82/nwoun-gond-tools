@@ -6,7 +6,7 @@ import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {
-  Spinner, Icon, Button, StandardError,
+  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo
 } from 'utils/imports/components';
 import {
   localize, routerLocalizedPush,
@@ -34,7 +34,6 @@ let pickerEnd = null;
 let pickerStartDate = qs.get('start') ? new Date(qs.get('start')) : null;
 let pickerEndDate = qs.get('end') ? new Date(qs.get('end')) : null;
 let categories = [];
-let qualities = [];
 let openItemDef = qs.get('open') || null;
 let curPage = parseInt(qs.get('page')) || 0;
 let curCat = qs.get('cat') || '';
@@ -151,11 +150,6 @@ function getItemData() {
         });
         return aggr;
       }, []);
-      qualities = itemData.reduce((aggr, cur) => {
-        if (!cur.Quality) return aggr;
-        if (!aggr.includes(cur.Quality)) aggr.push(cur.Quality);
-        return aggr;
-      }, []);
       filteredData = itemData.filter(
         (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
           && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
@@ -244,43 +238,12 @@ svelteLifecycleOnMount(async () => {
 {#if error}
   <StandardError />
 {:else}
-  {#if crawlEngineData}
-  <div class="mb-2">
-    {#if crawlEngineData.IsActive}
-    <div class="p-2 border-2 border-green-700 rounded-lg">
-      <div class="flex items-center justify-center">
-        <Icon data="{faCircleCheck}" scale="{1}" class="text-green-700 mr-2"></Icon>
-        <div>The crawl engine is up and running, updating <span class="font-bold">{ parseInt(crawlEngineData.ItemsPerDay) }</span> of <span class="font-bold">{ parseInt(crawlEngineData.TotalItems) }</span> items ({(parseInt(crawlEngineData.ItemsPerDay)/parseInt(crawlEngineData.TotalItems)*100).toFixed(2)}%) per day.</div>
-      </div>
-      <div class="text-center font-bold text-lg text-nwoun underline">
-        <a href="https://www.patreon.com/nwoun" target="_blank">HELP US IMPROVING THIS NUMBER!</a>
-      </div>
-    </div>
-    {:else}
-    <div class="p-2 border-2 border-red-700 rounded-lg">
-      <div class="flex items-center justify-center">
-        <Icon data="{faBan}" scale="{1}" class="text-red-700 mr-2"></Icon>
-        <div>The crawl engine is offline, but has updated <span class="font-bold">{ parseInt(crawlEngineData.ItemsPerDay) }</span> of <span class="font-bold">{ parseInt(crawlEngineData.TotalItems) }</span> items ({(parseInt(crawlEngineData.ItemsPerDay)/parseInt(crawlEngineData.TotalItems)*100).toFixed(2)}%) in the last 24 hours.</div>
-      </div>
-      <div class="text-center font-bold text-lg text-nwoun underline">
-        <a href="https://www.patreon.com/nwoun" target="_blank">HELP US RUNNING THE ENGINE MORE HOURS PER DAY!</a>
-      </div>
-    </div>
-    {/if}
-  </div>
-  {:else}
-  <div class="mb-2 p-2 border-2 border-gray-700 rounded-lg">
-    <div class="text-center">Fetching crawl engine stats...</div>
-    <div class="text-center font-bold text-lg text-nwoun underline">
-      <a href="https://www.patreon.com/nwoun" target="_blank">HELP US RUNNING THE ENGINE!</a>
-    </div>
-  </div>
-  {/if}
+  <AuctionDataEngineInfo />
   <div class="flex justify-between items-center mb-2">
     <div id="search" class="auction-tagify flex flex-grow mr-2">
       <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
       <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
-        <span contenteditable="" bind:this={searchElement} on:input={(e) => { curSearchTerm = e.target.innerText; searchChange(0); } } tabindex="0" data-placeholder="Search" aria-placeholder="Search" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
+        <span contenteditable="" bind:this={searchElement} on:input={(e) => { curSearchTerm = e.target.innerText; searchChange(0); } } tabindex="0" data-placeholder="{ $localize('auction.search.a11y.placeholder') }" aria-placeholder="{ $localize('auction.search.a11y.placeholder') }" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
         <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={curSearchTerm.length < 3}>
           <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
         </div>
@@ -288,9 +251,9 @@ svelteLifecycleOnMount(async () => {
     </div>
     <div>
       <select on:change={(e) => { curCat = e.target.value; searchChange(0); }} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
-        <option value="">-- Category --</option>
+        <option value="">{ $localize('auction.search.categorySelect') }</option>
         {#each categories.sort() as cat}
-          <option selected={ curCat === cat ? 'selected' : ''}>{cat}</option>
+          <option value="{cat}" selected={ curCat === cat ? 'selected' : ''}>{cat}</option>
         {/each}
       </select>
     </div>
@@ -314,10 +277,14 @@ svelteLifecycleOnMount(async () => {
     </div>
     <div>
       <select on:change={(e) => { curQuality = e.target.value; searchChange(0); }} bind:this={qualityElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
-        <option value="">-- Quality --</option>
-        {#each qualities as quality}
-          <option selected={ curQuality === quality ? 'selected' : ''}>{quality}</option>
-        {/each}
+        <option value="">{ $localize('auction.search.qualitySelect') }</option>
+          <option value="Grey" selected={ curQuality === "Grey" ? 'selected' : ''}>{ $localize('auction.search.qualities.Grey') }</option>
+          <option value="White" selected={ curQuality === "White" ? 'selected' : ''}>{ $localize('auction.search.qualities.White') }</option>
+          <option value="Green" selected={ curQuality === "Green" ? 'selected' : ''}>{ $localize('auction.search.qualities.Green') }</option>
+          <option value="Blue" selected={ curQuality === "Blue" ? 'selected' : ''}>{ $localize('auction.search.qualities.Blue') }</option>
+          <option value="Purple" selected={ curQuality === "Purple" ? 'selected' : ''}>{ $localize('auction.search.qualities.Purple') }</option>
+          <option value="Legendary" selected={ curQuality === "Legendary" ? 'selected' : ''}>{ $localize('auction.search.qualities.Legendary') }</option>
+          <option value="Mythic" selected={ curQuality === "Mythic" ? 'selected' : ''}>{ $localize('auction.search.qualities.Mythic') }</option>
       </select>
     </div>
   </div>
@@ -390,8 +357,8 @@ svelteLifecycleOnMount(async () => {
     </div>
   </div>
   <div id="pages" class="my-2 flex justify-between">
-    <Button text="&lt;&lt; Prev" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage -= 1); }}" />
-      {#if curResultsCount > (10 * (curPage + 1))}<Button text="Next &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage += 1); }}" />{/if}
+    <Button text="&lt;&lt; { $localize('auction.search.buttons.prev') }" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage -= 1); }}" />
+      {#if curResultsCount > (10 * (curPage + 1))}<Button text="{ $localize('auction.search.buttons.next') } &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage += 1); }}" />{/if}
   </div>
   {:else}
   <Spinner />
