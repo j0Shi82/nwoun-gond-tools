@@ -8,6 +8,7 @@ import InfohubArticles from 'components/content/infohub/InfohubArticles.svelte';
 // import InfohubSourceModal from 'components/content/infohub/InfohubSourceModal.svelte';
 
 import AuctionDataEngineInfo from 'components/content/auction/AuctionDataEngineInfo.svelte';
+import AuctionDataSearchTerm from 'components/content/auction/AuctionDataSearchTerm.svelte';
 
 import Button from 'components/ui/Button.svelte';
 import Spinner from 'components/ui/Spinner.svelte';
@@ -27,6 +28,7 @@ export {
   StandardError,
   InfohubSourceModal,
   AuctionDataEngineInfo,
+  AuctionDataSearchTerm,
   BackgroundOverlay,
   FaIcon,
   FaIcon as FontAwesomeIcon,

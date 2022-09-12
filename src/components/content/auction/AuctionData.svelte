@@ -6,7 +6,7 @@ import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {
-  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo
+  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo, AuctionDataSearchTerm
 } from 'utils/imports/components';
 import {
   localize, routerLocalizedPush,
@@ -23,7 +23,6 @@ const chartData = {};
 let loading = true;
 let error = false;
 let itemData = [];
-let filteredData = [];
 let searchElement = null;
 let catElement = null;
 let qualityElement = null;
@@ -39,33 +38,44 @@ let curPage = parseInt(qs.get('page')) || 0;
 let curCat = qs.get('cat') || '';
 let curQuality = qs.get('quality') || '';
 let curSearchTerm = qs.get('s') || '';
-let curResultsCount = 0;
 
-function updateURLQueryParams() {
-  routerLocalizedPush('auction', buildQueryStrings([
-    {
-      element: searchElement, type: 'innerText', comp: searchElement.innerText.length > 2, name: 's',
-    },
-    {
-      element: catElement, type: 'attrValue', comp: catElement.value !== '', name: 'cat',
-    },
-    {
-      element: qualityElement, type: 'attrValue', comp: qualityElement.value !== '', name: 'quality',
-    },
-    {
-      element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
-    },
-    {
-      element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
-    },
-    {
-      element: dateFormat(pickerStartDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerStartDate !== null, name: 'start',
-    },
-    {
-      element: dateFormat(pickerEndDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerEndDate !== null, name: 'end',
-    },
-  ]));
-}
+$: filteredData = itemData.filter(
+  (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
+    && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+    && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
+).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
+
+$: curResultsCount = itemData.filter(
+  (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
+    && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+    && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
+).length;
+
+$: queryStringData = [
+  {
+    element: curSearchTerm, type: 'value', comp: curSearchTerm.length > 2, name: 's',
+  },
+  {
+    element: catElement, type: 'attrValue', comp: catElement !== null && catElement.value !== '', name: 'cat',
+  },
+  {
+    element: qualityElement, type: 'attrValue', comp: qualityElement !== null && qualityElement.value !== '', name: 'quality',
+  },
+  {
+    element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
+  },
+  {
+    element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
+  },
+  {
+    element: dateFormat(pickerStartDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerStartDate !== null, name: 'start',
+  },
+  {
+    element: dateFormat(pickerEndDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerEndDate !== null, name: 'end',
+  }
+]
+
+$: routerLocalizedPush('auction', buildQueryStrings(queryStringData));
 
 function getDetailData(itemDef) {
   if (chartData[itemDef]) return Promise.resolve({ data: chartData[itemDef] });
@@ -104,18 +114,11 @@ function toggle(itemDef) {
       });
     }
   }
-  updateURLQueryParams()
 }
 
 function searchChange(page = 0) {
   if (openItemDef !== null) toggle(openItemDef);
   curPage = page;
-  updateURLQueryParams()
-  filteredData = itemData.filter(
-    (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-      && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
-      && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
-  ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
   curResultsCount = itemData.filter(
     (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
       && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
@@ -235,15 +238,7 @@ svelteLifecycleOnMount(async () => {
 {:else}
   <AuctionDataEngineInfo />
   <div class="flex justify-between items-center mb-2">
-    <div id="search" class="auction-tagify flex flex-grow mr-2">
-      <span style="background-image: url({faSearch});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10 mr-1" id="filter"></span>
-      <tags class="tagify tagify--noTags tagify--empty" tabindex="-1" aria-expanded="false">
-        <span contenteditable="" bind:this={searchElement} on:input={(e) => { curSearchTerm = e.target.innerText; searchChange(0); } } tabindex="0" data-placeholder="{ $localize('auction.search.a11y.placeholder') }" aria-placeholder="{ $localize('auction.search.a11y.placeholder') }" class="tagify__input" role="textbox" aria-autocomplete="both" aria-multiline="false">{ qs.get('s') ? qs.get('s') : '' }</span>
-        <div class="cursor-pointer right-1 top-1 absolute" on:click={searchReset} class:invisible={curSearchTerm.length < 3}>
-          <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
-        </div>
-      </tags>
-    </div>
+    <AuctionDataSearchTerm bind:curSearchTerm={curSearchTerm} />
     <div>
       <select on:change={(e) => { curCat = e.target.value; searchChange(0); }} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">{ $localize('auction.search.categorySelect') }</option>
