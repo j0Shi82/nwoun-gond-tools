@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 const sveltePath = path.resolve('node_modules', 'svelte');
 const babelConfig = require('./babel.config');
