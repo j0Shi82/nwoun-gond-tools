@@ -52,7 +52,8 @@
     "webpack-dev-server": "^4.11.0"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack",
+    "build": "env-cmd cross-env NODE_ENV=production webpack",
+    "build:unbranded": "cross-env NODE_ENV=production WHITE_LABEL=true webpack",
     "dev": "env-cmd webpack serve --port 8087",
     "test": "jest --coverage --runInBand",
     "lint": "eslint -c .eslintrc.js --ext .svelte,.js src"
