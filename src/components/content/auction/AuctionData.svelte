@@ -6,7 +6,7 @@ import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {
-  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo, AuctionDataSearchTerm
+  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo, AuctionDataSearchTerm, AuctionDataSearchCatSelect, AuctionDataSearchQualitySelect, AuctionDataSearchDatePicker
 } from 'utils/imports/components';
 import {
   localize, routerLocalizedPush,
@@ -23,33 +23,33 @@ const chartData = {};
 let loading = true;
 let error = false;
 let itemData = [];
-let searchElement = null;
-let catElement = null;
-let qualityElement = null;
-let pickerStartElement = null;
-let pickerEndElement = null;
-let pickerStart = null;
-let pickerEnd = null;
 let pickerStartDate = qs.get('start') ? new Date(qs.get('start')) : null;
 let pickerEndDate = qs.get('end') ? new Date(qs.get('end')) : null;
-let categories = [];
 let openItemDef = qs.get('open') || null;
 let curPage = parseInt(qs.get('page')) || 0;
-let curCat = qs.get('cat') || '';
+let curCategory = qs.get('cat') || '';
 let curQuality = qs.get('quality') || '';
 let curSearchTerm = qs.get('s') || '';
 
 $: filteredData = itemData.filter(
   (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-    && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+    && (curCategory === '' || (el.Categories && el.Categories.includes(curCategory)))
     && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
 ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
 
 $: curResultsCount = itemData.filter(
   (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-    && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
+    && (curCategory === '' || (el.Categories && el.Categories.includes(curCategory)))
     && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
 ).length;
+
+$: categories = itemData.reduce((aggr, cur) => {
+  if (!cur.Categories) return aggr;
+  cur.Categories.forEach((el) => {
+    if (!aggr.includes(el)) aggr.push(el);
+  });
+  return aggr;
+}, []);
 
 $: queryStringData = [
   {
@@ -59,10 +59,10 @@ $: queryStringData = [
     element: curSearchTerm, type: 'value', comp: curSearchTerm.length > 2, name: 's',
   },
   {
-    element: catElement, type: 'attrValue', comp: catElement !== null && catElement.value !== '', name: 'cat',
+    element: curCategory, type: 'value', comp: curCategory !== '', name: 'cat'
   },
   {
-    element: qualityElement, type: 'attrValue', comp: qualityElement !== null && qualityElement.value !== '', name: 'quality',
+    element: curQuality, type: 'value', comp: curQuality !== '', name: 'quality'
   },
   {
     element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
@@ -120,11 +120,6 @@ function toggleChart(itemDef) {
   }
 }
 
-function searchChange(page = 0) {
-  // if (openItemDef !== null) toggleChart(openItemDef);
-  // curPage = page;
-}
-
 function getItemData() {
   loading = true;
   makeApiCall({ 
@@ -137,23 +132,6 @@ function getItemData() {
   })
     .then((response) => {
       itemData = response.data;
-      categories = itemData.reduce((aggr, cur) => {
-        if (!cur.Categories) return aggr;
-        cur.Categories.forEach((el) => {
-          if (!aggr.includes(el)) aggr.push(el);
-        });
-        return aggr;
-      }, []);
-      filteredData = itemData.filter(
-        (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-          && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
-          && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
-      ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
-      curResultsCount = itemData.filter(
-        (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-          && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
-          && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
-      ).length;
     })
     .catch(() => {
       error = true;
@@ -180,48 +158,6 @@ function getItemData() {
 
 svelteLifecycleOnMount(async () => {
   getItemData();
-  pickerStart = new Easepick.create({
-    element: pickerStartElement,
-    date: pickerStartDate,
-    css: [
-        "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css"
-    ],
-    zIndex: 10,
-    setup(picker) {
-      picker.on('select', (e) => {
-        const { date } = e.detail;
-        pickerStartDate = date;
-        if (openItemDef !== null) toggleChart(openItemDef);
-        getItemData()
-      });
-      picker.on('clear', () => {
-        pickerStartDate = null;
-        if (openItemDef !== null) toggleChart(openItemDef);
-        getItemData()
-      });
-    },
-  })
-  pickerEnd = new Easepick.create({
-    element: pickerEndElement,
-    date: pickerEndDate,
-    css: [
-        "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css"
-    ],
-    zIndex: 10,
-    setup(picker) {
-      picker.on('select', (e) => {
-        const { date } = e.detail;
-        pickerEndDate = date;
-        if (openItemDef !== null) toggleChart(openItemDef);
-        getItemData()
-      });
-      picker.on('clear', () => {
-        pickerEndDate = null;
-        if (openItemDef !== null) toggleChart(openItemDef);
-        getItemData()
-      });
-    },
-  })
 });
 </script>
 
@@ -231,44 +167,23 @@ svelteLifecycleOnMount(async () => {
   <AuctionDataEngineInfo />
   <div class="flex justify-between items-center mb-2">
     <AuctionDataSearchTerm bind:curSearchTerm={curSearchTerm} on:change={closeOpenChart} />
-    <div>
-      <select on:change={(e) => { curCat = e.target.value; searchChange(0); }} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
-        <option value="">{ $localize('auction.search.categorySelect') }</option>
-        {#each categories.sort() as cat}
-          <option value="{cat}" selected={ curCat === cat ? 'selected' : ''}>{cat}</option>
-        {/each}
-      </select>
-    </div>
+    <AuctionDataSearchCatSelect bind:curCategory={curCategory} bind:categories={categories} on:change={closeOpenChart} />
   </div>
   <div class="flex justify-between items-center mb-2">
-    <div class="w-full mr-2 relative">
-      <input type="text" bind:this={pickerStartElement} readonly class="w-full border-nwoun bg-transparent cursor-pointer" placeholder="{$localize('auction.search.dateStart')}" />
-      {#if pickerStartDate }
-      <div  on:click="{() => pickerStart.clear()}" class="absolute right-1 top-1 cursor-pointer">
-        <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
-      </div>
-      {/if}
-    </div>
-    <div class="w-full mr-2 relative">
-      <input type="text" bind:this={pickerEndElement} readonly class="w-full border-nwoun bg-transparent cursor-pointer" placeholder="{$localize('auction.search.dateEnd')}" />
-      {#if pickerEndDate }
-      <div on:click="{() => pickerStart.clear()}" on:click="{() => pickerEnd.clear() }" class="absolute right-1 top-1 cursor-pointer">
-        <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
-      </div>
-      {/if}
-    </div>
-    <div>
-      <select on:change={(e) => { curQuality = e.target.value; searchChange(0); }} bind:this={qualityElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
-        <option value="">{ $localize('auction.search.qualitySelect') }</option>
-          <option value="Grey" selected={ curQuality === "Grey" ? 'selected' : ''}>{ $localize('auction.search.qualities.Grey') }</option>
-          <option value="White" selected={ curQuality === "White" ? 'selected' : ''}>{ $localize('auction.search.qualities.White') }</option>
-          <option value="Green" selected={ curQuality === "Green" ? 'selected' : ''}>{ $localize('auction.search.qualities.Green') }</option>
-          <option value="Blue" selected={ curQuality === "Blue" ? 'selected' : ''}>{ $localize('auction.search.qualities.Blue') }</option>
-          <option value="Purple" selected={ curQuality === "Purple" ? 'selected' : ''}>{ $localize('auction.search.qualities.Purple') }</option>
-          <option value="Legendary" selected={ curQuality === "Legendary" ? 'selected' : ''}>{ $localize('auction.search.qualities.Legendary') }</option>
-          <option value="Mythic" selected={ curQuality === "Mythic" ? 'selected' : ''}>{ $localize('auction.search.qualities.Mythic') }</option>
-      </select>
-    </div>
+    <AuctionDataSearchDatePicker bind:pickerStartDate={pickerStartDate} bind:pickerEndDate={pickerEndDate} on:change={
+      (e) => { 
+        const curQs = new URLSearchParams($currentRouteQuerystring)
+        const curQsStartDate = curQs.get('start') ?? null;
+        const curQsEndDate = curQs.get('end') ?? null;
+        const newStartDate = e.detail.start ? dateFormat(e.detail.start, "yyyy-MM-dd") : null;
+        const newEndDate = e.detail.end ? dateFormat(e.detail.end, "yyyy-MM-dd") : null;
+        console.log(curQsEndDate, curQsStartDate, newStartDate, newEndDate)
+        if (curQsEndDate !== newEndDate || curQsStartDate !== newStartDate ) {
+          closeOpenChart(); getItemData(); 
+        }
+      }
+    } />
+    <AuctionDataSearchQualitySelect bind:curQuality={curQuality} on:change={closeOpenChart} />
   </div>
   {#if !loading}
   <div class="flex flex-col">
@@ -339,8 +254,8 @@ svelteLifecycleOnMount(async () => {
     </div>
   </div>
   <div id="pages" class="my-2 flex justify-between">
-    <Button text="&lt;&lt; { $localize('auction.search.buttons.prev') }" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggleChart(openItemDef); searchChange(curPage -= 1); }}" />
-      {#if curResultsCount > (10 * (curPage + 1))}<Button text="{ $localize('auction.search.buttons.next') } &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggleChart(openItemDef); searchChange(curPage += 1); }}" />{/if}
+    <Button text="&lt;&lt; { $localize('auction.search.buttons.prev') }" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { closeOpenChart(); curPage -= 1; }}" />
+      {#if curResultsCount > (10 * (curPage + 1))}<Button text="{ $localize('auction.search.buttons.next') } &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { closeOpenChart(); curPage += 1; }}" />{/if}
   </div>
   {:else}
   <Spinner />
