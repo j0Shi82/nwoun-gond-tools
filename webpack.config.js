@@ -109,6 +109,9 @@ module.exports = {
   mode,
   plugins: [
     new Dotenv(),
+    webpack.DefinePlugin({
+      'process.env.WHITE_LABEL': JSON.stringify(process.env.WHITE_LABEL),
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
