@@ -10,7 +10,8 @@
         "repo": "Source",
         "tracker": "DevTracker",
         "infohub": "Content Hub",
-        "auction": "Auction Data"
+        "auction": "Auction Data",
+        "buy": "Buy me a coffee"
     },
     "header": {
         "subtitle": "Neverwinter's #1 independent news source and community from 2015 - 2019!"

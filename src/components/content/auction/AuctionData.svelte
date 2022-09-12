@@ -2,7 +2,6 @@
 import {
   faGem, faTimesCircle, faPlus, faMinus, faExclamationTriangle, faCircleCheck, faBan,
 } from '@fortawesome/free-solid-svg-icons';
-import faSearch from 'assets/media/fontawesome/search.svg';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {

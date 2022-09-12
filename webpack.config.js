@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
+const Dotenv = require('dotenv-webpack');
 
 const sveltePath = path.resolve('node_modules', 'svelte');
 const babelConfig = require('./babel.config');
@@ -107,13 +108,15 @@ module.exports = {
   },
   mode,
   plugins: [
+    new Dotenv(),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
     new HtmlWebpackPlugin({
-      title: 'Neverwinter Uncensored',
+      title: process.env.WHITE_LABEL ? 'Neverwinter\'s Gond Tools' : 'Neverwinter Uncensored',
       template: './src/index.template.html',
       filename: prod ? '../index.html' : 'index.html',
+      icon: process.env.WHITE_LABEL ? 'favicon-unbranded.png' : 'favicon.ico'
     }),
     new CopyPlugin({
       patterns: [

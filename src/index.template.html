@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
 
-	<link rel='icon' type='image/png' href='favicon.ico'>
+	<link rel='icon' type='image/png' href='<%= htmlWebpackPlugin.options.icon %>'>
 
 	<script> 
 		// generate with npx browserslist-useragent-regexp --ignorePatch --ignoreMinor --allowHigherVersions
@@ -42,7 +42,6 @@
 		<strong>We're sorry but this side doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 	</noscript>
 	<div id="nwoun_outdated" style="display: none; max-width:500px; margin: 0 auto;">
-		<img src="/logo-uncensored-1000.png" width="500" alt="Uncensored Logo" />
 		<p style="text-align: center;">In case you're seeing this there's a decent chance your browser might not be able to properly run this site. Please consider updating or using a different browser.</p>
 	</div>
 </body>

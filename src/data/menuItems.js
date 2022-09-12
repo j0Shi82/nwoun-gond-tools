@@ -1,9 +1,9 @@
 import { faWordpress, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
-  /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle, faGavel,
+  /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle, faGavel, faCoffee
 } from '@fortawesome/free-solid-svg-icons';
 
-export default [
+const branded = [
   {
     type: 'talk',
     id: 'blogLink',
@@ -22,6 +22,18 @@ export default [
   // },
   {
     type: 'talk',
+    id: 'discordLink',
+    textLocaleKey: 'menu.discord',
+    external: true,
+    link: 'https://discord.gg/SJrtYnY',
+    icon: faDiscord,
+  }
+]
+
+export default [
+  ...(process.env.WHITE_LABEL ? [] : branded),
+  {
+    type: 'talk',
     id: 'repoLink',
     textLocaleKey: 'menu.repo',
     external: true,
@@ -30,11 +42,11 @@ export default [
   },
   {
     type: 'talk',
-    id: 'discordLink',
-    textLocaleKey: 'menu.discord',
+    id: 'buyLink',
+    textLocaleKey: 'menu.buy',
     external: true,
-    link: 'https://discord.gg/SJrtYnY',
-    icon: faDiscord,
+    link: 'https://www.buymeacoffee.com/j0Shi',
+    icon: faCoffee,
   },
   {
     type: 'page',
@@ -60,12 +72,14 @@ export default [
     link: 'auction',
     icon: faGavel,
   },
-  {
-    type: 'page',
-    id: 'aboutLink',
-    textLocaleKey: 'menu.about',
-    external: false,
-    link: 'about',
-    icon: faQuestionCircle,
-  },
+  ...(process.env.WHITE_LABEL ? [] : [
+    {
+      type: 'page',
+      id: 'aboutLink',
+      textLocaleKey: 'menu.about',
+      external: false,
+      link: 'about',
+      icon: faQuestionCircle,
+    }
+  ]),
 ];

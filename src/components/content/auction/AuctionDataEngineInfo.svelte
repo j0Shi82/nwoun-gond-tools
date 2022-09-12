@@ -40,7 +40,7 @@ const classes = {
         <div>{@html $localize('auction.engine.up.data', localizeOptions)}</div>
     </div>
     <div class="{classes.div3}">
-        <a href="https://www.patreon.com/nwoun" target="_blank">{ $localize('auction.engine.up.help') }</a>
+        <a href="https://www.patreon.com/nw_gond_tools" target="_blank">{ $localize('auction.engine.up.help') }</a>
     </div>
 </div>
 {:else}
