@@ -1,11 +1,17 @@
 <script>
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import faSearch from 'assets/media/fontawesome/search.svg';
+import { svelteCreateEventDispatcher } from 'utils/imports/svelte';
 import { Icon } from 'utils/imports/components';
 import { localize } from 'utils/imports/core';
 
 export let curSearchTerm = '';
 let searchElement = null
+const dispatch = svelteCreateEventDispatcher();
+
+$: dispatch('change', {
+    value: curSearchTerm
+});
 </script>
 
 <div id="search" class="auction-tagify flex flex-grow mr-2">

@@ -53,6 +53,9 @@ $: curResultsCount = itemData.filter(
 
 $: queryStringData = [
   {
+    element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open'
+  },
+  {
     element: curSearchTerm, type: 'value', comp: curSearchTerm.length > 2, name: 's',
   },
   {
@@ -65,15 +68,16 @@ $: queryStringData = [
     element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
   },
   {
-    element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
-  },
-  {
     element: dateFormat(pickerStartDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerStartDate !== null, name: 'start',
   },
   {
     element: dateFormat(pickerEndDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerEndDate !== null, name: 'end',
   }
 ]
+
+const closeOpenChart = () => {
+  if (openItemDef !== null) toggleChart(openItemDef);
+}
 
 $: routerLocalizedPush('auction', buildQueryStrings(queryStringData));
 
@@ -88,7 +92,7 @@ function getDetailData(itemDef) {
   });
 }
 
-function toggle(itemDef) {
+function toggleChart(itemDef) {
   if (typeof charts[openItemDef] !== 'undefined') {
     charts[openItemDef].destroy();
     charts[openItemDef] = undefined;
@@ -117,20 +121,8 @@ function toggle(itemDef) {
 }
 
 function searchChange(page = 0) {
-  if (openItemDef !== null) toggle(openItemDef);
-  curPage = page;
-  curResultsCount = itemData.filter(
-    (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-      && (curCat === '' || (el.Categories && el.Categories.includes(curCat)))
-      && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
-  ).length;
-}
-
-function searchReset() {
-  if (openItemDef !== null) toggle(openItemDef);
-  searchElement.innerText = '';
-  curSearchTerm = searchElement.innerText;
-  searchChange();
+  // if (openItemDef !== null) toggleChart(openItemDef);
+  // curPage = page;
 }
 
 function getItemData() {
@@ -199,12 +191,12 @@ svelteLifecycleOnMount(async () => {
       picker.on('select', (e) => {
         const { date } = e.detail;
         pickerStartDate = date;
-        if (openItemDef !== null) toggle(openItemDef);
+        if (openItemDef !== null) toggleChart(openItemDef);
         getItemData()
       });
       picker.on('clear', () => {
         pickerStartDate = null;
-        if (openItemDef !== null) toggle(openItemDef);
+        if (openItemDef !== null) toggleChart(openItemDef);
         getItemData()
       });
     },
@@ -220,12 +212,12 @@ svelteLifecycleOnMount(async () => {
       picker.on('select', (e) => {
         const { date } = e.detail;
         pickerEndDate = date;
-        if (openItemDef !== null) toggle(openItemDef);
+        if (openItemDef !== null) toggleChart(openItemDef);
         getItemData()
       });
       picker.on('clear', () => {
         pickerEndDate = null;
-        if (openItemDef !== null) toggle(openItemDef);
+        if (openItemDef !== null) toggleChart(openItemDef);
         getItemData()
       });
     },
@@ -238,7 +230,7 @@ svelteLifecycleOnMount(async () => {
 {:else}
   <AuctionDataEngineInfo />
   <div class="flex justify-between items-center mb-2">
-    <AuctionDataSearchTerm bind:curSearchTerm={curSearchTerm} />
+    <AuctionDataSearchTerm bind:curSearchTerm={curSearchTerm} on:change={closeOpenChart} />
     <div>
       <select on:change={(e) => { curCat = e.target.value; searchChange(0); }} bind:this={catElement} class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" id="grid-state" style="max-width: 160px; width: 160px">
         <option value="">{ $localize('auction.search.categorySelect') }</option>
@@ -304,7 +296,7 @@ svelteLifecycleOnMount(async () => {
               {#each filteredData as data, i}
               <tr id={data.ItemDef} class="item-row {data.Quality}">
                 <td class="px-1 py-1 truncate item-name">
-                  <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggle(data.ItemDef)}>
+                  <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggleChart(data.ItemDef)}>
                     {#if openItemDef === data.ItemDef}
                       <Icon data={faMinus} scale="1.5" class="text-black"></Icon>
                     {:else}
@@ -347,8 +339,8 @@ svelteLifecycleOnMount(async () => {
     </div>
   </div>
   <div id="pages" class="my-2 flex justify-between">
-    <Button text="&lt;&lt; { $localize('auction.search.buttons.prev') }" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage -= 1); }}" />
-      {#if curResultsCount > (10 * (curPage + 1))}<Button text="{ $localize('auction.search.buttons.next') } &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggle(openItemDef); searchChange(curPage += 1); }}" />{/if}
+    <Button text="&lt;&lt; { $localize('auction.search.buttons.prev') }" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" invisible="{curPage < 1}" click="{() => { if (openItemDef !== null) toggleChart(openItemDef); searchChange(curPage -= 1); }}" />
+      {#if curResultsCount > (10 * (curPage + 1))}<Button text="{ $localize('auction.search.buttons.next') } &gt;&gt;" colorClasses="border-black bg-gray-300 bg-opacity-50 text-black" click="{() => { if (openItemDef !== null) toggleChart(openItemDef); searchChange(curPage += 1); }}" />{/if}
   </div>
   {:else}
   <Spinner />
