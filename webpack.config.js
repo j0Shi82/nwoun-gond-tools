@@ -4,7 +4,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 const Dotenv = require('dotenv-webpack');
-const webpack = require('webpack');
 
 const sveltePath = path.resolve('node_modules', 'svelte');
 const babelConfig = require('./babel.config');
@@ -33,7 +32,7 @@ module.exports = {
     modules: ['src', 'node_modules'],
   },
   output: {
-    path: prod ? `${__dirname}/dist/nwoun-hompage-index` : `${__dirname}/dist`,
+    path: prod ? `${__dirname}/dist/page` : `${__dirname}/dist`,
     filename: '[name].[contenthash].js',
     chunkFilename: '[name].[chunkhash].[contenthash].js',
   },
@@ -110,17 +109,14 @@ module.exports = {
   mode,
   plugins: [
     new Dotenv(),
-    new webpack.DefinePlugin({
-      'process.env.WHITE_LABEL': JSON.stringify(process.env.WHITE_LABEL),
-    }),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
     }),
     new HtmlWebpackPlugin({
-      title: process.env.WHITE_LABEL ? 'Neverwinter\'s Gond Tools' : 'Neverwinter Uncensored',
+      title: 'Neverwinter\'s Gond Tools',
       template: './src/index.template.html',
       filename: prod ? '../index.html' : 'index.html',
-      icon: process.env.WHITE_LABEL ? 'favicon-unbranded.png' : 'favicon.ico'
+      icon: 'favicon-unbranded.png'
     }),
     new CopyPlugin({
       patterns: [

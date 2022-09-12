@@ -45,28 +45,24 @@ svelteSetContext('modal', { modalOpen, modalClose });
 
 setupLocalization();
 
-const observer = new IntersectionObserver(((entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      showSmallLogo = false;
-    } else {
-      showSmallLogo = true;
-    }
-  });
-}));
+// const observer = new IntersectionObserver(((entries) => {
+//   entries.forEach((entry) => {
+//     if (entry.isIntersecting) {
+//       showSmallLogo = false;
+//     } else {
+//       showSmallLogo = true;
+//     }
+//   });
+// }));
 
 svelteLifecycleOnMount(() => () => {
-  if (!process.env.WHITE_LABEL) {
-    observer.unobserve(document.querySelector('#header'));
-  }
+  // observer.unobserve(document.querySelector('#header'));
 });
 
 isLocalizationLoading.subscribe(async (value) => {
   if (!value) {
     await svelteTick();
-    if (!process.env.WHITE_LABEL) {
-      observer.observe(document.querySelector('#header'));
-    }
+    // observer.observe(document.querySelector('#header'));
   }
 });
 
@@ -110,12 +106,10 @@ function scrollToTop() {
 {#if !$isLocalizationLoading}
 <img src="{images.backgroundImage}" id="background" alt="Showing a vampire" />
 <div id="page-wrapper">
-  {#if !process.env.WHITE_LABEL}
-  <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
+  <!-- <div id="header" class="flex flex-col lg:flex-row justify-center items-center lg:justify-start p-2">
     <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
     <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">{$localize('header.subtitle')}</div>
-  </div>
-  {/if}
+  </div> -->
   <div id="sticky" class="sticky z-20 top-0 bg-nwoun">
     <div id="mainMenu" class=" flex justify-between w-full h-12 ">
       <div style="{smallLogoStyle.style}" class="{smallLogoStyle.classes}" on:click="{scrollToTop}">

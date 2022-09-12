@@ -4613,13 +4613,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commander@npm:^4.0.0":
-  version: 4.1.1
-  resolution: "commander@npm:4.1.1"
-  checksum: d7b9913ff92cae20cb577a4ac6fcc121bd6223319e54a40f51a14740a681ad5c574fd29a57da478a5f234a6fa6c52cbf0b7c641353e03c648b1ae85ba670b977
-  languageName: node
-  linkType: hard
-
 "commander@npm:^7.0.0":
   version: 7.2.0
   resolution: "commander@npm:7.2.0"
@@ -4844,7 +4837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
+"cross-spawn@npm:^7.0.1, cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
   dependencies:
@@ -5458,18 +5451,6 @@ __metadata:
   version: 2.0.3
   resolution: "entities@npm:2.0.3"
   checksum: 5a7899fcc622e0d76afdeafe4c58a6b40ae3a8ee4772e5825a648c11a2ca324a9a02515386f512e466baac4aeb551f3d3b79eaece5cd98369b9f8601be336b1a
-  languageName: node
-  linkType: hard
-
-"env-cmd@npm:^10.1.0":
-  version: 10.1.0
-  resolution: "env-cmd@npm:10.1.0"
-  dependencies:
-    commander: ^4.0.0
-    cross-spawn: ^7.0.0
-  bin:
-    env-cmd: bin/env-cmd.js
-  checksum: efef55074250f14cfc0b80c98dd98f1f056a80e1f3c7db14097ceefdd2d56c766bbb83b54c22932112707f41b36ce2e923f8015d69e62a75c12d98640b972e75
   languageName: node
   linkType: hard
 
@@ -11331,7 +11312,6 @@ resolve@^1.9.0:
     css-loader: ^6.7.1
     date-fns: ^2.29.2
     dotenv-webpack: ^8.0.1
-    env-cmd: ^10.1.0
     eslint: ^8.23.0
     eslint-config-airbnb-base: ^15.0.0
     eslint-plugin-import: ^2.26.0

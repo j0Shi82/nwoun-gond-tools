@@ -3,35 +3,34 @@ import {
   /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle, faGavel, faCoffee
 } from '@fortawesome/free-solid-svg-icons';
 
-const branded = [
-  {
-    type: 'talk',
-    id: 'blogLink',
-    textLocaleKey: 'menu.blog',
-    external: true,
-    link: 'https://blog.nwo-uncensored.com',
-    icon: faWordpress,
-  },
-  // {
-  //   type: 'talk',
-  //   id: 'forumLink',
-  //   textLocaleKey: 'menu.forum',
-  //   external: true,
-  //   link: 'https://forum.nwo-uncensored.com',
-  //   icon: faEdit,
-  // },
-  {
-    type: 'talk',
-    id: 'discordLink',
-    textLocaleKey: 'menu.discord',
-    external: true,
-    link: 'https://discord.gg/SJrtYnY',
-    icon: faDiscord,
-  }
-]
+// const branded = [
+//   {
+//     type: 'talk',
+//     id: 'blogLink',
+//     textLocaleKey: 'menu.blog',
+//     external: true,
+//     link: 'https://blog.nwo-uncensored.com',
+//     icon: faWordpress,
+//   },
+//   // {
+//   //   type: 'talk',
+//   //   id: 'forumLink',
+//   //   textLocaleKey: 'menu.forum',
+//   //   external: true,
+//   //   link: 'https://forum.nwo-uncensored.com',
+//   //   icon: faEdit,
+//   // },
+//   {
+//     type: 'talk',
+//     id: 'discordLink',
+//     textLocaleKey: 'menu.discord',
+//     external: true,
+//     link: 'https://discord.gg/SJrtYnY',
+//     icon: faDiscord,
+//   }
+// ]
 
 export default [
-  ...(process.env.WHITE_LABEL ? [] : branded),
   {
     type: 'talk',
     id: 'repoLink',
@@ -72,14 +71,12 @@ export default [
     link: 'auction',
     icon: faGavel,
   },
-  ...(process.env.WHITE_LABEL ? [] : [
-    {
-      type: 'page',
-      id: 'aboutLink',
-      textLocaleKey: 'menu.about',
-      external: false,
-      link: 'about',
-      icon: faQuestionCircle,
-    }
-  ]),
+  {
+    type: 'page',
+    id: 'aboutLink',
+    textLocaleKey: 'menu.about',
+    external: false,
+    link: 'about',
+    icon: faQuestionCircle,
+  }
 ];

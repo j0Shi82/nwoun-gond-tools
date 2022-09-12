@@ -1,5 +1,5 @@
 {
-  "description": "nwo-uncensored.com homepage based on Svelte and Tailwind",
+  "description": "gond.tools homepage based on Svelte and Tailwind",
   "version": "1.0.0",
   "license": "GPL-3.0-or-later",
   "authors": [
@@ -21,7 +21,6 @@
     "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "dotenv-webpack": "^8.0.1",
-    "env-cmd": "^10.1.0",
     "eslint": "^8.23.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -52,9 +51,8 @@
     "webpack-dev-server": "^4.11.0"
   },
   "scripts": {
-    "build": "env-cmd cross-env NODE_ENV=production webpack",
-    "build:unbranded": "cross-env NODE_ENV=production WHITE_LABEL=true webpack",
-    "dev": "env-cmd webpack serve --port 8087",
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "webpack serve --port 8087",
     "test": "jest --coverage --runInBand",
     "lint": "eslint -c .eslintrc.js --ext .svelte,.js src"
   },
