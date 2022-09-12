@@ -3,7 +3,6 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { svelteCreateEventDispatcher, svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Icon } from 'utils/imports/components';
 import { localize } from 'utils/imports/core';
-import { currentRouteQuerystring } from 'utils/imports/store';
 import { Easepick } from 'utils/imports/plugins';
 
 export let pickerStartDate;
@@ -18,29 +17,34 @@ const pickerCallbacks = {
   startDateSelect: (e) => { const { date } = e.detail; pickerStartDate = date; },
   endDateSelect: (e) => { const { date } = e.detail; pickerEndDate = date; },
   startDateClear: () => { pickerStartDate = null; },
-  endDateClear: () => { pickerEndDate = null; }
-}
+  endDateClear: () => { pickerEndDate = null; },
+};
 
 const getPickerOptions = (pickerElement, pickerDate, selectCb, clearCb) => ({
   element: pickerElement,
   date: pickerDate,
   css: [
-      "https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css"
+    'https://cdn.jsdelivr.net/npm/@easepick/bundle@1.2.0/dist/index.css',
   ],
   zIndex: 10,
   setup(picker) {
     picker.on('select', selectCb);
     picker.on('clear', clearCb);
-  }
+  },
 });
 
 $: dispatch('change', {
-    start: pickerStartDate,
-    end: pickerEndDate
+  start: pickerStartDate,
+  end: pickerEndDate,
 });
 
 svelteLifecycleOnMount(async () => {
-  pickerStart = new Easepick.create(getPickerOptions(pickerStartElement, pickerStartDate, pickerCallbacks.startDateSelect, pickerCallbacks.startDateClear))
+  pickerStart = new Easepick.create(getPickerOptions(
+    pickerStartElement,
+    pickerStartDate,
+    pickerCallbacks.startDateSelect,
+    pickerCallbacks.startDateClear,
+  ));
   pickerEnd = new Easepick.create(getPickerOptions(pickerEndElement, pickerEndDate, pickerCallbacks.endDateSelect, pickerCallbacks.endDateClear));
 });
 </script>

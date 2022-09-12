@@ -1,6 +1,6 @@
 export default {
   en: {
-    about: '/about',
+    support: '/support',
     devtracker: '/devtracker',
     infohub: '/',
     auction: '/auction',

@@ -113,10 +113,11 @@ module.exports = {
       filename: '[name].[contenthash].css',
     }),
     new HtmlWebpackPlugin({
-      title: 'Neverwinter\'s Gond Tools',
+      title: 'Neverwinter Gond Tools',
       template: './src/index.template.html',
       filename: prod ? '../index.html' : 'index.html',
-      icon: 'favicon-unbranded.png'
+      icon: 'favicon-unbranded.png',
+      baseUrl: process.env.SITE_URL,
     }),
     new CopyPlugin({
       patterns: [

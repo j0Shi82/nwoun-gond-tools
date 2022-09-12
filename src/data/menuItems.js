@@ -1,6 +1,6 @@
-import { faWordpress, faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import {
-  /* faEdit, */faHashtag, faInfoCircle, faQuestionCircle, faGavel, faCoffee
+  /* faEdit, */faHashtag, faInfoCircle, faHeartCirclePlus, faGavel, faCoffee,
 } from '@fortawesome/free-solid-svg-icons';
 
 // const branded = [
@@ -36,16 +36,16 @@ export default [
     id: 'repoLink',
     textLocaleKey: 'menu.repo',
     external: true,
-    link: 'https://github.com/j0Shi82/nwoun-homepage-index',
+    link: 'https://github.com/j0Shi82/nwoun-gond-tools',
     icon: faGithub,
   },
   {
     type: 'talk',
     id: 'buyLink',
     textLocaleKey: 'menu.buy',
-    external: true,
-    link: 'https://www.buymeacoffee.com/j0Shi',
-    icon: faCoffee,
+    external: false,
+    link: 'support',
+    icon: faHeartCirclePlus,
   },
   {
     type: 'page',
@@ -71,12 +71,12 @@ export default [
     link: 'auction',
     icon: faGavel,
   },
-  {
-    type: 'page',
-    id: 'aboutLink',
-    textLocaleKey: 'menu.about',
-    external: false,
-    link: 'about',
-    icon: faQuestionCircle,
-  }
+  // {
+  //   type: 'page',
+  //   id: 'aboutLink',
+  //   textLocaleKey: 'menu.about',
+  //   external: false,
+  //   link: 'about',
+  //   icon: faQuestionCircle,
+  // },
 ];

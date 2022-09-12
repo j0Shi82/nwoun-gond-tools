@@ -1,7 +1,7 @@
 <script>
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
-import { animateScroll, localize } from 'utils/imports/core';
+import { localize } from 'utils/imports/core';
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Tagify } from 'utils/imports/plugins';
 import { InfohubArticles, Icon } from 'utils/imports/components';
@@ -20,10 +20,12 @@ let tags = [];
 let tagList = '';
 let tagify = null;
 let tagsLoaded = false;
+let loading = true;
 $: types = sectionStates.map((el, i) => (el ? articleSections[i].id : false)).filter((el) => el !== false).join(',');
 
 const handleSectionStates = (index) => {
   sectionStates[index] = !sectionStates[index];
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
 };
 
 const searchIcon = infohubSections.filter((el) => el.type === 'filter')[0].icon;
@@ -106,6 +108,7 @@ svelteLifecycleOnMount(() => {
           requestBlock="{!tagsLoaded}"
           tags="{tagList}"
           types="{types}"
+          on:loading={(e) => { loading = e.detail.state; }}
         />
       {:else}
         <div class="col-span-1 md:col-span-2">
@@ -116,12 +119,12 @@ svelteLifecycleOnMount(() => {
         </div>
       {/if}
     </div>
-    <div class="col-span-1 hidden md:block">
+    <div class="{loading ? 'pointer-events-none opacity-50 ' : ''}col-span-1 hidden md:block user-select-none">
         <div class="sticky sticky-right mx-auto" style="max-width: 48px;">
           <div 
             class="border-black pb-1/1 w-full bg-contain bg-center bg-no-repeat cursor-pointer mb-1" 
             style="background-image: url({searchIcon});" 
-            on:click="{() => animateScroll.scrollTo({ element: `#filter`, offset: -50 })}"
+            on:click="{() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}"
           >
           </div>
           <div class="border-black border-b-4 my-4"></div>
@@ -134,23 +137,23 @@ svelteLifecycleOnMount(() => {
         </div>
     </div>
 </div>
-<div class="menu-bottom bottom-0 left-0 w-full justify-between items-center flex fixed md:hidden h-12 z-20 bg-nwoun p-1">
+<div class="{loading ? 'pointer-events-none opacity-50 ' : ''}menu-bottom bottom-0 left-0 w-full justify-between items-center flex fixed md:hidden h-12 z-20 bg-nwoun px-2 user-select-none">
   <div class="w-10">
     <div 
       class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" 
       style="background-image: url({searchIcon});"
-      on:click="{() => animateScroll.scrollTo({ element: `#filter`, offset: -50 })}"
+      on:click="{() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}"
     >
     </div>
   </div>
-  <div class="border-black border-r-4 mx-4 h-full flex-0"></div>
+  <div class="border-black border-r-4 mx-4 h-3/4 flex-0"></div>
   {#each articleSections as section, i}
       <div class="w-10">
         <div 
           class:opacity-25="{!sectionStates[i]}" 
           class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" 
           style="background-image: url({section.icon});" 
-          on:click="{() => handleSectionStates(i)}"
+          on:click="{() => { handleSectionStates(i); }}"
         >
         </div>
       </div>

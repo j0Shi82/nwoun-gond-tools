@@ -21,13 +21,13 @@ function visitForum(data) {
 }
 
 function scrollToTop() {
-  if (window.scrollY > document.querySelector('#header').offsetHeight) {
-    window.scrollTo({
-      behavior: 'smooth',
-      top: document.querySelector('#header').offsetHeight + 1,
-      left: 0,
-    });
-  }
+  // if (window.scrollY > document.querySelector('#header').offsetHeight) {
+  window.scrollTo({
+    behavior: 'smooth',
+    top: 0,
+    left: 0,
+  });
+  // }
 }
 </script>
 

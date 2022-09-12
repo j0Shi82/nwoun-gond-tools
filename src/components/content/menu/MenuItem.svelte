@@ -15,6 +15,7 @@ export let flexAuto = true;
 
 const mobileClasses = 'flex lg:hidden h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
 const desktopClasses = 'hidden lg:flex justify-start h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
+const condensedClasses = 'hover:rounded-full';
 
 function linkClick() {
   if (linkType === 'external') {
@@ -30,11 +31,15 @@ function linkClick() {
 <style lang="scss">
   .menu-item.active {
     @apply bg-black text-nwoun;
+
+    &.condensed {
+      @apply rounded-full;
+    }
   }
 
 </style>
 
-<div id="{id}" class:flex-auto="{flexAuto}" class="{mobile ? mobileClasses : desktopClasses} menu-item" on:click="{linkClick}" use:routerActive={{ path: linkType === 'external' ? '/ext' : getLocalizedRoute(link) }}>
-    <Icon data={icon} scale="1.5" class="{mobile ? ' w-8' : ''}"></Icon>
+<div id="{id}" class:flex-auto="{flexAuto}" class:condensed="{condensed}" class="{mobile ? mobileClasses : desktopClasses} {condensed ? condensedClasses : ''} menu-item" on:click="{linkClick}" use:routerActive={{ path: linkType === 'external' ? '/ext' : getLocalizedRoute(link) }}>
+    <Icon data={icon} scale="1.5" class="w-8"></Icon>
     {#if !condensed}<span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>{/if}
 </div>

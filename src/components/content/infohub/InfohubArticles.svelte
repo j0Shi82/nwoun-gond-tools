@@ -2,7 +2,7 @@
 import {
   localize, routerLocalizedPush,
 } from 'utils/imports/core';
-import { svelteGetContext } from 'utils/imports/svelte';
+import { svelteGetContext, svelteCreateEventDispatcher } from 'utils/imports/svelte';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
 import { infohubFirstloadError } from 'utils/imports/store';
 import { buildQueryStrings, makeApiCall, getInfiniteScrollingObserver } from 'utils/imports/helpers';
@@ -34,11 +34,16 @@ let allData = [];
 let spinner = null;
 let curPage = 1;
 
+const dispatch = svelteCreateEventDispatcher();
+
 const getData = (page) => {
   if (loading || finished) return;
   infohubFirstloadError.set(false);
   loadError = false;
   loading = true;
+  dispatch('loading', {
+    state: loading,
+  });
   if (page === 1) firstLoading = true;
   makeApiCall({ type: 'articles/all', params: { page, types, tags }, returnData: false }).then((response) => {
     const newData = response.data.map((el) => {
@@ -65,6 +70,9 @@ const getData = (page) => {
   }).finally(() => {
     firstLoading = false;
     loading = false;
+    dispatch('loading', {
+      state: loading,
+    });
   });
 };
 

@@ -1,13 +1,14 @@
 <script>
 import {
-  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded, localize,
+  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded,
   AsyncComponentLoader,
 } from 'utils/imports/core';
 import {
-  svelteLifecycleOnMount, svelteTransitionScale, svelteSetContext, svelteTick,
+  svelteLifecycleOnMount, svelteSetContext, svelteTick,
 } from 'utils/imports/svelte';
 import { menuItems, images } from 'utils/imports/data';
 import { Modal } from 'utils/imports/components';
+import { currentRouteLocation } from 'utils/imports/store';
 
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -16,18 +17,12 @@ import { Icon, MenuItem } from 'utils/imports/components';
 import 'assets/style/tailwind.scss';
 import 'assets/style/global.scss';
 
-let showSmallLogo = false;
 let menuOpen = false;
 
 // modal logic
 let modalComponent = null;
 let modalProps = null;
 let modalHeadlineLocaleIdent = 'modal.defaultHeadline';
-
-$: smallLogoStyle = {
-  classes: showSmallLogo ? 'py-2 ml-2' : '',
-  style: showSmallLogo ? 'width: 180px; transition: width 500ms;' : 'width: 0px; transition: width 500ms;',
-};
 
 const modalOpen = (component, props = {}, headlineLocaleIdent = 'modal.defaultHeadline') => {
   modalComponent = component;
@@ -94,6 +89,11 @@ function scrollToTop() {
 
 </style>
 
+<svelte:head>
+	<meta property="og:url" content="{process.env.SITE_URL}/#{$currentRouteLocation}" />
+  <link rel="canonical" href="{process.env.SITE_URL}/#{$currentRouteLocation}" />
+</svelte:head>
+
 {#if modalComponent !== null}
 <AsyncComponentLoader 
   loader="{Modal}"
@@ -110,12 +110,10 @@ function scrollToTop() {
     <img src="{images.headerBanner}" id="headerBanner" class="h-16 md:h-32" alt="logo of Neverwinter Uncensored" />
     <div id="subtitle" class="text-center w-full text-sm md:text-lg lg:text-2xl">{$localize('header.subtitle')}</div>
   </div> -->
-  <div id="sticky" class="sticky z-20 top-0 bg-nwoun">
-    <div id="mainMenu" class=" flex justify-between w-full h-12 ">
-      <div style="{smallLogoStyle.style}" class="{smallLogoStyle.classes}" on:click="{scrollToTop}">
-        {#if showSmallLogo}
-          <img transition:svelteTransitionScale="{{ duration: 500 }}" src="{images.headerBanner}" class="h-full w-auto cursor-pointer" on:click="{scrollToTop}" alt="small logo of Neverwinter Uncensored" />
-        {/if}
+  <div id="sticky" class="sticky px-2 z-20 top-0 bg-nwoun">
+    <div id="mainMenu" class="flex justify-between w-full h-12">
+      <div class="py-1 mr-2" on:click="{scrollToTop}">
+        <img src="{images.headerBannerSmall}" class="h-full w-auto cursor-pointer" on:click="{scrollToTop}" alt="Small logo of Neverwinter Gond Tools" />
       </div>
       {#each menuItems.filter((i) => i.type !== 'talk') as item}
         <MenuItem 
@@ -150,7 +148,7 @@ function scrollToTop() {
           link="{item.link}"
         />
         {/each}
-        <div class="flex lg:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+        <div class="flex lg:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun hover:rounded-full pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
           <Icon data={faBars} scale="1.5" class="w-8"></Icon>
         </div>
       </div>

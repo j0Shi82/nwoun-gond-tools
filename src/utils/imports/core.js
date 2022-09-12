@@ -16,7 +16,6 @@ import setupLocalization from 'locale/i18n';
 
 // plugins
 import axios from 'axios';
-import * as animateScroll from 'svelte-scrollto';
 
 const routerLocalizedPush = (routeName, queryString = '') => push(getLocalizedRoute(routeName) + queryString);
 
@@ -42,6 +41,5 @@ export {
   init as initLocalization,
   isLoading as isLocalizationLoading,
   setupLocalization,
-  animateScroll,
   Loadable as AsyncComponentLoader,
 };
