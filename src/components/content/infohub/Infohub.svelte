@@ -89,10 +89,6 @@ svelteLifecycleOnMount(() => {
   .menu-bottom {
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.75);
   }
-
-  :global(.tagify) {
-    display: flex;
-  }
 </style>
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">

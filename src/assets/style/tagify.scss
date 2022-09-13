@@ -17,6 +17,10 @@ $tagify-dd-color-primary:#b51208;
   --tagify-dd-color-primary: #b51208;
 }
 
+.tagify {
+  display: flex !important;
+}
+
 .auction-tagify .tagify {
   @apply flex-grow;
 }
