@@ -1,18 +1,21 @@
 <script>
 import {
-  faGem, faTimesCircle, faPlus, faMinus, faExclamationTriangle, faCircleCheck, faBan,
+  faGem, faPlus, faMinus, faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {
-  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo, AuctionDataSearchTerm, AuctionDataSearchCatSelect, AuctionDataSearchQualitySelect, AuctionDataSearchDatePicker
+  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo, AuctionDataSearchTerm,
+  AuctionDataSearchCatSelect, AuctionDataSearchQualitySelect, AuctionDataSearchDatePicker,
 } from 'utils/imports/components';
 import {
   localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { currentRouteQuerystring } from 'utils/imports/store';
-import { dateFormat, dateFormatRelative, buildQueryStrings, makeApiCall } from 'utils/imports/helpers';
-import { getAuctionChart, Easepick } from 'utils/imports/plugins';
+import {
+  dateFormat, dateFormatRelative, buildQueryStrings, makeApiCall,
+} from 'utils/imports/helpers';
+import { getAuctionChart } from 'utils/imports/plugins';
 
 import 'assets/style/tagify.scss';
 
@@ -25,7 +28,7 @@ let itemData = [];
 let pickerStartDate = qs.get('start') ? new Date(qs.get('start')) : null;
 let pickerEndDate = qs.get('end') ? new Date(qs.get('end')) : null;
 let openItemDef = qs.get('open') || null;
-let curPage = parseInt(qs.get('page')) || 0;
+let curPage = parseInt(qs.get('page'), 10) || 0;
 let curCategory = qs.get('cat') || '';
 let curQuality = qs.get('quality') || '';
 let curSearchTerm = qs.get('s') || '';
@@ -52,42 +55,36 @@ $: categories = itemData.reduce((aggr, cur) => {
 
 $: queryStringData = [
   {
-    element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open'
+    element: openItemDef, type: 'value', comp: openItemDef !== null, name: 'open',
   },
   {
     element: curSearchTerm, type: 'value', comp: curSearchTerm.length > 2, name: 's',
   },
   {
-    element: curCategory, type: 'value', comp: curCategory !== '', name: 'cat'
+    element: curCategory, type: 'value', comp: curCategory !== '', name: 'cat',
   },
   {
-    element: curQuality, type: 'value', comp: curQuality !== '', name: 'quality'
+    element: curQuality, type: 'value', comp: curQuality !== '', name: 'quality',
   },
   {
     element: curPage, type: 'value', comp: curPage !== 0, name: 'page',
   },
   {
-    element: dateFormat(pickerStartDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerStartDate !== null, name: 'start',
+    element: dateFormat(pickerStartDate || new Date(), 'yyyy-MM-dd'), type: 'value', comp: pickerStartDate !== null, name: 'start',
   },
   {
-    element: dateFormat(pickerEndDate || new Date(), "yyyy-MM-dd"), type: 'value', comp: pickerEndDate !== null, name: 'end',
-  }
-]
-
-const closeOpenChart = () => {
-  if (openItemDef !== null) toggleChart(openItemDef);
-}
-
-$: routerLocalizedPush('auction', buildQueryStrings(queryStringData));
+    element: dateFormat(pickerEndDate || new Date(), 'yyyy-MM-dd'), type: 'value', comp: pickerEndDate !== null, name: 'end',
+  },
+];
 
 function getDetailData(itemDef) {
   if (chartData[itemDef]) return Promise.resolve({ data: chartData[itemDef] });
-  return makeApiCall({ 
-    type: 'auctions/itemdetails', 
-    params: { 
-      itemDef
-    }, 
-    returnData: false 
+  return makeApiCall({
+    type: 'auctions/itemdetails',
+    params: {
+      itemDef,
+    },
+    returnData: false,
   });
 }
 
@@ -107,10 +104,11 @@ function toggleChart(itemDef) {
       getDetailData(itemDef).then(({ data: detailData }) => {
         chartData[itemDef] = detailData;
         charts[openItemDef] = getAuctionChart(
-          `Chart_${openItemDef}`, 
+          `Chart_${openItemDef}`,
           detailData.filter((el) => (pickerStartDate === null || (new Date(el.InsertedDate) >= pickerStartDate))
             && (pickerEndDate === null || (new Date(el.InsertedDate) <= pickerEndDate))),
-          itemData.find((el) => el.ItemDef === itemDef).Quality);
+          itemData.find((el) => el.ItemDef === itemDef).Quality,
+        );
         charts[openItemDef].resize();
       }).catch(() => {
         chartData[itemDef] = false;
@@ -119,15 +117,21 @@ function toggleChart(itemDef) {
   }
 }
 
+const closeOpenChart = () => { if (openItemDef !== null) toggleChart(openItemDef); };
+const resetPage = () => { curPage = 0; };
+const searchParamChange = () => { closeOpenChart(); resetPage(); };
+
+$: routerLocalizedPush('auction', buildQueryStrings(queryStringData));
+
 function getItemData() {
   loading = true;
-  makeApiCall({ 
-    type: 'auctions/items', 
-    params: { 
-      start: pickerStartDate ? dateFormat(pickerStartDate, "yyyy-MM-dd") : '1970-01-01', 
-      end: pickerEndDate  ? dateFormat(pickerEndDate, "yyyy-MM-dd") : '2070-01-01'
-    }, 
-    returnData: false 
+  makeApiCall({
+    type: 'auctions/items',
+    params: {
+      start: pickerStartDate ? dateFormat(pickerStartDate, 'yyyy-MM-dd') : '1970-01-01',
+      end: pickerEndDate ? dateFormat(pickerEndDate, 'yyyy-MM-dd') : '2070-01-01',
+    },
+    returnData: false,
   })
     .then((response) => {
       itemData = response.data;
@@ -142,10 +146,11 @@ function getItemData() {
           getDetailData(openItemDef).then(({ data: detailData }) => {
             chartData[openItemDef] = detailData;
             charts[openItemDef] = getAuctionChart(
-              `Chart_${openItemDef}`, 
+              `Chart_${openItemDef}`,
               detailData.filter((el) => (pickerStartDate === null || (new Date(el.InsertedDate) >= pickerStartDate))
                 && (pickerEndDate === null || (new Date(el.InsertedDate) <= pickerEndDate))),
-              itemData.find((el) => el.ItemDef === openItemDef).Quality);
+              itemData.find((el) => el.ItemDef === openItemDef).Quality,
+            );
             charts[openItemDef].resize();
           }).catch(() => {
             chartData[openItemDef] = false;
@@ -165,24 +170,23 @@ svelteLifecycleOnMount(async () => {
 {:else}
   <AuctionDataEngineInfo />
   <div class="flex justify-between items-center mb-2">
-    <AuctionDataSearchTerm bind:curSearchTerm={curSearchTerm} on:change={closeOpenChart} />
-    <AuctionDataSearchCatSelect bind:curCategory={curCategory} bind:categories={categories} on:change={closeOpenChart} />
+    <AuctionDataSearchTerm bind:curSearchTerm={curSearchTerm} on:change={searchParamChange} />
+    <AuctionDataSearchCatSelect bind:curCategory={curCategory} bind:categories={categories} on:change={searchParamChange} />
   </div>
   <div class="flex justify-between items-center mb-2">
     <AuctionDataSearchDatePicker bind:pickerStartDate={pickerStartDate} bind:pickerEndDate={pickerEndDate} on:change={
-      (e) => { 
-        const curQs = new URLSearchParams($currentRouteQuerystring)
+      (e) => {
+        const curQs = new URLSearchParams($currentRouteQuerystring);
         const curQsStartDate = curQs.get('start') ?? null;
         const curQsEndDate = curQs.get('end') ?? null;
-        const newStartDate = e.detail.start ? dateFormat(e.detail.start, "yyyy-MM-dd") : null;
-        const newEndDate = e.detail.end ? dateFormat(e.detail.end, "yyyy-MM-dd") : null;
-        console.log(curQsEndDate, curQsStartDate, newStartDate, newEndDate)
-        if (curQsEndDate !== newEndDate || curQsStartDate !== newStartDate ) {
-          closeOpenChart(); getItemData(); 
+        const newStartDate = e.detail.start ? dateFormat(e.detail.start, 'yyyy-MM-dd') : null;
+        const newEndDate = e.detail.end ? dateFormat(e.detail.end, 'yyyy-MM-dd') : null;
+        if (curQsEndDate !== newEndDate || curQsStartDate !== newStartDate) {
+          searchParamChange(); getItemData();
         }
       }
     } />
-    <AuctionDataSearchQualitySelect bind:curQuality={curQuality} on:change={closeOpenChart} />
+    <AuctionDataSearchQualitySelect bind:curQuality={curQuality} on:change={searchParamChange} />
   </div>
   {#if !loading}
   <div class="flex flex-col">
