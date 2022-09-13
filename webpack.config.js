@@ -4,6 +4,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const sveltePreprocess = require('svelte-preprocess');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 const sveltePath = path.resolve('node_modules', 'svelte');
 const babelConfig = require('./babel.config');
@@ -108,6 +109,9 @@ module.exports = {
   },
   mode,
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.SITE_URL': JSON.stringify(process.env.SITE_URL),
+    }),
     new Dotenv(),
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css',
