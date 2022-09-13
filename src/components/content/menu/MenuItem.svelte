@@ -2,6 +2,7 @@
 import {
   localize, routerLocalizedPush, getLocalizedRoute, routerActive,
 } from 'utils/imports/core';
+import { currentRouteLocation } from 'utils/imports/store';
 import { Icon } from 'utils/imports/components';
 
 export let id;
@@ -22,7 +23,7 @@ function linkClick() {
     window.open(link);
   }
 
-  if (linkType === 'internal') {
+  if (linkType === 'internal' && $currentRouteLocation !== getLocalizedRoute(link)) {
     routerLocalizedPush(link);
   }
 }
@@ -39,7 +40,7 @@ function linkClick() {
 
 </style>
 
-<div id="{id}" class:flex-auto="{flexAuto}" class:condensed="{condensed}" class="{mobile ? mobileClasses : desktopClasses} {condensed ? condensedClasses : ''} menu-item" on:click="{linkClick}" use:routerActive={{ path: linkType === 'external' ? '/ext' : getLocalizedRoute(link) }}>
+<div id="{id}" class:flex-auto="{flexAuto}" class:active="{$currentRouteLocation === getLocalizedRoute(link)}" class:condensed="{condensed}" class="{mobile ? mobileClasses : desktopClasses} {condensed ? condensedClasses : ''} menu-item" on:click="{linkClick}">
     <Icon data={icon} scale="1.5" class="w-8"></Icon>
     {#if !condensed}<span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>{/if}
 </div>
