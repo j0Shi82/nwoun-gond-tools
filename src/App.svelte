@@ -8,7 +8,7 @@ import {
 } from 'utils/imports/svelte';
 import { menuItems, images } from 'utils/imports/data';
 import { Modal } from 'utils/imports/components';
-import { currentRouteLocation } from 'utils/imports/store';
+import { currentRouteLocation, currentRouteQuerystring } from 'utils/imports/store';
 
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -90,8 +90,8 @@ function scrollToTop() {
 </style>
 
 <svelte:head>
-	<meta property="og:url" content="{process.env.SITE_URL}/#{$currentRouteLocation}" />
-  <link rel="canonical" href="{process.env.SITE_URL}/#{$currentRouteLocation}" />
+	<meta property="og:url" content="{process.env.SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring ? `?${$currentRouteQuerystring}` : ''}" />
+  <link rel="canonical" href="{process.env.SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring ? `?${$currentRouteQuerystring}` : ''}" />
 </svelte:head>
 
 {#if modalComponent !== null}
