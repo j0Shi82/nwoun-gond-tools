@@ -21,7 +21,7 @@ let loading = false;
 let apiError = false;
 let finished = false;
 let curPage = 1;
-let curDev = qs.has('dev') ? parseInt(qs.get('dev'), 10) : '';
+let curDev = qs.has('dev') ? qs.get('dev') : '';
 let curID = qs.has('discussion_id') ? qs.get('discussion_id') : '0';
 
 $: {
@@ -46,17 +46,17 @@ function getDevPosts() {
       if (newData.length < 20) finished = true;
 
       newData
-        .map((el) => el.dev_id)
+        .map((el) => `${el.dev_name}::${el.dev_id}`)
         .reduce((all, cur) => {
           if (!all.includes(cur)) all.push(cur);
           return all;
         }, [])
         .filter((el) => !Object.keys(avatarData).includes(el))
-        .forEach((devID) => {
+        .forEach((devIdent) => {
           axios({
-            url: `${apiServer}/v1/devtracker/devinfo?dev=${devID}`,
+            url: `${apiServer}/v1/devtracker/devinfo?dev=${devIdent.split('::')[0]}&id=${devIdent.split('::')[1]}`,
           }).then((res) => {
-            avatarData[devID] = res.data.Profile.PhotoUrl;
+            avatarData[devIdent] = res.data.img;
             devtrackerAvatarList.set(avatarData);
           });
         });
@@ -122,7 +122,7 @@ svelteLifecycleOnMount(async () => {
       >
         <option value="" selected>-- Developer --</option>
         {#each devData as data}
-          <option value="{data.dev_id}">{data.dev_name} ({data.post_count})</option>
+          <option value="{data.dev_name}">{data.dev_name} ({data.post_count})</option>
         {/each}
       </select>
       <select 
@@ -139,7 +139,7 @@ svelteLifecycleOnMount(async () => {
       </select>
     </div>
     {#each apiData as data}
-    <DevtrackerPost postData="{data}" avatarSrc="{avatarData[data.dev_id] ? avatarData[data.dev_id] : null}" />
+    <DevtrackerPost postData="{data}" avatarSrc="{avatarData[`${data.dev_name}::${data.dev_id}`] ? avatarData[`${data.dev_name}::${data.dev_id}`] : null}" />
     {/each}
     {#if !finished}
       <div class="col-span-1 md:col-span-2" bind:this="{spinner}">

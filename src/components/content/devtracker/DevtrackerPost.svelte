@@ -16,7 +16,16 @@ $: {
 }
 
 function visitForum(data) {
-  const href = parseInt(data.comment_id, 10) !== 0 ? `https://forum.arcgames.com/neverwinter/discussion/comment/${data.comment_id}` : `https://forum.arcgames.com/neverwinter/discussion/${data.discussion_id}`;
+  let href;
+  if (parseInt(data.category_id, 10) === 5555) {
+    const discussionId = data.discussion_id.replace(/^t3_/, '');
+    const commentId = data.comment_id.replace(/^t1_/, '');
+    // reddit
+    href = commentId ? `https://www.reddit.com/r/Neverwinter/comments/${discussionId}/comment/${commentId}` : `https://www.reddit.com/r/Neverwinter/comments/${discussionId}`;
+  } else {
+    // arc
+    href = parseInt(data.comment_id, 10) !== 0 ? `https://forum.arcgames.com/neverwinter/discussion/comment/${data.comment_id}` : `https://forum.arcgames.com/neverwinter/discussion/${data.discussion_id}`;
+  }
   window.open(href);
 }
 
