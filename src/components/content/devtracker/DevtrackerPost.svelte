@@ -18,7 +18,7 @@ $: {
 function visitForum(data) {
   let href;
   if (parseInt(data.category_id, 10) === 5555) {
-    const discussionId = data.discussion_id.replace(/^t3_/, '');
+    const discussionId = data.discussion_id.replace(/^t[1-3]_/, '');
     const commentId = data.comment_id.replace(/^t1_/, '');
     // reddit
     href = commentId ? `https://www.reddit.com/r/Neverwinter/comments/${discussionId}/comment/${commentId}` : `https://www.reddit.com/r/Neverwinter/comments/${discussionId}`;

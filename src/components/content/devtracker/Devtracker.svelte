@@ -24,17 +24,6 @@ let curPage = 1;
 let curDev = qs.has('dev') ? qs.get('dev') : '';
 let curID = qs.has('discussion_id') ? qs.get('discussion_id') : '0';
 
-$: {
-  routerLocalizedPush('devtracker', buildQueryStrings([
-    {
-      element: curDev, type: 'value', comp: curDev !== '', name: 'dev',
-    },
-    {
-      element: curID, type: 'value', comp: curID !== '0', name: 'discussion_id',
-    },
-  ]));
-}
-
 function getDevPosts() {
   if (loading || finished) return;
   if (curPage === 1) firstLoading = true;
@@ -78,12 +67,24 @@ function getDevPosts() {
     });
 }
 
-async function searchReload(resetPage = false) {
-  await svelteTick(); // need tick to wait for curDev and curID to get set
+const searchReload = (resetPage = false) => {
   curPage = resetPage ? 1 : curPage;
   finished = false;
   apiError = false;
   getDevPosts();
+};
+
+$: {
+  routerLocalizedPush('devtracker', buildQueryStrings([
+    {
+      element: curDev, type: 'value', comp: curDev !== '', name: 'dev',
+    },
+    {
+      element: curID, type: 'value', comp: curID !== '0', name: 'discussion_id',
+    },
+  ]));
+
+  searchReload(true);
 }
 
 $: {
@@ -91,7 +92,7 @@ $: {
     const spinnerObserver = getInfiniteScrollingObserver(() => {
       if (!loading) {
         curPage += 1;
-        getDevPosts();
+        searchReload();
       }
     });
     spinnerObserver.observe(spinner);
@@ -101,7 +102,6 @@ $: {
 svelteLifecycleOnMount(async () => {
   devData = await makeApiCall({ type: 'devtracker/devlist', nullCatch: true });
   topicData = await makeApiCall({ type: 'devtracker/topiclist', nullCatch: true });
-  getDevPosts();
 });
 </script>
 
@@ -114,7 +114,6 @@ svelteLifecycleOnMount(async () => {
   {#if (apiData.length) && !firstLoading}
     <div id="form" class="mt-2">
       <select 
-        on:change="{() => { searchReload(true); }}" 
         bind:value="{curDev}" 
         disabled="{curID !== '0'}" 
         class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black h-12" 
@@ -126,7 +125,6 @@ svelteLifecycleOnMount(async () => {
         {/each}
       </select>
       <select 
-        on:change="{() => { searchReload(true); }}" 
         bind:value="{curID}" 
         disabled="{curDev !== ''}" 
         class="block w-full form-select bg-gray-300 border-black border-2 rounded-md bg-opacity-50 font-bold text-black mt-2 h-12" 

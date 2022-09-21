@@ -4,11 +4,10 @@ import { localize } from 'utils/imports/core';
 
 export let curCategory = '';
 export let categories = [];
-let searchElement = null
 const dispatch = svelteCreateEventDispatcher();
 
 $: dispatch('change', {
-    value: curCategory
+  value: curCategory,
 });
 </script>
 
