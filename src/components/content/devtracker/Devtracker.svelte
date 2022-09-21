@@ -1,5 +1,5 @@
 <script>
-import { svelteLifecycleOnMount, svelteTick } from 'utils/imports/svelte';
+import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 import {
   Spinner, DevtrackerPost, StandardError,
 } from 'utils/imports/components';
@@ -99,9 +99,13 @@ $: {
   }
 }
 
-svelteLifecycleOnMount(async () => {
-  devData = await makeApiCall({ type: 'devtracker/devlist', nullCatch: true });
-  topicData = await makeApiCall({ type: 'devtracker/topiclist', nullCatch: true });
+svelteLifecycleOnMount(() => {
+  makeApiCall({ type: 'devtracker/devlist', nullCatch: true }).then((data) => {
+    devData = data;
+  });
+  makeApiCall({ type: 'devtracker/topiclist', nullCatch: true }).then((data) => {
+    topicData = data;
+  });
 });
 </script>
 

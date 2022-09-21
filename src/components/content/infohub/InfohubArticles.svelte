@@ -14,7 +14,6 @@ import faPlusCircle from 'assets/media/fontawesome/plus-circle.svg';
 
 export let types = '';
 export let tags;
-export let requestBlock = true;
 
 const sectionIcons = infohubSections.reduce((aggr, cur) => {
   // eslint-disable-next-line no-param-reassign
@@ -92,22 +91,18 @@ function pushRoute() {
 $: {
   finished = false;
   curPage = 1;
-  if (!requestBlock) {
-    if (tags && types) {
-      getData(1);
-    } else {
-      getData(1);
-    }
+  if (tags && types) {
+    getData(1);
+  } else {
+    getData(1);
   }
   pushRoute();
 }
 
 // when params change, fetch data again
 $: {
-  if (!requestBlock) {
-    getData(curPage);
-    pushRoute();
-  }
+  getData(curPage);
+  pushRoute();
 }
 
 // rercreate observer every time the sponner gets updated

@@ -17,7 +17,7 @@ const articleSections = infohubSections.filter((el) => el.type === 'articles');
 const sectionStates = articleSections.map((el) => !qs.has('types') || (qs.has('types') && qs.get('types').split(',').includes(el.id)));
 
 let tags = [];
-let tagList = '';
+let tagList = qs.has('tags') ? qs.get('tags').split(',').sort().join(',') : '';
 let tagify = null;
 let tagsLoaded = false;
 let loading = true;
@@ -75,7 +75,8 @@ svelteLifecycleOnMount(() => {
       if (e.detail.value === '') {
         tagList = '';
       } else {
-        tagList = JSON.parse(e.detail.value).map((el) => tags.filter((tag) => tag.term === el.value)).map((el) => el[0].id).join(',');
+        tagList = JSON.parse(e.detail.value).map((el) => tags.filter((tag) => tag.term === el.value)).map((el) => el[0].id).sort()
+          .join(',');
       }
     });
 });
@@ -101,7 +102,6 @@ svelteLifecycleOnMount(() => {
       </div>
       {#if !$infohubFirstloadError}
         <InfohubArticles 
-          requestBlock="{!tagsLoaded}"
           tags="{tagList}"
           types="{types}"
           on:loading={(e) => { loading = e.detail.state; }}
