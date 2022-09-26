@@ -38,6 +38,9 @@ const logos = {
   igc: 'https://i1.wp.com/invisioncommunity.co.uk/wp-content/uploads/2020/01/cropped-igc-site-icon-1.png',
   gamepur: 'https://www.gamepur.com/wp-content/uploads/2020/01/cropped-gamepur_favicon-1-150x150.png',
   gamerant: 'https://gamerant.com/public/build/images/favicon-48x48.dd8046e7.png',
+  anjicat: 'https://anjicatsneverwinternotes.files.wordpress.com/2022/06/wp-1656609241894.jpg',
+  mmohaven: 'https://mmohaven.com/wp-content/uploads/elementor/thumbs/cropped-icon-p8u9nqrhnas4ztgpd3i1o7dh5tiyrln731nyz811o0.png',
+  pcgamesn: 'https://www.pcgamesn.com/wp-content/sites/pcgamesn/avatars/user-6.png',
 };
 
 const sections = [
