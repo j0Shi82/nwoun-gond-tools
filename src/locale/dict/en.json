@@ -80,15 +80,18 @@
         "engine": {
             "up": {
                 "data": "The crawl engine is up and running, updating <span class=\"font-bold\">{itemsPerDay}</span> of <span class=\"font-bold\">{totalItems}</span> items ({percentage}%) per day.",
-                "help": "HELP US IMPROVING THIS NUMBER!"
+                "help": "The engine needs funding to improve the numbers of crawled items per day. Click here to see why and how you can help!"
             },
             "down": {
                 "data": "The crawl engine is offline, but has updated <span class=\"font-bold\">{itemsPerDay}</span> of <span class=\"font-bold\">{totalItems}</span> items ({percentage}%) in the last 24 hours.",
-                "help": "HELP US RUNNING THE ENGINE MORE HOURS PER DAY!"
+                "help": "The engine needs funding to run more hours per day. Click here to see why and how you can help!"
             },
             "loading": {
                 "data": "Fetching crawl engine stats...",
-                "help": "HELP US RUNNING THE ENGINE!"
+                "help": "The engine needs funding. Click here to see why and how you can help!"
+            },
+            "patreons": {
+                "mention": "Thanks to these awesome donors, the Neverwinter community has access to auction house data!"
             }
         }
     }

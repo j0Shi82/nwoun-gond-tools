@@ -33,6 +33,9 @@ export default ({
     case 'auctions/engine':
       requestUrl = `${apiServer}/v1/auctions/engine`;
       break;
+    case 'auctions/patreon':
+      requestUrl = `${apiServer}/v1/auctions/patreon`;
+      break;
     default:
       requestUrl = null;
   }
