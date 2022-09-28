@@ -4,6 +4,7 @@ import xboxLogo from 'assets/media/images/Xbox_one_logo.svg.png';
 import ps4Logo from 'assets/media/images/ps4-logos-scee-blue.png';
 import redditLogo from 'assets/media/images/reddit_icon.png';
 import twitchLogo from 'assets/media/icons/TwitchGlitchPurple.svg';
+import rainerLogo from 'assets/media/icons/rainer_64.png';
 import faSearch from 'assets/media/fontawesome/search.svg';
 import faComment from 'assets/media/fontawesome/comment.svg';
 import faBookMedical from 'assets/media/fontawesome/book-medical.svg';
@@ -43,6 +44,7 @@ const logos = {
   mmohaven: 'https://mmohaven.com/wp-content/uploads/elementor/thumbs/cropped-icon-p8u9nqrhnas4ztgpd3i1o7dh5tiyrln731nyz811o0.png',
   pcgamesn: 'https://www.pcgamesn.com/wp-content/sites/pcgamesn/avatars/user-6.png',
   twitch: twitchLogo,
+  nwhub: rainerLogo,
 };
 
 const sections = [
