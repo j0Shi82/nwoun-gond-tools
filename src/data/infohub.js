@@ -45,6 +45,8 @@ const logos = {
   pcgamesn: 'https://www.pcgamesn.com/wp-content/sites/pcgamesn/avatars/user-6.png',
   twitch: twitchLogo,
   nwhub: rainerLogo,
+  mmogg: 'https://mmorpg.gg/wp-content/uploads/2021/09/cropped-MMORPG-Dragon-Logo-32x32.png',
+  mmotips: 'https://www.mmorpgtips.com/wp-content/uploads/2020/01/cropped-online-logo-creator-for-gaming-featuring-a-samurai-panda-2755r-1-32x32.png',
 };
 
 const sections = [
