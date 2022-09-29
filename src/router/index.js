@@ -1,6 +1,7 @@
 import { routeWrapper, getLocalizedRoute, getRouteGuards } from 'utils/imports/core';
 import { localeStandardLanguage, localeSupportedLanguages } from 'utils/imports/config';
 import baseRoutes from 'router/baseRoutes';
+import { NotFound } from 'utils/imports/routes';
 
 const routes = {};
 
@@ -26,5 +27,15 @@ Object.assign(routes, baseRoutes.reduce((prev, cur) => {
   });
   return p;
 }, {}));
+
+const notFoundRoute = {
+  '*': routeWrapper({
+    component: NotFound,
+    userData: { lang: localeStandardLanguage, routeName: 'notfound' },
+    conditions: [...getRouteGuards('notfound')],
+  }),
+};
+
+Object.assign(routes, notFoundRoute);
 
 export default routes;
