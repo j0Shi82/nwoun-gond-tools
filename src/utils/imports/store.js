@@ -7,7 +7,7 @@ import { locale, locales } from 'svelte-i18n';
 
 const { routeName, isRouting } = store.app.router;
 const { avatars } = store.devtracker;
-const { firstloadError } = store.infohub;
+const { firstloadError, tagId, tags } = store.infohub;
 const { bgOverlay } = store.app;
 
 export {
@@ -20,5 +20,7 @@ export {
   locales,
   avatars as devtrackerAvatarList,
   firstloadError as infohubFirstloadError,
+  tagId as infohubWhoamiTagId,
+  tags as infohubTags,
   bgOverlay as appBackgroundOverlayActive,
 };

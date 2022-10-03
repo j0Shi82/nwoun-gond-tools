@@ -10669,7 +10669,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regexparam@npm:2.0.1":
+"regexparam@npm:2.0.1, regexparam@npm:^2.0.1":
   version: 2.0.1
   resolution: "regexparam@npm:2.0.1"
   checksum: 797998e96c995c200ebd4a7d5e734381b96d3979b4b6672ec65ed5ca9210b8a5149ad73109ec32115779674b526088704c2564e9fa07f8b747743beadc424803
@@ -11084,6 +11084,7 @@ resolve@^1.9.0:
     postcss-load-config: ^4.0.1
     postcss-loader: ^7.0.1
     postcss-nested: ^5.0.6
+    regexparam: ^2.0.1
     sass: ^1.54.9
     sass-loader: ^13.0.2
     style-loader: ^3.3.1

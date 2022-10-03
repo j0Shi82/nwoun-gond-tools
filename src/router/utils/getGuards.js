@@ -5,7 +5,7 @@ import whoami from 'router/guards/whoami';
 
 const guardConfig = [
   { test: () => true, guards: [setLocale, setIsLoadingTrue] },
-  { test: (routeName) => routeName === 'notfound', guards: [whoami] },
+  { test: (routeName) => routeName === 'infohub', guards: [whoami] },
 ];
 
 export default (routeName) => {

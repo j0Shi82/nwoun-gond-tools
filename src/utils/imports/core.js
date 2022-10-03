@@ -1,5 +1,5 @@
 // routing
-import getLocalizedRoute from 'locale/utils/routeHelper';
+import getLocalizedRouteMatcher, { getLocalizedRoute } from 'locale/utils/routeHelper';
 import getGuards from 'router/utils/getGuards';
 import Router, { push } from 'svelte-spa-router';
 import active from 'svelte-spa-router/active';
@@ -17,14 +17,20 @@ import setupLocalization from 'locale/i18n';
 // plugins
 import axios from 'axios';
 
-const routerLocalizedPush = (routeName, queryString = '') => push(getLocalizedRoute(routeName) + queryString);
+const routerLocalizedPush = (routeName, options = {}) => {
+  const o = {
+    queryString: '',
+    ...options,
+  };
+  push(getLocalizedRoute(routeName, options) + o.queryString);
+};
 
 const instance = axios.create({
   timeout: 5000,
 });
 
 export {
-  getLocalizedRoute,
+  getLocalizedRouteMatcher,
   getGuards as getRouteGuards,
   Router as RouterComponent,
   routes,

@@ -7,7 +7,9 @@ import { Tagify } from 'utils/imports/plugins';
 import { InfohubArticles, Icon } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
 import { makeApiCall } from 'utils/imports/helpers';
-import { infohubFirstloadError, currentRouteQuerystring } from 'utils/imports/store';
+import {
+  infohubFirstloadError, infohubWhoamiTagId, infohubTags, currentRouteQuerystring,
+} from 'utils/imports/store';
 
 import 'assets/style/infohub.scss';
 import 'assets/style/tagify.scss';
@@ -16,8 +18,10 @@ const qs = new URLSearchParams($currentRouteQuerystring);
 const articleSections = infohubSections.filter((el) => el.type === 'articles');
 const sectionStates = articleSections.map((el) => !qs.has('types') || (qs.has('types') && qs.get('types').split(',').includes(el.id)));
 
-let tags = [];
-let tagList = qs.has('tags') ? qs.get('tags').split(',').sort().join(',') : '';
+let tagList = qs.has('tags') ? qs.get('tags').split(',').map((el) => parseInt(el, 10)) : [];
+if ($infohubWhoamiTagId !== null) {
+  tagList.push($infohubWhoamiTagId);
+}
 let tagify = null;
 let tagsLoaded = false;
 let loading = true;
@@ -30,32 +34,30 @@ const handleSectionStates = (index) => {
 
 const searchIcon = infohubSections.filter((el) => el.type === 'filter')[0].icon;
 
-function getTags() {
-  makeApiCall({ type: 'articles/dicussiontags', returnData: false })
-    .then((response) => {
-      tags = response.data;
-      if (tagify !== null) {
-        tagify.settings.whitelist.splice(0, tags.map((el) => el.term).length, ...tags.map((el) => el.term));
-        if (qs.has('tags')) {
-          tagify.addTags(tags.filter((el) => qs.get('tags').split(',').includes(el.id)).map((el) => el.term));
-        }
-      }
-    })
-    .catch(() => {
-      infohubFirstloadError.set(true);
-    })
-    .finally(() => {
-      tagsLoaded = true;
-    });
+async function getTags() {
+  if ($infohubTags.length > 0) {
+    tagsLoaded = true;
+  } else {
+    await makeApiCall({ type: 'articles/dicussiontags', returnData: false })
+      .then((response) => {
+        infohubTags.set(response.data);
+      })
+      .catch(() => {
+        infohubFirstloadError.set(true);
+      })
+      .finally(() => {
+        tagsLoaded = true;
+      });
+  }
 }
 
-svelteLifecycleOnMount(() => {
+svelteLifecycleOnMount(async () => {
   infohubFirstloadError.set(false);
-  getTags();
+  await getTags();
   tagify = new Tagify(
     document.querySelector('#discussionTagFilter input'),
     {
-      whitelist: tags.map((el) => el.term),
+      whitelist: $infohubTags.map((el) => el.term),
       enforceWhitelist: true,
       skipInvalid: true,
       editTags: false,
@@ -73,12 +75,12 @@ svelteLifecycleOnMount(() => {
   tagify
     .on('change', (e) => {
       if (e.detail.value === '') {
-        tagList = '';
+        tagList = [];
       } else {
-        tagList = JSON.parse(e.detail.value).map((el) => tags.filter((tag) => tag.term === el.value)).map((el) => el[0].id).sort()
-          .join(',');
+        tagList = JSON.parse(e.detail.value).map((el) => $infohubTags.filter((tag) => tag.term === el.value)).map((el) => el[0].id);
       }
     });
+  tagify.addTags($infohubTags.filter((el) => tagList.includes(parseInt(el.id, 10))).map((el) => el.term));
 });
 </script>
 
@@ -94,16 +96,17 @@ svelteLifecycleOnMount(() => {
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">
     <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
-      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError}">
+      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError || !tagsLoaded}">
         <span style="background-image: url({searchIcon});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="filter">{$localize('infohub.filter')}</span>
       </div>
-      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError}" id="discussionTagFilter">
+      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError || !tagsLoaded}" id="discussionTagFilter">
         <input />
       </div>
       {#if !$infohubFirstloadError}
         <InfohubArticles 
           tags="{tagList}"
           types="{types}"
+          canMount={tagsLoaded}
           on:loading={(e) => { loading = e.detail.state; }}
         />
       {:else}

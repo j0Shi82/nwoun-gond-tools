@@ -1,41 +1,33 @@
-import { routeWrapper, getLocalizedRoute, getRouteGuards } from 'utils/imports/core';
+import { routeWrapper, getLocalizedRouteMatcher, getRouteGuards } from 'utils/imports/core';
 import { localeStandardLanguage, localeSupportedLanguages } from 'utils/imports/config';
 import baseRoutes from 'router/baseRoutes';
 import { NotFound } from 'utils/imports/routes';
 
-const routes = {};
+const routes = new Map();
 
 // add routes with lang param
 localeSupportedLanguages.filter((lang) => lang !== localeStandardLanguage).forEach((lang) => {
-  Object.assign(routes, baseRoutes.reduce((prev, cur) => {
-    const p = prev;
-    p[getLocalizedRoute(cur.name, lang)] = routeWrapper({
-      component: cur.component,
-      userData: { lang, routeName: cur.name, ...cur.data },
-      conditions: [...getRouteGuards(cur.name)],
-    });
-    return p;
-  }, {}));
+  baseRoutes.forEach((route) => {
+    routes.set(getLocalizedRouteMatcher(route.name, lang), routeWrapper({
+      component: route.component,
+      userData: { lang, routeName: route.name, ...route.data },
+      conditions: [...getRouteGuards(route.name)],
+    }));
+  });
 });
 
-Object.assign(routes, baseRoutes.reduce((prev, cur) => {
-  const p = prev;
-  p[getLocalizedRoute(cur.name, localeStandardLanguage)] = routeWrapper({
-    component: cur.component,
-    userData: { lang: localeStandardLanguage, routeName: cur.name, ...cur.data },
-    conditions: [...getRouteGuards(cur.name)],
-  });
-  return p;
-}, {}));
+baseRoutes.forEach((route) => {
+  routes.set(getLocalizedRouteMatcher(route.name, localeStandardLanguage), routeWrapper({
+    component: route.component,
+    userData: { localeStandardLanguage, routeName: route.name, ...route.data },
+    conditions: [...getRouteGuards(route.name)],
+  }));
+});
 
-const notFoundRoute = {
-  '*': routeWrapper({
-    component: NotFound,
-    userData: { lang: localeStandardLanguage, routeName: 'notfound' },
-    conditions: [...getRouteGuards('notfound')],
-  }),
-};
-
-Object.assign(routes, notFoundRoute);
+routes.set('*', routeWrapper({
+  component: NotFound,
+  userData: { lang: localeStandardLanguage, routeName: 'notfound' },
+  conditions: [...getRouteGuards('notfound')],
+}));
 
 export default routes;

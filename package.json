@@ -75,6 +75,7 @@
     "date-fns": "^2.29.2",
     "express": "^4.18.1",
     "postcss-discard-duplicates": "^5.1.0",
+    "regexparam": "^2.0.1",
     "svelte": "^3.50.1",
     "svelte-awesome": "^3.0.0",
     "svelte-fa": "^3.0.3",

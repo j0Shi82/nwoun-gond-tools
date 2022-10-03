@@ -8,5 +8,7 @@ export default {
   },
   infohub: {
     firstloadError: storeTypeWritable(false),
+    tagId: storeTypeWritable(null),
+    tags: storeTypeWritable([]),
   },
 };

@@ -1,5 +1,5 @@
 <script>
-import { getLocalizedRoute } from 'utils/imports/core';
+import { getLocalizedRouteMatcher } from 'utils/imports/core';
 import { faHeartCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { Icon } from 'utils/imports/components';
 import { images } from 'utils/imports/data';
@@ -20,7 +20,7 @@ import { images } from 'utils/imports/data';
             </p>
             <p class="mb-2"><a href="https://www.buymeacoffee.com/j0Shi" target="_blank"><img src="{images.buyMeCoffee}" alt="buy me a coffee" style="max-width: 250px" class="mx-auto" /></a></p>
             
-            <p class="mb-2">The project however does indeed need funding to power the <a class="underline font-medium" href="/#{getLocalizedRoute('auction')}">crawl engine</a> for reasons outlined <a href="https://www.patreon.com/posts/welcome-faqs-71737051" target="_blank" class="underline font-medium">here</a>. So if you like that particular tool strongly consider donating towards keeping the data as updated as possible. Plans start as low as $1.30.</p>
+            <p class="mb-2">The project however does indeed need funding to power the <a class="underline font-medium" href="/#{getLocalizedRouteMatcher('auction')}">crawl engine</a> for reasons outlined <a href="https://www.patreon.com/posts/welcome-faqs-71737051" target="_blank" class="underline font-medium">here</a>. So if you like that particular tool strongly consider donating towards keeping the data as updated as possible. Plans start as low as $1.30.</p>
             <p class="mb-2"><a href="https://www.patreon.com/nw_gond_tools" target="_blank"><img src="{images.patreon}" alt="visit patreon.com" style="max-width: 250px; background-color: #FF424D" class="mx-auto rounded-lg py-2 px-7" /></a></p>
         </div>
     </div>
