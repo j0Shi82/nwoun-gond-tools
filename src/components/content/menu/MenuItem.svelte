@@ -27,6 +27,8 @@ function linkClick() {
     routerLocalizedPush(link);
   }
 }
+
+console.log(link, getLocalizedRouteMatcher(link), $currentRouteLocation, $currentRouteLocation.match(getLocalizedRouteMatcher(link)));
 </script>
 
 <style lang="scss">

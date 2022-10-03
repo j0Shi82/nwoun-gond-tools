@@ -26,6 +26,12 @@ export const getLocalizedRoute = (routeName, options = {}, lang = localeStoreVal
 const getLocalizedRouteMatcher = (routeName, lang = localeStoreValue) => {
   let routePath;
   const route = routeLocaleDict[lang][routeName];
+
+  // no route, just return the initial routeName, might need to throw an error instead
+  if (!route) {
+    return routeName;
+  }
+
   if (typeof route === 'object') {
     routePath = route.matcher;
   } else {
