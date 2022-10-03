@@ -22,6 +22,7 @@
     },
     "infohub": {
         "filter": "Filter",
+        "filterPlaceholder": "Add tags to filter posts",
         "official": "Official News",
         "guides": "Guides / Blogs",
         "social": "Social Feeds",

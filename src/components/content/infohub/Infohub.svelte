@@ -61,7 +61,7 @@ svelteLifecycleOnMount(async () => {
       enforceWhitelist: true,
       skipInvalid: true,
       editTags: false,
-      placeholder: 'Add tags to filter posts',
+      placeholder: $localize('infohub.filterPlaceholder'),
       dropdown: {
         classname: 'color-nwoun',
         enabled: 3, // show the dropdown immediately on focus
@@ -92,15 +92,23 @@ svelteLifecycleOnMount(async () => {
   .menu-bottom {
     box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.75);
   }
+
+  .disabled {
+    @apply opacity-30;
+  }
 </style>
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">
     <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
-      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError || !tagsLoaded}">
+
+      <div class="col-span-1 md:col-span-2" class:disabled="{$infohubFirstloadError || !tagsLoaded}">
         <span style="background-image: url({searchIcon});" class="font-bold text-2xl bg-no-repeat bg-contain pl-10" id="filter">{$localize('infohub.filter')}</span>
       </div>
-      <div class="col-span-1 md:col-span-2" class:hidden="{$infohubFirstloadError || !tagsLoaded}" id="discussionTagFilter">
-        <input />
+      <div class="col-span-1 md:col-span-2" id="discussionTagFilter">
+        <input class:hidden="{$infohubFirstloadError || !tagsLoaded}" />
+        {#if $infohubFirstloadError || !tagsLoaded}
+          <div class="disabled skeleton-input tagify"><tag class="tagify--noTags tagify--empty"><span class="tagify__input">{$localize('infohub.filterPlaceholder')}</span></tag></div>
+        {/if}
       </div>
       {#if !$infohubFirstloadError}
         <InfohubArticles 
