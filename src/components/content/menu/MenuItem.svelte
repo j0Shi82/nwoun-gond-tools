@@ -1,6 +1,6 @@
 <script>
 import {
-  localize, routerLocalizedPush, getLocalizedRouteMatcher, routerActive,
+  localize, routerLocalizedPush, getLocalizedRouteMatcher,
 } from 'utils/imports/core';
 import { currentRouteLocation } from 'utils/imports/store';
 import { Icon } from 'utils/imports/components';
@@ -28,7 +28,6 @@ function linkClick() {
   }
 }
 
-console.log(link, getLocalizedRouteMatcher(link), $currentRouteLocation, $currentRouteLocation.match(getLocalizedRouteMatcher(link)));
 </script>
 
 <style lang="scss">

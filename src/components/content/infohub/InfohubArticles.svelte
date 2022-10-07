@@ -1,10 +1,10 @@
 <script>
 import {
-  localize, routerPush, routerLocalizedPush,
+  localize, routerLocalizedPush,
 } from 'utils/imports/core';
 import { svelteGetContext, svelteCreateEventDispatcher } from 'utils/imports/svelte';
 import { infohubLogos, infohubSections } from 'utils/imports/data';
-import { infohubFirstloadError, currentRouteLocation, infohubTags } from 'utils/imports/store';
+import { infohubFirstloadError, infohubTags } from 'utils/imports/store';
 import { buildQueryStrings, makeApiCall, getInfiniteScrollingObserver } from 'utils/imports/helpers';
 import { InfohubSourceModal, Spinner, StandardError } from 'utils/imports/components';
 

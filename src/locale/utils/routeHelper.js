@@ -1,7 +1,7 @@
 import { currentLocale } from 'utils/imports/store';
 import { routeLocaleDict } from 'utils/imports/data';
 import { localeStandardLanguage } from 'utils/imports/config';
-import { parse, inject } from 'regexparam';
+import { inject } from 'regexparam';
 
 let localeStoreValue;
 

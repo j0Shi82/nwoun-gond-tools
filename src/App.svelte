@@ -1,14 +1,16 @@
 <script>
 import {
   isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded,
-  AsyncComponentLoader,
+  AsyncComponentLoader, localize,
 } from 'utils/imports/core';
 import {
   svelteLifecycleOnMount, svelteSetContext, svelteTick,
 } from 'utils/imports/svelte';
 import { menuItems, images } from 'utils/imports/data';
 import { Modal } from 'utils/imports/components';
-import { currentRouteLocation, currentRouteQuerystring } from 'utils/imports/store';
+import {
+  currentRouteLocation, currentRouteName, currentRouteQuerystring, currentRouteTitleKey, infohubWhoamiTagTitle,
+} from 'utils/imports/store';
 
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
@@ -23,6 +25,7 @@ let menuOpen = false;
 let modalComponent = null;
 let modalProps = null;
 let modalHeadlineLocaleIdent = 'modal.defaultHeadline';
+$: titleAppendix = $currentRouteName === 'infohub' && $infohubWhoamiTagTitle !== null ? ` about ${$infohubWhoamiTagTitle}` : '';
 
 const modalOpen = (component, props = {}, headlineLocaleIdent = 'modal.defaultHeadline') => {
   modalComponent = component;
@@ -92,6 +95,7 @@ function scrollToTop() {
 <svelte:head>
 	<meta property="og:url" content="{process.env.SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring ? `?${$currentRouteQuerystring}` : ''}" />
   <link rel="canonical" href="{process.env.SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring ? `?${$currentRouteQuerystring}` : ''}" />
+  <title>Neverwinter Gond Tools{$currentRouteTitleKey !== '' ? ` - ${$localize($currentRouteTitleKey)}` : ''}{titleAppendix}</title>
 </svelte:head>
 
 {#if modalComponent !== null}

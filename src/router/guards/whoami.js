@@ -1,14 +1,18 @@
 import { makeApiCall } from 'utils/imports/helpers';
-import { infohubWhoamiTagId } from 'utils/imports/store';
+import { infohubWhoamiTagId, infohubWhoamiTagTitle } from 'utils/imports/store';
 
 export default async (detail) => {
-  let tagId = null;
+  let data = {
+    id: null,
+    name: null,
+  };
 
   if (detail.params.length && detail.params[3]) {
-    tagId = await makeApiCall({ type: 'infohub/whoami', params: { url: detail.params[3] }, nullCatch: true });
+    data = await makeApiCall({ type: 'infohub/whoami', params: { url: detail.params[3] }, nullCatch: true });
   }
 
-  infohubWhoamiTagId.set(tagId ?? null);
+  infohubWhoamiTagId.set(data?.id ?? null);
+  infohubWhoamiTagTitle.set(data?.name ?? null);
 
   return true;
 };

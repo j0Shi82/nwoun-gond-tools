@@ -11,7 +11,7 @@ localeSupportedLanguages.filter((lang) => lang !== localeStandardLanguage).forEa
     routes.set(getLocalizedRouteMatcher(route.name, lang), routeWrapper({
       component: route.component,
       userData: { lang, routeName: route.name, ...route.data },
-      conditions: [...getRouteGuards(route.name)],
+      conditions: [...getRouteGuards({ routeName: route.name })],
     }));
   });
 });
@@ -20,14 +20,14 @@ baseRoutes.forEach((route) => {
   routes.set(getLocalizedRouteMatcher(route.name, localeStandardLanguage), routeWrapper({
     component: route.component,
     userData: { localeStandardLanguage, routeName: route.name, ...route.data },
-    conditions: [...getRouteGuards(route.name)],
+    conditions: [...getRouteGuards({ routeName: route.name })],
   }));
 });
 
 routes.set('*', routeWrapper({
   component: NotFound,
   userData: { lang: localeStandardLanguage, routeName: 'notfound' },
-  conditions: [...getRouteGuards('notfound')],
+  conditions: [...getRouteGuards({ routeName: 'notfound' })],
 }));
 
 export default routes;
