@@ -5,7 +5,6 @@ export default (detail) => {
     detail.userData
     && detail.userData.routeName
   ) {
-    console.log(detail);
     currentRouteTitleKey.set(`routes.titles.${detail.userData.routeName}`);
   }
   return true;
