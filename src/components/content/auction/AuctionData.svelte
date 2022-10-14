@@ -121,7 +121,7 @@ const closeOpenChart = () => { if (openItemDef !== null) toggleChart(openItemDef
 const resetPage = () => { curPage = 0; };
 const searchParamChange = () => { closeOpenChart(); resetPage(); };
 
-$: routerLocalizedPush('auction', buildQueryStrings(queryStringData));
+$: routerLocalizedPush('auction', { queryString: buildQueryStrings(queryStringData) });
 
 function getItemData() {
   loading = true;

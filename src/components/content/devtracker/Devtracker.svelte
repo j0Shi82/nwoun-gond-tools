@@ -75,14 +75,16 @@ const searchReload = (resetPage = false) => {
 };
 
 $: {
-  routerLocalizedPush('devtracker', buildQueryStrings([
-    {
-      element: curDev, type: 'value', comp: curDev !== '', name: 'dev',
-    },
-    {
-      element: curID, type: 'value', comp: curID !== '0', name: 'discussion_id',
-    },
-  ]));
+  routerLocalizedPush('devtracker', {
+    queryString: buildQueryStrings([
+      {
+        element: curDev, type: 'value', comp: curDev !== '', name: 'dev',
+      },
+      {
+        element: curID, type: 'value', comp: curID !== '0', name: 'discussion_id',
+      },
+    ]),
+  });
 
   searchReload(true);
 }
