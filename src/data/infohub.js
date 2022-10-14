@@ -27,7 +27,7 @@ const logos = {
   xboxhub: 'https://www.thexboxhub.com/wp-content/uploads/2014/07/new-txh-logo-500-360x360.png',
   flickmyth: 'https://www.flickeringmyth.com/wp-content/themes/news-pro/images/favicon.ico',
   hcgamer: 'https://hardcoregamer.com/wp-content/themes/hardcore-gamer-theme/favicon.png',
-  nerdstash: 'https://tnsmedialibrary.s3-accelerate.amazonaws.com/2015/02/favicon.ico',
+  nerdstash: 'https://thenerdstash.com/wp-content/uploads/2015/02/favicon.ico',
   mmominds: 'https://nw.mmominds.com/favicon.ico',
   occarticle: 'https://www.overclockersclub.com/favicon.ico',
   occguide: 'https://www.overclockersclub.com/favicon.ico',
