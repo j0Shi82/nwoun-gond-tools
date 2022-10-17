@@ -20,9 +20,9 @@ $: hasPetreons = patreonData.reduce((aggr, cur) => {
 
 $: localizeOptions = {
   values: {
-    itemsPerDay: parseInt(crawlEngineData?.ItemsPerDay, 10),
-    totalItems: parseInt(crawlEngineData?.TotalItems, 10),
-    percentage: ((parseInt(crawlEngineData?.ItemsPerDay, 10) / parseInt(crawlEngineData?.TotalItems, 10)) * 100).toFixed(2),
+    itemsPerDay: parseInt(crawlEngineData?.itemsPerDay, 10),
+    totalItems: parseInt(crawlEngineData?.totalItems, 10),
+    percentage: ((parseInt(crawlEngineData?.itemsPerDay, 10) / parseInt(crawlEngineData?.totalItems, 10)) * 100).toFixed(2),
   },
 };
 

@@ -82,7 +82,7 @@ function pushRoute() {
     routerLocalizedPush('infohub', {
       routeIndex: 1,
       params: {
-        url: $infohubTags.filter((tag) => parseInt(tag.id, 10) === parseInt(tags[0], 10))[0].term.replace(/[^0-9a-zA-Z\s]/g, '').replace(/\s/g, '-').toLowerCase(),
+        url: $infohubTags.filter((tag) => tag.id === parseInt(tags[0], 10))[0].term.replace(/[^0-9a-zA-Z\s]/g, '').replace(/\s/g, '-').toLowerCase(),
       },
     });
   } else {
@@ -150,7 +150,7 @@ $: {
         <div class="truncate font-medium flex-grow relative mr-3">
           <span>{data.title}</span>
         </div>
-        <span class="font-medium justify-self-end whitespace-nowrap">{ format(new Date(data.ts * 1000), 'dd MMM') }</span>
+        <span class="font-medium justify-self-end whitespace-nowrap">{ format(new Date(data.timestamp * 1000), 'dd MMM') }</span>
       </div>
       <!-- insert add sources popup in midle of data -->
       {#if (i + 1) % 50 === 0}

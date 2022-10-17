@@ -196,7 +196,7 @@ export default (domId, datasets, colorIdent) => {
     curConfig.data.datasets[1].trendlineLinear.colorMin = colors[colorIdent].datasets[1];
     curConfig.options.scales.y1.ticks.color = colors[colorIdent].datasets[1];
   }
-  curConfig.data.datasets[0].data = datasets.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgLow }));
-  curConfig.data.datasets[1].data = datasets.map((auction) => ({ x: auction.InsertedTimestamp * 1000, y: auction.AvgCount }));
+  curConfig.data.datasets[0].data = datasets.map((auction) => ({ x: auction.insertedTimestamp * 1000, y: auction.avgLow }));
+  curConfig.data.datasets[1].data = datasets.map((auction) => ({ x: auction.insertedTimestamp * 1000, y: auction.avgCount }));
   return new Chart(document.getElementById(domId), curConfig);
 };

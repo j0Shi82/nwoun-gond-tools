@@ -34,20 +34,20 @@ let curQuality = qs.get('quality') || '';
 let curSearchTerm = qs.get('s') || '';
 
 $: filteredData = itemData.filter(
-  (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-    && (curCategory === '' || (el.Categories && el.Categories.includes(curCategory)))
-    && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
+  (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.itemName))
+    && (curCategory === '' || (el.categories && el.categories.includes(curCategory)))
+    && (curQuality === '' || (el.quality && el.quality === curQuality)),
 ).filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
 
 $: curResultsCount = itemData.filter(
-  (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.ItemName))
-    && (curCategory === '' || (el.Categories && el.Categories.includes(curCategory)))
-    && (curQuality === '' || (el.Quality && el.Quality === curQuality)),
+  (el) => (curSearchTerm.length < 3 || RegExp(curSearchTerm, 'i').test(el.itemName))
+    && (curCategory === '' || (el.categories && el.categories.includes(curCategory)))
+    && (curQuality === '' || (el.quality && el.quality === curQuality)),
 ).length;
 
 $: categories = itemData.reduce((aggr, cur) => {
-  if (!cur.Categories) return aggr;
-  cur.Categories.forEach((el) => {
+  if (!cur.categories) return aggr;
+  cur.categories.forEach((el) => {
     if (!aggr.includes(el)) aggr.push(el);
   });
   return aggr;
@@ -105,9 +105,9 @@ function toggleChart(itemDef) {
         chartData[itemDef] = detailData;
         charts[openItemDef] = getAuctionChart(
           `Chart_${openItemDef}`,
-          detailData.filter((el) => (pickerStartDate === null || (new Date(el.InsertedDate) >= pickerStartDate))
-            && (pickerEndDate === null || (new Date(el.InsertedDate) <= pickerEndDate))),
-          itemData.find((el) => el.ItemDef === itemDef).Quality,
+          detailData.filter((el) => (pickerStartDate === null || (new Date(el.insertedDate) >= pickerStartDate))
+            && (pickerEndDate === null || (new Date(el.insertedDate) <= pickerEndDate))),
+          itemData.find((el) => el.itemDef === itemDef).quality,
         );
         charts[openItemDef].resize();
       }).catch(() => {
@@ -147,9 +147,9 @@ function getItemData() {
             chartData[openItemDef] = detailData;
             charts[openItemDef] = getAuctionChart(
               `Chart_${openItemDef}`,
-              detailData.filter((el) => (pickerStartDate === null || (new Date(el.InsertedDate) >= pickerStartDate))
-                && (pickerEndDate === null || (new Date(el.InsertedDate) <= pickerEndDate))),
-              itemData.find((el) => el.ItemDef === openItemDef).Quality,
+              detailData.filter((el) => (pickerStartDate === null || (new Date(el.insertedDate) >= pickerStartDate))
+                && (pickerEndDate === null || (new Date(el.insertedDate) <= pickerEndDate))),
+              itemData.find((el) => el.itemDef === openItemDef).quality,
             );
             charts[openItemDef].resize();
           }).catch(() => {
@@ -212,28 +212,28 @@ svelteLifecycleOnMount(async () => {
             </thead>
             <tbody class="bg-white divide-y divide-black">
               {#each filteredData as data, i}
-              <tr id={data.ItemDef} class="item-row {data.Quality}">
+              <tr id={data.itemDef} class="item-row {data.quality}">
                 <td class="px-1 py-1 truncate item-name">
-                  <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggleChart(data.ItemDef)}>
-                    {#if openItemDef === data.ItemDef}
+                  <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggleChart(data.itemDef)}>
+                    {#if openItemDef === data.itemDef}
                       <Icon data={faMinus} scale="1.5" class="text-black"></Icon>
                     {:else}
                       <Icon data={faPlus} scale="1.5" class="text-black"></Icon>
                     {/if}
                   </div>
-                  {data.ItemName}
+                  {data.itemName}
                 </td>
                 <td class="px-1 py-1 whitespace-nowrap text-right item-price">
-                  {Intl.NumberFormat().format(data.Low)} <Icon data={faGem} scale="1.5" class="text-black"></Icon>
+                  {Intl.NumberFormat().format(data.low)} <Icon data={faGem} scale="1.5" class="text-black"></Icon>
                 </td>
                 <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-count">
-                  {Intl.NumberFormat().format(data.Count)}
+                  {Intl.NumberFormat().format(data.count)}
                 </td>
                 <td class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-date">
-                  {dateFormatRelative(new Date(data.Inserted * 1000), new Date())}
+                  {dateFormatRelative(new Date(data.inserted * 1000), new Date())}
                 </td>
               </tr>
-              <tr class="item-row {data.Quality}" class:hidden={openItemDef !== data.ItemDef}>
+              <tr class="item-row {data.quality}" class:hidden={openItemDef !== data.itemDef}>
                 <td colspan="5" class="relative">
                   {#if chartData[openItemDef] === false}
                   <div class="absolute top-0 left-0 w-full p-2 rounded-md font-bold flex justify-center items-center" style="height: 400px">
@@ -244,7 +244,7 @@ svelteLifecycleOnMount(async () => {
                     <Spinner style="position: absolute; height: 400px;" />
                   {/if}
                   <div style="position: relative; height: 400px;" class="flex justify-center items-center">
-                    <canvas id={`Chart_${data.ItemDef}`} class:hidden={charts[openItemDef] === 'undefined'}></canvas>
+                    <canvas id={`Chart_${data.itemDef}`} class:hidden={charts[openItemDef] === 'undefined'}></canvas>
                   </div>
                   <div ></div>
                 </td>

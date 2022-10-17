@@ -80,7 +80,7 @@ svelteLifecycleOnMount(async () => {
         tagList = JSON.parse(e.detail.value).map((el) => $infohubTags.filter((tag) => tag.term === el.value)).map((el) => el[0].id);
       }
     });
-  tagify.addTags($infohubTags.filter((el) => tagList.includes(parseInt(el.id, 10))).map((el) => el.term));
+  tagify.addTags($infohubTags.filter((el) => tagList.includes(el.id)).map((el) => el.term));
 });
 </script>
 
