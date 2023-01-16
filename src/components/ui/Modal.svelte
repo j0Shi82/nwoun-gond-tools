@@ -45,7 +45,7 @@ const handleBackgroundClick = () => {
 <BackgroundOverlay on:click="{handleBackgroundClick}">
     <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
     <div class="inline-block align-bottom bg-gray-300 border-nwoun border-2 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-        <div class="absolute top-0 right-0 rounded-full cursor-pointer" on:click="{handleBackgroundClick}">
+        <div class="absolute top-0 right-0 rounded-full cursor-pointer" on:click="{handleBackgroundClick}" on:keypress="{handleBackgroundClick}">
             <Icon scale="3" data="{faTimesCircle}"></Icon>
         </div>
         <div class="h-12 mx-12 font-bold text-2xl flex content-center justify-center">
