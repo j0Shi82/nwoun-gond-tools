@@ -23,8 +23,11 @@
     import faPlusCircle from "assets/media/fontawesome/plus-circle.svg";
 
     export let types = "";
+    export let sites = "";
     export let tags = [];
     export let canMount = false;
+
+    $: console.log(types, sites);
 
     const { modalOpen } = svelteGetContext("modal");
     const showModal = () => {
@@ -52,7 +55,7 @@
         if (page === 1) firstLoading = true;
         makeApiCall({
             type: "articles/all",
-            params: { page, types, tags: tags.sort().join(",") },
+            params: { page, types, sites, tags: tags.sort().join(",") },
             returnData: false,
         })
             .then((response) => {
@@ -91,7 +94,11 @@
 
     function pushRoute() {
         // redirect to named article routes if only one tag is picked, otherwise index route with paramters
-        if (tags.length === 1 && types.split(",").length === 5) {
+        if (
+            tags.length === 1 &&
+            types.split(",").length === 0 &&
+            sites.split(",").length === 0
+        ) {
             routerLocalizedPush("infohub", {
                 routeIndex: 1,
                 params: {
@@ -114,8 +121,14 @@
                     {
                         element: types,
                         type: "value",
-                        comp: types.split(",").length < 5,
+                        comp: types !== "" && types.split(",").length > 0,
                         name: "types",
+                    },
+                    {
+                        element: sites,
+                        type: "value",
+                        comp: sites !== "" && sites.split(",").length > 0,
+                        name: "sites",
                     },
                 ]),
             });
@@ -128,7 +141,7 @@
         if (canMount) {
             finished = false;
             curPage = 1;
-            if (tags.length && types) {
+            if (tags.length && types && sites) {
                 getData(1);
             } else {
                 getData(1);

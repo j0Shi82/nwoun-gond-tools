@@ -1,6 +1,7 @@
 <script>
     import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
+    import faChevronUp from "assets/media/fontawesome/chevron-up.svg";
     import { Icon, InfohubArticles } from "utils/imports/components";
     import { localize } from "utils/imports/core";
     import { infohubSections } from "utils/imports/data";
@@ -17,14 +18,45 @@
     import "assets/style/infohub.scss";
     import "assets/style/tagify.scss";
 
+    // get types and site from query string and set them as active
     const qs = new URLSearchParams($currentRouteQuerystring);
     const articleSections = infohubSections.filter(
         (el) => el.type === "articles"
     );
     const sectionStates = articleSections.map(
-        (el) => qs.has("types") && qs.get("types").split(",").includes(el.id)
+        (el) =>
+            qs.has("types") &&
+            qs.get("types").split(",").includes(el.id) &&
+            ((qs.has("sites") &&
+                qs.get("sites").split(",").includes(el.site)) ||
+                el.site === null)
     );
+    // reactive types array that gets types and site from section data for the api call
+    $: types = sectionStates
+        .map((el, i) => (el ? articleSections[i].id : false))
+        .filter((el) => el !== false && el !== null)
+        .reduce(
+            (unique, item) =>
+                unique.includes(item) ? unique : [...unique, item],
+            []
+        )
+        .join(",");
+    $: sites = sectionStates
+        .map((el, i) => (el ? articleSections[i].site : false))
+        .filter((el) => el !== false && el !== null)
+        .reduce(
+            (unique, item) =>
+                unique.includes(item) ? unique : [...unique, item],
+            []
+        )
+        .join(",");
+    // clicking the types array will change the sectionStates array
+    const handleSectionStates = (index) => {
+        sectionStates[index] = !sectionStates[index];
+        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    };
 
+    // tag list logic, get tags from query string
     let tagList = qs.has("tags")
         ? qs
               .get("tags")
@@ -37,19 +69,8 @@
     let tagify = null;
     let tagsLoaded = false;
     let loading = true;
-    $: types = sectionStates
-        .map((el, i) => (el ? articleSections[i].id : false))
-        .filter((el) => el !== false)
-        .join(",");
 
-    const handleSectionStates = (index) => {
-        sectionStates[index] = !sectionStates[index];
-        window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    };
-
-    const searchIcon = infohubSections.filter((el) => el.type === "filter")[0]
-        .icon;
-
+    // get list of tags from api
     async function getTags() {
         if ($infohubTags.length > 0) {
             tagsLoaded = true;
@@ -71,6 +92,7 @@
     }
 
     svelteLifecycleOnMount(async () => {
+        // set up tags
         infohubFirstloadError.set(false);
         await getTags();
         tagify = new Tagify(
@@ -112,16 +134,6 @@
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">
     <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
-        <!-- <div
-            class="col-span-1 md:col-span-2"
-            class:disabled={$infohubFirstloadError || !tagsLoaded}
-        >
-            <span
-                style="background-image: url({searchIcon});"
-                class="font-bold text-2xl bg-no-repeat bg-contain pl-10"
-                id="filter">{$localize("infohub.filter")}</span
-            >
-        </div> -->
         <div class="col-span-1 md:col-span-2" id="discussionTagFilter">
             <input class:hidden={$infohubFirstloadError || !tagsLoaded} />
             {#if $infohubFirstloadError || !tagsLoaded}
@@ -138,6 +150,7 @@
             <InfohubArticles
                 tags={tagList}
                 {types}
+                {sites}
                 canMount={tagsLoaded}
                 on:loading={(e) => {
                     loading = e.detail.state;
@@ -168,7 +181,7 @@
         <div class="sticky sticky-right mx-auto" style="max-width: 48px;">
             <div
                 class="border-black pb-1/1 w-full bg-contain bg-center bg-no-repeat cursor-pointer mb-1"
-                style="background-image: url({searchIcon});"
+                style="background-image: url({faChevronUp});"
                 on:keypress={() =>
                     window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
                 on:click={() =>
@@ -195,7 +208,7 @@
     <div class="w-10">
         <div
             class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer"
-            style="background-image: url({searchIcon});"
+            style="background-image: url({faChevronUp});"
             on:keypress={() =>
                 window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
             on:click={() =>

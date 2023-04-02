@@ -68,11 +68,13 @@ const sections = [
         type: "filter",
         icon: faChevronUp,
         id: "filter",
+        site: null,
     },
     {
         type: "articles",
         icon: pweLogo,
         id: "official",
+        site: null,
     },
     {
         type: "articles",
@@ -90,11 +92,13 @@ const sections = [
         type: "articles",
         icon: faNewspaper,
         id: "news",
+        site: null,
     },
     {
         type: "articles",
         icon: faBookMedical,
         id: "guides",
+        site: null,
     },
     {
         type: "articles",
