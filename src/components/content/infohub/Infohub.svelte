@@ -187,7 +187,7 @@
                 on:click={() =>
                     window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
             />
-            <div class="border-black border-b-4 my-4" />
+            <div class="my-4" />
             {#each articleSections as section, i}
                 <div
                     class:opacity-25={!sectionStates[i]}
@@ -215,9 +215,9 @@
                 window.scrollTo({ top: 0, left: 0, behavior: "smooth" })}
         />
     </div>
-    <div class="border-black border-r-4 mx-4 h-3/4 flex-0" />
+    <div class="mx-4 h-3/4 flex-0" />
     {#each articleSections as section, i}
-        <div class="w-10">
+        <div class="w-6">
             <div
                 class:opacity-25={!sectionStates[i]}
                 class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer"
