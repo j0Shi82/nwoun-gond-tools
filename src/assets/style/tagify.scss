@@ -1,26 +1,27 @@
-$tags-border-color       : #b51208;
-$tags-hover-border-color : #b51208;
-$tags-focus-border-color : #b51208;
+$tags-border-color: #b51208;
+$tags-hover-border-color: #b51208;
+$tags-focus-border-color: #b51208;
 $tag-bg: #b51208;
-$tag-hover:#b51208;
-$tagify-dd-color-primary:#b51208;
+$tag-hover: #b51208;
+$tagify-dd-color-primary: #b51208;
 
-@import '@yaireo/tagify/src/tagify.scss';
+@import "@yaireo/tagify/src/tagify";
 
 .tagify,
 :root {
-  --tags-border-color: #b51208;
-  --tags-hover-border-color: #b51208;
-  --tags-focus-border-color: #b51208;
-  --tag-bg: #b51208;
-  --tag-hover: #b51208;
-  --tagify-dd-color-primary: #b51208;
+    --tags-border-color: #b51208;
+    --tags-hover-border-color: #b51208;
+    --tags-focus-border-color: #b51208;
+    --tag-bg: #b51208;
+    --tag-hover: #b51208;
+    --tagify-dd-color-primary: #b51208;
 }
 
 .tagify {
-  display: flex !important;
+    display: flex !important;
+    @apply rounded-md;
 }
 
 .auction-tagify .tagify {
-  @apply flex-grow;
+    @apply flex-grow;
 }

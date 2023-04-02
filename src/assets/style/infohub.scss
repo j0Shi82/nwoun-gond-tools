@@ -1,14 +1,14 @@
 input.error,
 textarea.error {
-  @apply border-red-600;
+    @apply border-red-600;
 }
 
 span.error,
 div.error {
-  @apply text-red-600 italic;
+    @apply text-red-600 italic;
 }
 
 span.success,
 div.success {
-  @apply text-green-600 italic;
+    @apply text-green-600 italic;
 }

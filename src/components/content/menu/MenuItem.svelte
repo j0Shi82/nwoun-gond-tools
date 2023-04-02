@@ -1,45 +1,66 @@
 <script>
-import { Icon } from 'utils/imports/components';
-import { getLocalizedRouteMatcher, localize, routerLocalizedPush } from 'utils/imports/core';
-import { currentRouteLocation } from 'utils/imports/store';
+    import { Icon } from "utils/imports/components";
+    import {
+        getLocalizedRouteMatcher,
+        localize,
+        routerLocalizedPush,
+    } from "utils/imports/core";
+    import { currentRouteLocation } from "utils/imports/store";
 
-export let id;
-export let mobile = false;
-export let icon;
-export let textLocaleKey;
-export let linkType = 'external';
-export let link;
-export let condensed = false;
-export let flexAuto = true;
+    export let id;
+    export let mobile = false;
+    export let icon;
+    export let textLocaleKey;
+    export let linkType = "external";
+    export let link;
+    export let condensed = false;
+    export let flexAuto = true;
 
-const mobileClasses = 'flex lg:hidden h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
-const desktopClasses = 'hidden lg:flex justify-start h-full items-center cursor-pointer hover:bg-black hover:text-nwoun pl-2 pr-2';
-const condensedClasses = 'hover:rounded-full';
+    const scale = condensed ? "2" : "1";
 
-function linkClick() {
-  if (linkType === 'external') {
-    window.open(link);
-  }
+    const mobileClasses =
+        "flex justify-center lg:hidden h-full items-center cursor-pointer hover:underline pl-2 pr-3";
+    const desktopClasses =
+        "hidden lg:flex justify-start h-full items-center cursor-pointer hover:underline pl-2 pr-3";
+    const condensedClasses = "hover:rounded-full";
 
-  if (linkType === 'internal' && !$currentRouteLocation.match(getLocalizedRouteMatcher(link))) {
-    routerLocalizedPush(link);
-  }
-}
+    function linkClick() {
+        if (linkType === "external") {
+            window.open(link);
+        }
 
+        if (
+            linkType === "internal" &&
+            !$currentRouteLocation.match(getLocalizedRouteMatcher(link))
+        ) {
+            routerLocalizedPush(link);
+        }
+    }
 </script>
 
-<style lang="scss">
-  .menu-item.active {
-    @apply bg-black text-nwoun;
-
-    &.condensed {
-      @apply rounded-full;
-    }
-  }
-
-</style>
-
-<div id="{id}" class:flex-auto="{flexAuto}" class:active="{$currentRouteLocation.match(getLocalizedRouteMatcher(link))}" class:condensed="{condensed}" class="{mobile ? mobileClasses : desktopClasses} {condensed ? condensedClasses : ''} menu-item" on:keypress="{linkClick}" on:click="{linkClick}">
-    <Icon data={icon} scale="1.5" class="w-8"></Icon>
-    {#if !condensed}<span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>{/if}
+<div
+    {id}
+    class:flex-auto={flexAuto}
+    class:active={$currentRouteLocation.match(getLocalizedRouteMatcher(link))}
+    class:condensed
+    class="{mobile ? mobileClasses : desktopClasses} {condensed
+        ? condensedClasses
+        : ''} menu-item"
+    on:keypress={linkClick}
+    on:click={linkClick}
+>
+    <Icon data={icon} {scale} class="w-8" />
+    {#if !condensed}<span class="text-xl font-bold"
+            >{$localize(textLocaleKey)}</span
+        >{/if}
 </div>
+
+<style lang="scss">
+    .menu-item.active {
+        @apply underline;
+
+        &.condensed {
+            @apply rounded-full;
+        }
+    }
+</style>
