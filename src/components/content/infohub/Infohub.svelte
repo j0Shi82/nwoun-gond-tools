@@ -1,15 +1,13 @@
 <script>
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
+import { Icon, InfohubArticles } from 'utils/imports/components';
 import { localize } from 'utils/imports/core';
-import { svelteLifecycleOnMount } from 'utils/imports/svelte';
-import { Tagify } from 'utils/imports/plugins';
-import { InfohubArticles, Icon } from 'utils/imports/components';
 import { infohubSections } from 'utils/imports/data';
 import { makeApiCall } from 'utils/imports/helpers';
-import {
-  infohubFirstloadError, infohubWhoamiTagId, infohubTags, currentRouteQuerystring,
-} from 'utils/imports/store';
+import { Tagify } from 'utils/imports/plugins';
+import { currentRouteQuerystring, infohubFirstloadError, infohubTags, infohubWhoamiTagId } from 'utils/imports/store';
+import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 
 import 'assets/style/infohub.scss';
 import 'assets/style/tagify.scss';
@@ -131,6 +129,7 @@ svelteLifecycleOnMount(async () => {
           <div 
             class="border-black pb-1/1 w-full bg-contain bg-center bg-no-repeat cursor-pointer mb-1" 
             style="background-image: url({searchIcon});" 
+            on:keypress="{() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}"
             on:click="{() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}"
           >
           </div>
@@ -138,7 +137,10 @@ svelteLifecycleOnMount(async () => {
           {#each articleSections as section, i}
               <div 
                 class:opacity-25="{!sectionStates[i]}" 
-                class="pb-1/1 w-full bg-contain bg-center bg-no-repeat cursor-pointer mb-1" style="background-image: url({section.icon});" on:click="{() => handleSectionStates(i)}">
+                class="pb-1/1 w-full bg-contain bg-center bg-no-repeat cursor-pointer mb-1" 
+                style="background-image: url({section.icon});" 
+                on:keypress="{() => handleSectionStates(i)}"
+                on:click="{() => handleSectionStates(i)}">
               </div>
           {/each}
         </div>
@@ -149,6 +151,7 @@ svelteLifecycleOnMount(async () => {
     <div 
       class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" 
       style="background-image: url({searchIcon});"
+      on:keypress="{() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}"
       on:click="{() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}"
     >
     </div>
@@ -160,6 +163,7 @@ svelteLifecycleOnMount(async () => {
           class:opacity-25="{!sectionStates[i]}" 
           class="pb-1/1 bg-contain bg-center bg-no-repeat cursor-pointer" 
           style="background-image: url({section.icon});" 
+          on:keypress="{() => { handleSectionStates(i); }}"
           on:click="{() => { handleSectionStates(i); }}"
         >
         </div>

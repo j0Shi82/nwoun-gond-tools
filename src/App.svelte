@@ -1,23 +1,22 @@
 <script>
-import {
-  isLocalizationLoading, setupLocalization, RouterComponent, routes, routerOnRouteLoaded,
-  AsyncComponentLoader, localize,
-} from 'utils/imports/core';
-import {
-  svelteLifecycleOnMount, svelteSetContext, svelteTick,
-} from 'utils/imports/svelte';
-import { menuItems, images } from 'utils/imports/data';
 import { Modal } from 'utils/imports/components';
 import {
-  currentRouteLocation, currentRouteName, currentRouteQuerystring, currentRouteTitleKey, infohubWhoamiTagTitle,
+    AsyncComponentLoader, isLocalizationLoading, localize, RouterComponent, routerOnRouteLoaded, routes, setupLocalization
+} from 'utils/imports/core';
+import { images, menuItems } from 'utils/imports/data';
+import {
+    currentRouteLocation, currentRouteName, currentRouteQuerystring, currentRouteTitleKey, infohubWhoamiTagTitle
 } from 'utils/imports/store';
+import {
+    svelteLifecycleOnMount, svelteSetContext, svelteTick
+} from 'utils/imports/svelte';
 
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 import { Icon, MenuItem } from 'utils/imports/components';
 
-import 'assets/style/tailwind.scss';
 import 'assets/style/global.scss';
+import 'assets/style/tailwind.scss';
 
 let menuOpen = false;
 
@@ -116,8 +115,8 @@ function scrollToTop() {
   </div> -->
   <div id="sticky" class="sticky px-2 z-20 top-0 bg-nwoun">
     <div id="mainMenu" class="flex justify-between w-full h-12">
-      <div class="py-1 mr-2" on:click="{scrollToTop}">
-        <img src="{images.headerBannerSmall}" class="h-full w-auto cursor-pointer" on:click="{scrollToTop}" alt="Small logo of Neverwinter Gond Tools" />
+      <div class="py-1 mr-2" on:keypress="{scrollToTop}" on:click="{scrollToTop}">
+        <img src="{images.headerBannerSmall}" class="h-full w-auto cursor-pointer" on:keypress="{scrollToTop}" on:click="{scrollToTop}" alt="Small logo of Neverwinter Gond Tools" />
       </div>
       {#each menuItems.filter((i) => i.type !== 'talk') as item}
         <MenuItem 
@@ -152,12 +151,12 @@ function scrollToTop() {
           link="{item.link}"
         />
         {/each}
-        <div class="flex lg:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun hover:rounded-full pl-2 pr-2 flex-0" on:click="{() => { menuOpen = !menuOpen; }}">
+        <div class="flex lg:hidden justify-end h-full items-center cursor-pointer hover:bg-black hover:text-nwoun hover:rounded-full pl-2 pr-2 flex-0" on:keypress="{() => { menuOpen = !menuOpen; }}" on:click="{() => { menuOpen = !menuOpen; }}">
           <Icon data={faBars} scale="1.5" class="w-8"></Icon>
         </div>
       </div>
     </div>
-    <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}" on:click="{() => { menuOpen = false; }}">
+    <div id="mobileMenu" class="p-2 flex-col border-black border-t-2 border-solid" class:hidden="{!menuOpen}" class:flex="{menuOpen}" on:keypress="{() => { menuOpen = false; }}" on:click="{() => { menuOpen = false; }}">
       {#each menuItems.filter((i) => i.type !== 'talk') as item}
         <MenuItem 
           id="{`${item.id}Mobile`}"

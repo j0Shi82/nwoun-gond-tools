@@ -13,6 +13,6 @@ export let colorClasses = 'border-nwoun bg-gray-300 bg-opacity-50 text-nwoun';
     }
 </style>
 
-<div class="p-3 rounded-md text-center {colorClasses} {cssClasses} font-bold leading-tight border-{borderSize} cursor-pointer" class:invisible="{invisible}" on:click="{click}">
+<div class="p-3 rounded-md text-center {colorClasses} {cssClasses} font-bold leading-tight border-{borderSize} cursor-pointer" class:invisible="{invisible}" on:keypress="{click}" on:click="{click}">
     <slot>{text}</slot>
 </div>

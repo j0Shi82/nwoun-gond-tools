@@ -1,9 +1,9 @@
 <script>
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-import { svelteCreateEventDispatcher, svelteLifecycleOnMount } from 'utils/imports/svelte';
 import { Icon } from 'utils/imports/components';
 import { localize } from 'utils/imports/core';
 import { Easepick } from 'utils/imports/plugins';
+import { svelteCreateEventDispatcher, svelteLifecycleOnMount } from 'utils/imports/svelte';
 
 export let pickerStartDate;
 export let pickerEndDate;
@@ -52,7 +52,7 @@ svelteLifecycleOnMount(async () => {
 <div class="w-full mr-2 relative">
   <input type="text" bind:this={pickerStartElement} readonly class="w-full border-nwoun bg-transparent cursor-pointer" placeholder="{$localize('auction.search.dateStart')}" />
   {#if pickerStartDate }
-  <div  on:click="{() => pickerStart.clear()}" class="absolute right-1 top-1 cursor-pointer">
+  <div on:keypress="{() => pickerStart.clear()}" on:click="{() => pickerStart.clear()}" class="absolute right-1 top-1 cursor-pointer">
     <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
   </div>
   {/if}
@@ -60,7 +60,7 @@ svelteLifecycleOnMount(async () => {
 <div class="w-full mr-2 relative">
   <input type="text" bind:this={pickerEndElement} readonly class="w-full border-nwoun bg-transparent cursor-pointer" placeholder="{$localize('auction.search.dateEnd')}" />
   {#if pickerEndDate }
-  <div on:click="{() => pickerStart.clear()}" on:click="{() => pickerEnd.clear() }" class="absolute right-1 top-1 cursor-pointer">
+  <div on:keypress="{() => pickerStart.clear()}" on:keypress="{() => pickerEnd.clear()}" on:click="{() => pickerStart.clear()}" on:click="{() => pickerEnd.clear() }" class="absolute right-1 top-1 cursor-pointer">
     <Icon data="{faTimesCircle}" scale="{2}" class="text-black"></Icon>
   </div>
   {/if}

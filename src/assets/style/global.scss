@@ -1,26 +1,23 @@
 body,
 html {
-  min-width: 360px;
+    min-width: 360px;
 }
 
 body {
-  @apply font-sans;
+    @apply font-sans;
 
-  &.scroll-off {
-    overflow: hidden;
-    width: 100vw;
-  }
+    &.scroll-off {
+        overflow: hidden;
+        width: 100vw;
+    }
 }
 
 html {
-  &.scroll-off {
-    max-height: 100vh;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    height: 100%;
-    overflow: hidden;
-    padding-bottom: 1px;
-  }
+    &.scroll-off {
+        max-height: 100vh;
+        inset: 0;
+        height: 100%;
+        overflow: hidden;
+        padding-bottom: 1px;
+    }
 }

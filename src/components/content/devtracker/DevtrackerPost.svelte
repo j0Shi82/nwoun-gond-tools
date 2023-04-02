@@ -1,6 +1,6 @@
 <script>
-import { formatDate, formatTime } from 'utils/imports/core';
 import { Button, Icon } from 'utils/imports/components';
+import { formatDate, formatTime } from 'utils/imports/core';
 
 import { faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -47,7 +47,7 @@ function scrollToTop() {
 </style>
 
 <div class="flex flex-col md:flex-row items-center md:items-start rounded-md bg-red-700 p-2 my-2 border-2 border-black relative">
-    <div class="absolute top-0 right-0 text-red-700 bg-black cursor-pointer border-b-4 border-l-4 border-red-700" on:click={scrollToTop} style="width:34px; height: 34px; border-bottom-left-radius: 100%;">
+    <div class="absolute top-0 right-0 text-red-700 bg-black cursor-pointer border-b-4 border-l-4 border-red-700" on:keypress={scrollToTop} on:click={scrollToTop} style="width:34px; height: 34px; border-bottom-left-radius: 100%;">
       <Icon data={faChevronUp} class="absolute" style="top: 3px; right:5px;" />
     </div>
     <div class="w-full md:w-auto flex-none flex md:flex-col md:mr-2">
@@ -60,9 +60,9 @@ function scrollToTop() {
       </div>
     </div>
     <div class="w-full flex-none md:flex-auto cursor-pointer">
-        <div class="w-full border-black border-b-2 text-lg font-bold text-center md:text-left" on:click="{() => visitForum(postData)}">{postData.discussion_name}</div>
+        <div class="w-full border-black border-b-2 text-lg font-bold text-center md:text-left" on:keypress="{() => visitForum(postData)}" on:click="{() => visitForum(postData)}">{postData.discussion_name}</div>
         <div bind:this="{bodyEl}" class="relative italic overflow-hidden" style="word-break: break-word;" class:condensed="{!showAll}">
-            <div class="mt-2" on:click="{() => visitForum(postData)}">{@html postData.body}</div>
+            <div class="mt-2" on:keypress="{() => visitForum(postData)}" on:click="{() => visitForum(postData)}">{@html postData.body}</div>
             {#if overflow && !showAll}
             <div class="absolute w-full bottom-0 pt-10 bg-gradient-to-t from-red-700 to-transparent">
                 <div class="w-1/1 sm:w-1/2 md:w-1/4 float-right border-l-0 sm:border-l-8 border-t-8 border-red-700">

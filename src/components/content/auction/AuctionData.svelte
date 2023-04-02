@@ -1,21 +1,14 @@
 <script>
-import {
-  faGem, faPlus, faMinus, faExclamationTriangle,
-} from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faGem, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import { svelteLifecycleOnMount } from 'utils/imports/svelte';
+import { AuctionDataEngineInfo, AuctionDataSearchCatSelect, AuctionDataSearchDatePicker, AuctionDataSearchQualitySelect, AuctionDataSearchTerm, Button, Icon, Spinner, StandardError } from 'utils/imports/components';
 import {
-  Spinner, Icon, Button, StandardError, AuctionDataEngineInfo, AuctionDataSearchTerm,
-  AuctionDataSearchCatSelect, AuctionDataSearchQualitySelect, AuctionDataSearchDatePicker,
-} from 'utils/imports/components';
-import {
-  localize, routerLocalizedPush,
+    localize, routerLocalizedPush
 } from 'utils/imports/core';
-import { currentRouteQuerystring } from 'utils/imports/store';
-import {
-  dateFormat, dateFormatRelative, buildQueryStrings, makeApiCall,
-} from 'utils/imports/helpers';
+import { buildQueryStrings, dateFormat, dateFormatRelative, makeApiCall } from 'utils/imports/helpers';
 import { getAuctionChart } from 'utils/imports/plugins';
+import { currentRouteQuerystring } from 'utils/imports/store';
+import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 
 import 'assets/style/tagify.scss';
 
@@ -214,7 +207,7 @@ svelteLifecycleOnMount(async () => {
               {#each filteredData as data, i}
               <tr id={data.itemDef} class="item-row {data.quality}">
                 <td class="px-1 py-1 truncate item-name">
-                  <div class="cursor-pointer w-4 inline-block mr-1" on:click={toggleChart(data.itemDef)}>
+                  <div class="cursor-pointer w-4 inline-block mr-1" on:keypress={toggleChart(data.itemDef)} on:click={toggleChart(data.itemDef)}>
                     {#if openItemDef === data.itemDef}
                       <Icon data={faMinus} scale="1.5" class="text-black"></Icon>
                     {:else}

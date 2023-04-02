@@ -1,11 +1,9 @@
 <script>
-import {
-  faCircleCheck, faBan,
-} from '@fortawesome/free-solid-svg-icons';
-import { svelteLifecycleOnMount } from 'utils/imports/svelte';
+import { faBan, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { Icon, Spinner } from 'utils/imports/components';
 import { localize } from 'utils/imports/core';
 import { makeApiCall } from 'utils/imports/helpers';
+import { svelteLifecycleOnMount } from 'utils/imports/svelte';
 
 let crawlEngineData = null;
 let patreonData = [];
@@ -62,7 +60,7 @@ svelteLifecycleOnMount(async () => {
     </div>
     <div class="mt-2">
       <div class="text-center font-bold text-base text-nwoun underline">
-        <a href="https://www.patreon.com/nw_gond_tools" target="_blank">
+        <a href="https://www.patreon.com/nw_gond_tools" target="_blank" rel="noreferrer">
           {#if crawlActive}
           { $localize('auction.engine.up.help') }
           {/if}

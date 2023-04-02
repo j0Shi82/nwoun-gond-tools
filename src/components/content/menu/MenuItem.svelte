@@ -1,9 +1,7 @@
 <script>
-import {
-  localize, routerLocalizedPush, getLocalizedRouteMatcher,
-} from 'utils/imports/core';
-import { currentRouteLocation } from 'utils/imports/store';
 import { Icon } from 'utils/imports/components';
+import { getLocalizedRouteMatcher, localize, routerLocalizedPush } from 'utils/imports/core';
+import { currentRouteLocation } from 'utils/imports/store';
 
 export let id;
 export let mobile = false;
@@ -41,7 +39,7 @@ function linkClick() {
 
 </style>
 
-<div id="{id}" class:flex-auto="{flexAuto}" class:active="{$currentRouteLocation.match(getLocalizedRouteMatcher(link))}" class:condensed="{condensed}" class="{mobile ? mobileClasses : desktopClasses} {condensed ? condensedClasses : ''} menu-item" on:click="{linkClick}">
+<div id="{id}" class:flex-auto="{flexAuto}" class:active="{$currentRouteLocation.match(getLocalizedRouteMatcher(link))}" class:condensed="{condensed}" class="{mobile ? mobileClasses : desktopClasses} {condensed ? condensedClasses : ''} menu-item" on:keypress="{linkClick}" on:click="{linkClick}">
     <Icon data={icon} scale="1.5" class="w-8"></Icon>
     {#if !condensed}<span class="ml-2 text-xl font-bold">{$localize(textLocaleKey)}</span>{/if}
 </div>

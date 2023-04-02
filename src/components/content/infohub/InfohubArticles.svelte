@@ -1,12 +1,12 @@
 <script>
-import {
-  localize, routerLocalizedPush,
-} from 'utils/imports/core';
-import { svelteGetContext, svelteCreateEventDispatcher } from 'utils/imports/svelte';
-import { infohubLogos, infohubSections } from 'utils/imports/data';
-import { infohubFirstloadError, infohubTags } from 'utils/imports/store';
-import { buildQueryStrings, makeApiCall, getInfiniteScrollingObserver } from 'utils/imports/helpers';
 import { InfohubSourceModal, Spinner, StandardError } from 'utils/imports/components';
+import {
+    localize, routerLocalizedPush
+} from 'utils/imports/core';
+import { infohubLogos, infohubSections } from 'utils/imports/data';
+import { buildQueryStrings, getInfiniteScrollingObserver, makeApiCall } from 'utils/imports/helpers';
+import { infohubFirstloadError, infohubTags } from 'utils/imports/store';
+import { svelteCreateEventDispatcher, svelteGetContext } from 'utils/imports/svelte';
 
 import format from 'date-fns/format';
 
@@ -142,7 +142,11 @@ $: {
 {/if}
 {#if (allData.length) && !firstLoading}
     {#each allData as data, i}
-      <div class="flex-auto w-full bg-nwoun p-2 flex items-center rounded-md cursor-pointer" on:click="{() => { window.open(data.link); }}">
+      <div 
+        class="flex-auto w-full bg-nwoun p-2 flex items-center rounded-md cursor-pointer" 
+        on:keypress="{() => { window.open(data.link); }}"
+        on:click="{() => { window.open(data.link); }}"
+      >
         <div class="flex-none h-4 w-4 mr-2 cursor-pointer bg-no-repeat bg-contain bg-center" style="background-image: url({sectionIcons[data.type]});"></div>
         {#each data.logos as logo}
           <img class="flex-none h-4 w-4 mr-2 cursor-pointer" src="{logo}" alt="site logo" />
@@ -155,7 +159,7 @@ $: {
       <!-- insert add sources popup in midle of data -->
       {#if (i + 1) % 50 === 0}
       <div class="col-span-1 md:col-span-2">
-        <div class="w-full bg-orange-600 p-2 text-center rounded-md font-bold cursor-pointer" on:click="{() => { showModal(); }}">
+        <div class="w-full bg-orange-600 p-2 text-center rounded-md font-bold cursor-pointer" on:keypress="{() => { showModal(); }}" on:click="{() => { showModal(); }}">
           <span style="background-image: url({faPlusCircle});" class="bg-no-repeat pl-10">{$localize('infohub.addSource')}</span>
         </div>
       </div>
@@ -163,7 +167,7 @@ $: {
     {/each}
     {#if allData.length < 50}
       <div class="col-span-1 md:col-span-2">
-        <div class="w-full bg-orange-600 p-2 text-center rounded-md font-bold cursor-pointer" on:click="{() => { showModal(); }}">
+        <div class="w-full bg-orange-600 p-2 text-center rounded-md font-bold cursor-pointer" on:keypress="{() => { showModal(); }}" on:click="{() => { showModal(); }}">
           <span style="background-image: url({faPlusCircle});" class="bg-no-repeat pl-10">{$localize('infohub.addSource')}</span>
         </div>
       </div>
