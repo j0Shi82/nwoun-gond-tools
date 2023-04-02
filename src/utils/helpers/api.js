@@ -1,9 +1,12 @@
 import { apiServer } from "utils/imports/config";
-import { axios } from "utils/imports/core";
+
+import axios from "axios";
 
 export default ({
     type,
     params = {},
+    method = "get",
+    timeout = 5000,
     returnData = true,
     nullCatch = false,
 }) => {
@@ -28,6 +31,9 @@ export default ({
         case "devtracker/devlist":
             requestUrl = `${apiServer}/v1/devtracker/devlist`;
             break;
+        case "devtracker/devinfo":
+            requestUrl = `${apiServer}/v1/devtracker/devlist?dev=${curDev}&id=${curID}`;
+            break;
         case "devtracker/topiclist":
             requestUrl = `${apiServer}/v1/devtracker/topiclist?threshold=5`;
             break;
@@ -39,6 +45,9 @@ export default ({
             break;
         case "infohub/whoami":
             requestUrl = `${apiServer}/v1/infohub/whoami?url=${url}`;
+            break;
+        case "infohub/source":
+            requestUrl = `${apiServer}/v1/infohub/source`;
             break;
         case "auctions/itemdetails":
             requestUrl = `${apiServer}/v1/auctions/itemdetails?item_def=${itemDef}&server=GLOBAL`;
@@ -55,10 +64,16 @@ export default ({
         default:
             requestUrl = null;
     }
-    if (requestUrl == null)
+    if (requestUrl == null) {
         return Promise.reject(new Error("no valid request"));
-    return axios
-        .get(requestUrl)
+    }
+
+    return axios({
+        method,
+        url: requestUrl,
+        timeout,
+        data: method === "post" ? params : {},
+    })
         .then((response) => {
             if (returnData) return Promise.resolve(response.data);
             return Promise.resolve(response);

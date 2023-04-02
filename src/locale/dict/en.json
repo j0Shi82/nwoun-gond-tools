@@ -25,6 +25,11 @@
             "auction": "Auction Data"
         }
     },
+    "devtracker": {
+        "posts": {
+            "expand": "Expand"
+        }
+    },
     "infohub": {
         "filter": "Filter",
         "filterPlaceholder": "Add tags to filter posts",
