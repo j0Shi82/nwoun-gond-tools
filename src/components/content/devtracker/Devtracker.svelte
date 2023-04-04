@@ -56,7 +56,7 @@
                             type: "devtracker/devinfo",
                             params: {
                                 curDev: devIdent.split("::")[0],
-                                curId: devIdent.split("::")[1],
+                                curID: devIdent.split("::")[1],
                             },
                             returnData: false,
                         }).then((res) => {

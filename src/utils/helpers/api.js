@@ -32,7 +32,7 @@ export default ({
             requestUrl = `${apiServer}/v1/devtracker/devlist`;
             break;
         case "devtracker/devinfo":
-            requestUrl = `${apiServer}/v1/devtracker/devlist?dev=${curDev}&id=${curID}`;
+            requestUrl = `${apiServer}/v1/devtracker/devinfo?dev=${curDev}&id=${curID}`;
             break;
         case "devtracker/topiclist":
             requestUrl = `${apiServer}/v1/devtracker/topiclist?threshold=5`;
