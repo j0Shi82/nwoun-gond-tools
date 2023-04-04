@@ -434,7 +434,8 @@
         <div id="pages" class="my-2 flex justify-between">
             <Button
                 text="&lt;&lt; {$localize('auction.search.buttons.prev')}"
-                colorClasses="border-black bg-gray-300 bg-opacity-50 text-black"
+                colorClasses="border-nwoun bg-gray-300 bg-opacity-70 text-black"
+                borderSize="1"
                 invisible={curPage < 1}
                 click={() => {
                     closeOpenChart();
@@ -443,7 +444,8 @@
             />
             {#if curResultsCount > 10 * (curPage + 1)}<Button
                     text="{$localize('auction.search.buttons.next')} &gt;&gt;"
-                    colorClasses="border-black bg-gray-300 bg-opacity-50 text-black"
+                    colorClasses="border-nwoun bg-gray-300 bg-opacity-70 text-black"
+                    borderSize="1"
                     click={() => {
                         closeOpenChart();
                         curPage += 1;

@@ -42,7 +42,7 @@
     });
 </script>
 
-<div class="mb-2">
+<div class="mb-2 bg-gray-300 bg-opacity-70">
     <div
         class="p-2 border rounded-lg"
         class:border-green-700={crawlActive}
