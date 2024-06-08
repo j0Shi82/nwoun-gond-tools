@@ -1,8 +1,8 @@
 <script>
+    import { Icon } from "@/utils/imports/components";
+    import { getLocalizedRouteMatcher } from "@/utils/imports/core";
+    import { images } from "@/utils/imports/data";
     import { faHeartCirclePlus } from "@fortawesome/free-solid-svg-icons";
-    import { Icon } from "utils/imports/components";
-    import { getLocalizedRouteMatcher } from "utils/imports/core";
-    import { images } from "utils/imports/data";
 </script>
 
 <div class="min-w-screen flex items-center justify-center px-5 mt-5 pt-16">

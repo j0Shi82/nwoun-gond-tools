@@ -1,12 +1,12 @@
 <script>
-    import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
-    import { Icon } from "utils/imports/components";
-    import { localize } from "utils/imports/core";
-    import { Easepick } from "utils/imports/plugins";
+    import { Icon } from "@/utils/imports/components";
+    import { localize } from "@/utils/imports/core";
+    import { Easepick } from "@/utils/imports/plugins";
     import {
         svelteCreateEventDispatcher,
         svelteLifecycleOnMount,
-    } from "utils/imports/svelte";
+    } from "@/utils/imports/svelte";
+    import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 
     export let pickerStartDate;
     export let pickerEndDate;
@@ -37,7 +37,7 @@
         pickerElement,
         pickerDate,
         selectCb,
-        clearCb
+        clearCb,
     ) => ({
         element: pickerElement,
         date: pickerDate,
@@ -62,16 +62,16 @@
                 pickerStartElement,
                 pickerStartDate,
                 pickerCallbacks.startDateSelect,
-                pickerCallbacks.startDateClear
-            )
+                pickerCallbacks.startDateClear,
+            ),
         );
         pickerEnd = new Easepick.create(
             getPickerOptions(
                 pickerEndElement,
                 pickerEndDate,
                 pickerCallbacks.endDateSelect,
-                pickerCallbacks.endDateClear
-            )
+                pickerCallbacks.endDateClear,
+            ),
         );
     });
 </script>

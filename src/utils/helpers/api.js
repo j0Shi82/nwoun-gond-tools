@@ -1,4 +1,4 @@
-import { apiServer } from "utils/imports/config";
+import { apiServer } from "@/utils/imports/config";
 
 import axios from "axios";
 

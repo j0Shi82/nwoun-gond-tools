@@ -1,18 +1,17 @@
 // routing
 import getLocalizedRouteMatcher, {
     getLocalizedRoute,
-} from "locale/utils/routeHelper";
-import getGuards from "router/utils/getGuards";
+} from "@/locale/utils/routeHelper";
+import routes from "@/router/index";
+import routeLoaded from "@/router/routeLoaded";
+import Loadable from "svelte-loadable/Loadable.svelte";
 import Router, { push } from "svelte-spa-router";
 import active from "svelte-spa-router/active";
 import { wrap } from "svelte-spa-router/wrap";
-import routes from "router/index";
-import routeLoaded from "router/routeLoaded";
-import Loadable from "svelte-loadable";
 
 // locale
-import { _, register, init, date, isLoading, time } from "svelte-i18n";
-import setupLocalization from "locale/i18n";
+import setupLocalization from "@/locale/i18n";
+import { _, date, isLoading, time } from "svelte-i18n";
 
 const routerLocalizedPush = (routeName, options = {}) => {
     const o = {
@@ -23,21 +22,18 @@ const routerLocalizedPush = (routeName, options = {}) => {
 };
 
 export {
-    getLocalizedRouteMatcher,
-    getGuards as getRouteGuards,
+    Loadable as AsyncComponentLoader,
     Router as RouterComponent,
-    routes,
-    routeLoaded as routerOnRouteLoaded,
-    active as routerActive,
-    push as routerPush,
-    routerLocalizedPush,
-    wrap as routeWrapper,
-    _ as localize,
     date as formatDate,
     time as formatTime,
-    register as registerLocaleDict,
-    init as initLocalization,
+    getLocalizedRouteMatcher,
     isLoading as isLocalizationLoading,
+    _ as localize,
+    wrap as routeWrapper,
+    active as routerActive,
+    routerLocalizedPush,
+    routeLoaded as routerOnRouteLoaded,
+    push as routerPush,
+    routes,
     setupLocalization,
-    Loadable as AsyncComponentLoader,
 };

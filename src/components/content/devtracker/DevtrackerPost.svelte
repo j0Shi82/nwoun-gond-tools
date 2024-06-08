@@ -1,6 +1,6 @@
 <script>
-    import { Button, Icon } from "utils/imports/components";
-    import { formatDate, formatTime, localize } from "utils/imports/core";
+    import { Button, Icon } from "@/utils/imports/components";
+    import { formatDate, formatTime, localize } from "@/utils/imports/core";
 
     import {
         faChevronUp,

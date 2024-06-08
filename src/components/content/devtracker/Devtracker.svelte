@@ -3,18 +3,18 @@
         DevtrackerPost,
         Spinner,
         StandardError,
-    } from "utils/imports/components";
-    import { routerLocalizedPush } from "utils/imports/core";
+    } from "@/utils/imports/components";
+    import { routerLocalizedPush } from "@/utils/imports/core";
     import {
         buildQueryStrings,
         getInfiniteScrollingObserver,
         makeApiCall,
-    } from "utils/imports/helpers";
+    } from "@/utils/imports/helpers";
     import {
         currentRouteQuerystring,
         devtrackerAvatarList,
-    } from "utils/imports/store";
-    import { svelteLifecycleOnMount } from "utils/imports/svelte";
+    } from "@/utils/imports/store";
+    import { svelteLifecycleOnMount } from "@/utils/imports/svelte";
 
     const qs = new URLSearchParams($currentRouteQuerystring);
     const avatarData = $devtrackerAvatarList;
@@ -126,12 +126,12 @@
         makeApiCall({ type: "devtracker/devlist", nullCatch: true }).then(
             (data) => {
                 devData = data;
-            }
+            },
         );
         makeApiCall({ type: "devtracker/topiclist", nullCatch: true }).then(
             (data) => {
                 topicData = data;
-            }
+            },
         );
     });
 </script>

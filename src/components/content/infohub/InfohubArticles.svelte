@@ -1,26 +1,26 @@
 <script>
-    import pweLogo from "assets/media/icons/neverwinter-96.png";
+    import pweLogo from "@/assets/media/icons/neverwinter-96.png";
     import {
         InfohubSourceModal,
         Spinner,
         StandardError,
-    } from "utils/imports/components";
-    import { localize, routerLocalizedPush } from "utils/imports/core";
-    import { infohubLogos, infohubSections } from "utils/imports/data";
+    } from "@/utils/imports/components";
+    import { localize, routerLocalizedPush } from "@/utils/imports/core";
+    import { infohubLogos, infohubSections } from "@/utils/imports/data";
     import {
         buildQueryStrings,
         getInfiniteScrollingObserver,
         makeApiCall,
-    } from "utils/imports/helpers";
-    import { infohubFirstloadError, infohubTags } from "utils/imports/store";
+    } from "@/utils/imports/helpers";
+    import { infohubFirstloadError, infohubTags } from "@/utils/imports/store";
     import {
         svelteCreateEventDispatcher,
         svelteGetContext,
-    } from "utils/imports/svelte";
+    } from "@/utils/imports/svelte";
 
     import format from "date-fns/format";
 
-    import faPlusCircle from "assets/media/fontawesome/plus-circle.svg";
+    import faPlusCircle from "@/assets/media/fontawesome/plus-circle.svg";
 
     export let types = "";
     export let sites = "";

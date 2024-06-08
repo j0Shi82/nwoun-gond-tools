@@ -3,7 +3,7 @@
 <head>
 	<meta charset='utf8'>
     <meta name='viewport' content='width=device-width'>
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <title>Neverwinter Gond Tools</title>
 	<meta name="description" content="Neverwinter Gond Tools is a news aggregator and collection of online tools for the award-winning, officially-licensed Dungeons & Dragons free-to-play MMORPG Neverwinter by Cryptic Studios and Gearbox Entertainment. It is home to the inofficial devtracker and auction house data. More to come...">
 	<meta name="keywords" content="Neverwinter, MMORPG, D&D, Dungeons & Dragons, Cryptic Studios, Gearbox, Online Game" />
 	<meta property="og:title" content="Neverwinter Gond Tools: News aggregator and online tool collection for the Neverwinter MMORPG" />
@@ -21,7 +21,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,600,700">
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
 
-	<link rel='icon' type='image/png' href='<%= htmlWebpackPlugin.options.icon %>'>
+	<link rel='icon' type='image/png' href='favicon-unbranded.png'>
 
 	<script> 
 		// generate with npx browserslist-useragent-regexp --ignorePatch --ignoreMinor --allowHigherVersions
@@ -56,5 +56,6 @@
 	<div id="nwoun_outdated" style="display: none; max-width:500px; margin: 0 auto;">
 		<p style="text-align: center;">In case you're seeing this there's a decent chance your browser might not be able to properly run this site. Please consider updating or using a different browser.</p>
 	</div>
+    <script type="module" src="/src/main.js"></script>
 </body>
 </html>

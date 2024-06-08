@@ -1,5 +1,8 @@
-import { makeApiCall } from "utils/imports/helpers";
-import { infohubWhoamiTagId, infohubWhoamiTagTitle } from "utils/imports/store";
+import { makeApiCall } from "@/utils/imports/helpers";
+import {
+    infohubWhoamiTagId,
+    infohubWhoamiTagTitle,
+} from "@/utils/imports/store";
 
 export default async (detail) => {
     let data = {

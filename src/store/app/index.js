@@ -1,4 +1,4 @@
-import { storeTypeWritable } from "utils/imports/svelte";
+import { storeTypeWritable } from "@/utils/imports/svelte";
 
 const store = {
     router: {

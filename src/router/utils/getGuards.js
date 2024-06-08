@@ -1,8 +1,8 @@
 // guards
-import setIsLoadingTrue from "router/guards/setIsLoadingTrue";
-import setLocale from "router/guards/setLocale";
-import setTitle from "router/guards/setTitle";
-import whoami from "router/guards/whoami";
+import setIsLoadingTrue from "@/router/guards/setIsLoadingTrue";
+import setLocale from "@/router/guards/setLocale";
+import setTitle from "@/router/guards/setTitle";
+import whoami from "@/router/guards/whoami";
 
 const guardConfig = [
     { test: () => true, guards: [setLocale, setIsLoadingTrue, setTitle] },

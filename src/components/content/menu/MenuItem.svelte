@@ -1,11 +1,11 @@
 <script>
-    import { Icon } from "utils/imports/components";
+    import { Icon } from "@/utils/imports/components";
     import {
         getLocalizedRouteMatcher,
         localize,
         routerLocalizedPush,
-    } from "utils/imports/core";
-    import { currentRouteLocation } from "utils/imports/store";
+    } from "@/utils/imports/core";
+    import { currentRouteLocation } from "@/utils/imports/store";
 
     export let id;
     export let mobile = false;

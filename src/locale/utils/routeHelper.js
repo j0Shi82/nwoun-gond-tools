@@ -1,6 +1,6 @@
-import { currentLocale } from "utils/imports/store";
-import { routeLocaleDict } from "utils/imports/data";
-import { localeStandardLanguage } from "utils/imports/config";
+import { localeStandardLanguage } from "@/utils/imports/config";
+import { routeLocaleDict } from "@/utils/imports/data";
+import { currentLocale } from "@/utils/imports/store";
 import { inject } from "regexparam";
 
 let localeStoreValue;
@@ -12,7 +12,7 @@ currentLocale.subscribe((value) => {
 export const getLocalizedRoute = (
     routeName,
     options = {},
-    lang = localeStoreValue
+    lang = localeStoreValue,
 ) => {
     const o = {
         routeIndex: 0,

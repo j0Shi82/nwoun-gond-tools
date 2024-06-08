@@ -1,6 +1,6 @@
-import { storeSetRouterIsRouting } from 'utils/imports/store';
+import { storeSetRouterIsRouting } from "@/utils/imports/store";
 
 export default () => {
-  storeSetRouterIsRouting(true);
-  return true;
+    storeSetRouterIsRouting(true);
+    return true;
 };

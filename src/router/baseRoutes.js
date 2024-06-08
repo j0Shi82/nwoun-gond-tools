@@ -1,10 +1,10 @@
 import {
-    UserRoute,
-    SupportRoute,
+    AuctionDataRoute,
     DevtrackerRoute,
     InfohubRoute,
-    AuctionDataRoute,
-} from "utils/imports/routes";
+    SupportRoute,
+    UserRoute,
+} from "@/utils/imports/routes";
 
 const baseRoutes = [
     { name: "user", component: UserRoute, data: {} },

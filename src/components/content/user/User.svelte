@@ -1,14 +1,14 @@
 <script>
+    import { Button, Icon } from "@/utils/imports/components";
+    import { getLocalizedRouteMatcher, localize } from "@/utils/imports/core";
+    import { images } from "@/utils/imports/data";
     import { faUser } from "@fortawesome/free-solid-svg-icons";
-    import { Button, Icon } from "utils/imports/components";
-    import { getLocalizedRouteMatcher, localize } from "utils/imports/core";
-    import { images } from "utils/imports/data";
 
     import { createClient } from "@supabase/supabase-js";
 
     const supabase = createClient(
         "https://bvvvppmucphfyhfxursk.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2dnZwcG11Y3BoZnloZnh1cnNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODA2MzgyODUsImV4cCI6MTk5NjIxNDI4NX0.oXUuvMUoUZqtvz6zEkPC25RIgiTHz6RaC2a6tp1j_j4"
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ2dnZwcG11Y3BoZnloZnh1cnNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODA2MzgyODUsImV4cCI6MTk5NjIxNDI4NX0.oXUuvMUoUZqtvz6zEkPC25RIgiTHz6RaC2a6tp1j_j4",
     );
 
     let username = "";

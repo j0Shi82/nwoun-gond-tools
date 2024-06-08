@@ -1,9 +1,9 @@
 <script>
+    import { Icon, Spinner } from "@/utils/imports/components";
+    import { localize } from "@/utils/imports/core";
+    import { makeApiCall } from "@/utils/imports/helpers";
+    import { svelteLifecycleOnMount } from "@/utils/imports/svelte";
     import { faBan, faCircleCheck } from "@fortawesome/free-solid-svg-icons";
-    import { Icon, Spinner } from "utils/imports/components";
-    import { localize } from "utils/imports/core";
-    import { makeApiCall } from "utils/imports/helpers";
-    import { svelteLifecycleOnMount } from "utils/imports/svelte";
 
     let crawlEngineData = null;
     let patreonData = [];
@@ -69,7 +69,7 @@
                 <div>
                     {@html $localize(
                         "auction.engine.down.data",
-                        localizeOptions
+                        localizeOptions,
                     )}
                 </div>
             {/if}

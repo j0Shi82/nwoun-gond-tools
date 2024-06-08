@@ -1,34 +1,34 @@
 <script>
-    import { Modal } from "utils/imports/components";
+    import { Modal } from "@/utils/imports/components";
     import {
         AsyncComponentLoader,
+        RouterComponent,
         isLocalizationLoading,
         localize,
-        RouterComponent,
         routerOnRouteLoaded,
         routes,
         setupLocalization,
-    } from "utils/imports/core";
-    import { images, menuItems } from "utils/imports/data";
+    } from "@/utils/imports/core";
+    import { images, menuItems } from "@/utils/imports/data";
     import {
         currentRouteLocation,
         currentRouteName,
         currentRouteQuerystring,
         currentRouteTitleKey,
         infohubWhoamiTagTitle,
-    } from "utils/imports/store";
+    } from "@/utils/imports/store";
     import {
         svelteLifecycleOnMount,
         svelteSetContext,
         svelteTick,
-    } from "utils/imports/svelte";
+    } from "@/utils/imports/svelte";
 
     import { faBars } from "@fortawesome/free-solid-svg-icons";
 
-    import { Icon, MenuItem } from "utils/imports/components";
+    import { Icon, MenuItem } from "@/utils/imports/components";
 
-    import "assets/style/global.scss";
-    import "assets/style/tailwind.scss";
+    import "@/assets/style/global.scss";
+    import "@/assets/style/tailwind.scss";
 
     let menuOpen = false;
 
@@ -44,7 +44,7 @@
     const modalOpen = (
         component,
         props = {},
-        headlineLocaleIdent = "modal.defaultHeadline"
+        headlineLocaleIdent = "modal.defaultHeadline",
     ) => {
         modalComponent = component;
         modalProps = props;
@@ -94,14 +94,14 @@
 <svelte:head>
     <meta
         property="og:url"
-        content="{process.env
+        content="{import.meta.env
             .SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring
             ? `?${$currentRouteQuerystring}`
             : ''}"
     />
     <link
         rel="canonical"
-        href="{process.env
+        href="{import.meta.env
             .SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring
             ? `?${$currentRouteQuerystring}`
             : ''}"
@@ -189,7 +189,7 @@
                             menuOpen = !menuOpen;
                         }}
                     >
-                        <Icon data={faBars} scale="2" class="w-8" />
+                        <Icon data={faBars} scale={2} class="w-8" />
                     </div>
                 </div>
             </div>

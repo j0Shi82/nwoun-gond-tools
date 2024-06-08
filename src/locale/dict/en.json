@@ -1,0 +1,109 @@
+{
+    "modal": {
+        "defaultDeadline": "Info"
+    },
+    "menu": {
+        "blog": "UN:Blogged",
+        "forum": "Message Board",
+        "about": "About",
+        "discord": "Discord",
+        "repo": "Source",
+        "tracker": "DevTracker",
+        "infohub": "Content Hub",
+        "auction": "Auction Data",
+        "buy": "Buy me a coffee"
+    },
+    "errors": {
+        "catError": "There was an issue loading this section. Please refresh the page to try again.",
+        "ctaError": "There was an issue loading this section. Click here to try again."
+    },
+    "routes": {
+        "titles": {
+            "support": "Support Us",
+            "devtracker": "Devtracker",
+            "infohub": "Articles and Resources",
+            "auction": "Auction Data"
+        }
+    },
+    "devtracker": {
+        "posts": {
+            "expand": "Expand"
+        }
+    },
+    "infohub": {
+        "filter": "Filter",
+        "filterPlaceholder": "Add tags to filter posts",
+        "official": "Official News",
+        "guides": "Guides / Blogs",
+        "social": "Social Feeds",
+        "discussion": "Discussions",
+        "news": "External News",
+        "addSource": "Add Source",
+        "sourceModal": {
+            "info": "Help us create the most comprehensive list of Neverwinter articles, discussions, social posts, and media by adding sources that you feel aren't included in our engine. Please include a direct link to the content, channel, or feed that you would like us to crawl. Otherwise make sure to add a detailed description of what you'd like to have included.",
+            "buttons": {
+                "send": "Send",
+                "cancel": "Cancel"
+            },
+            "labels": {
+                "email": "E-Mail",
+                "url": "URL *",
+                "desc": "Description"
+            },
+            "placeholders": {
+                "email": "john@example.com",
+                "url": "https://www.homepage.com/neverwinter.rss",
+                "desc": "Please enter additional info if possible"
+            }
+        }
+    },
+    "auction": {
+        "search": {
+            "a11y": {
+                "placeholder": "Search"
+            },
+            "dateStart": "Pick Start Date",
+            "dateEnd": "Pick End Date",
+            "categorySelect": "-- Category --",
+            "qualitySelect": "-- Quality --",
+            "qualities": {
+                "White": "Common",
+                "Green": "Uncommon",
+                "Blue": "Rare",
+                "Purple": "Epic",
+                "Legendary": "Legendary",
+                "Mythic": "Mythic",
+                "Grey": "Trash"
+            },
+            "table": {
+                "header": {
+                    "item": "ITEM",
+                    "pirce": "PRICE",
+                    "count": "COUNT",
+                    "updated": "UPDATED"
+                }
+            },
+            "buttons": {
+                "next": "Next",
+                "prev": "Prev"
+            }
+        },
+        "engine": {
+            "up": {
+                "data": "The crawl engine is up and running, updating <span class=\"font-bold\">{itemsPerDay}</span> of <span class=\"font-bold\">{totalItems}</span> items ({percentage}%) per day.",
+                "help": "The engine needs funding to improve the numbers of crawled items per day. Click here to see why and how you can help!"
+            },
+            "down": {
+                "data": "The crawl engine is offline, but has updated <span class=\"font-bold\">{itemsPerDay}</span> of <span class=\"font-bold\">{totalItems}</span> items ({percentage}%) in the last 24 hours.",
+                "help": "The engine needs funding to run more hours per day. Click here to see why and how you can help!"
+            },
+            "loading": {
+                "data": "Fetching crawl engine stats...",
+                "help": "The engine needs funding. Click here to see why and how you can help!"
+            },
+            "patreons": {
+                "mention": "Thanks to these awesome donors, the Neverwinter community has access to auction house data!"
+            }
+        }
+    }
+}

@@ -1,8 +1,8 @@
-const autoprefixer = require('autoprefixer');
-const tailwindcss = require('tailwindcss');
-const postcssDiscardDuplicates = require('postcss-discard-duplicates');
+import autoprefixer from 'autoprefixer';
+import postcssDiscardDuplicates from 'postcss-discard-duplicates';
+import tailwindcss from 'tailwindcss';
 
-module.exports = {
+export default {
   plugins: [
     tailwindcss,
     autoprefixer(),

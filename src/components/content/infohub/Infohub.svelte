@@ -1,27 +1,25 @@
 <script>
     import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
-    import faChevronUp from "assets/media/fontawesome/chevron-up.svg";
-    import { Icon, InfohubArticles } from "utils/imports/components";
-    import { localize } from "utils/imports/core";
-    import { infohubSections } from "utils/imports/data";
-    import { makeApiCall } from "utils/imports/helpers";
-    import { Tagify } from "utils/imports/plugins";
+    import faChevronUp from "@/assets/media/fontawesome/chevron-up.svg";
+    import { Icon, InfohubArticles } from "@/utils/imports/components";
+    import { localize } from "@/utils/imports/core";
+    import { infohubSections } from "@/utils/imports/data";
+    import { makeApiCall } from "@/utils/imports/helpers";
     import {
         currentRouteQuerystring,
         infohubFirstloadError,
         infohubTags,
         infohubWhoamiTagId,
-    } from "utils/imports/store";
-    import { svelteLifecycleOnMount } from "utils/imports/svelte";
+    } from "@/utils/imports/store";
+    import { svelteLifecycleOnMount } from "@/utils/imports/svelte";
 
-    import "assets/style/infohub.scss";
-    import "assets/style/tagify.scss";
+    import "@/assets/style/infohub.scss";
 
     // get types and site from query string and set them as active
     const qs = new URLSearchParams($currentRouteQuerystring);
     const articleSections = infohubSections.filter(
-        (el) => el.type === "articles"
+        (el) => el.type === "articles",
     );
     const sectionStates = articleSections.map(
         (el) =>
@@ -29,7 +27,7 @@
             qs.get("types").split(",").includes(el.id) &&
             ((qs.has("sites") &&
                 qs.get("sites").split(",").includes(el.site)) ||
-                el.site === null)
+                el.site === null),
     );
     // reactive types array that gets types and site from section data for the api call
     $: types = sectionStates
@@ -38,7 +36,7 @@
         .reduce(
             (unique, item) =>
                 unique.includes(item) ? unique : [...unique, item],
-            []
+            [],
         )
         .join(",");
     $: sites = sectionStates
@@ -47,7 +45,7 @@
         .reduce(
             (unique, item) =>
                 unique.includes(item) ? unique : [...unique, item],
-            []
+            [],
         )
         .join(",");
     // clicking the types array will change the sectionStates array
@@ -66,92 +64,17 @@
     if ($infohubWhoamiTagId !== null) {
         tagList.push($infohubWhoamiTagId);
     }
-    let tagify = null;
-    let tagsLoaded = false;
     let loading = true;
-
-    // get list of tags from api
-    async function getTags() {
-        if ($infohubTags.length > 0) {
-            tagsLoaded = true;
-        } else {
-            await makeApiCall({
-                type: "articles/dicussiontags",
-                returnData: false,
-            })
-                .then((response) => {
-                    infohubTags.set(response.data);
-                })
-                .catch(() => {
-                    infohubFirstloadError.set(true);
-                })
-                .finally(() => {
-                    tagsLoaded = true;
-                });
-        }
-    }
-
-    svelteLifecycleOnMount(async () => {
-        // set up tags
-        infohubFirstloadError.set(false);
-        await getTags();
-        tagify = new Tagify(
-            document.querySelector("#discussionTagFilter input"),
-            {
-                whitelist: $infohubTags.map((el) => el.term),
-                enforceWhitelist: true,
-                skipInvalid: true,
-                editTags: false,
-                placeholder: $localize("infohub.filterPlaceholder"),
-                dropdown: {
-                    classname: "color-nwoun",
-                    enabled: 3, // show the dropdown immediately on focus
-                    maxItems: 10,
-                    position: "text", // place the dropdown near the typed text
-                    closeOnSelect: true, // keep the dropdown open after selecting a suggestion
-                    highlightFirst: true,
-                },
-            }
-        );
-        tagify.on("change", (e) => {
-            if (e.detail.value === "") {
-                tagList = [];
-            } else {
-                tagList = JSON.parse(e.detail.value)
-                    .map((el) =>
-                        $infohubTags.filter((tag) => tag.term === el.value)
-                    )
-                    .map((el) => el[0].id);
-            }
-        });
-        tagify.addTags(
-            $infohubTags
-                .filter((el) => tagList.includes(el.id))
-                .map((el) => el.term)
-        );
-    });
 </script>
 
 <div class="grid md:grid-cols-12 grid-cols-11 gap-2 pb-12 md:pb-0">
     <div class="grid grid-cols-1 md:grid-cols-2 col-span-11 gap-2">
-        <div class="col-span-1 md:col-span-2" id="discussionTagFilter">
-            <input class:hidden={$infohubFirstloadError || !tagsLoaded} />
-            {#if $infohubFirstloadError || !tagsLoaded}
-                <div class="disabled skeleton-input tagify">
-                    <tag class="tagify--noTags tagify--empty"
-                        ><span class="tagify__input"
-                            >{$localize("infohub.filterPlaceholder")}</span
-                        ></tag
-                    >
-                </div>
-            {/if}
-        </div>
         {#if !$infohubFirstloadError}
             <InfohubArticles
                 tags={tagList}
                 {types}
                 {sites}
-                canMount={tagsLoaded}
+                canMount={true}
                 on:loading={(e) => {
                     loading = e.detail.state;
                 }}

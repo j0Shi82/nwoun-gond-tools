@@ -1,8 +1,8 @@
 <script>
-    import { Button, Icon } from "utils/imports/components";
-    import { localize } from "utils/imports/core";
-    import { makeApiCall } from "utils/imports/helpers";
-    import { svelteGetContext } from "utils/imports/svelte";
+    import { Button, Icon } from "@/utils/imports/components";
+    import { localize } from "@/utils/imports/core";
+    import { makeApiCall } from "@/utils/imports/helpers";
+    import { svelteGetContext } from "@/utils/imports/svelte";
 
     import { faSyncAlt } from "@fortawesome/free-solid-svg-icons";
 

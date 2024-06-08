@@ -1,6 +1,6 @@
 <script>
-    import { localize } from "utils/imports/core";
-    import { svelteCreateEventDispatcher } from "utils/imports/svelte";
+    import { localize } from "@/utils/imports/core";
+    import { svelteCreateEventDispatcher } from "@/utils/imports/svelte";
 
     export let curQuality = "";
     const dispatch = svelteCreateEventDispatcher();

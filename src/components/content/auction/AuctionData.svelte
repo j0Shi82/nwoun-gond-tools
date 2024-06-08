@@ -11,24 +11,21 @@
         AuctionDataSearchCatSelect,
         AuctionDataSearchDatePicker,
         AuctionDataSearchQualitySelect,
-        AuctionDataSearchTerm,
         Button,
         Icon,
         Spinner,
         StandardError,
-    } from "utils/imports/components";
-    import { localize, routerLocalizedPush } from "utils/imports/core";
+    } from "@/utils/imports/components";
+    import { localize, routerLocalizedPush } from "@/utils/imports/core";
     import {
         buildQueryStrings,
         dateFormat,
         dateFormatRelative,
         makeApiCall,
-    } from "utils/imports/helpers";
-    import { getAuctionChart } from "utils/imports/plugins";
-    import { currentRouteQuerystring } from "utils/imports/store";
-    import { svelteLifecycleOnMount } from "utils/imports/svelte";
-
-    import "assets/style/tagify.scss";
+    } from "@/utils/imports/helpers";
+    import { getAuctionChart } from "@/utils/imports/plugins";
+    import { currentRouteQuerystring } from "@/utils/imports/store";
+    import { svelteLifecycleOnMount } from "@/utils/imports/svelte";
 
     const qs = new URLSearchParams($currentRouteQuerystring);
     const charts = {};
@@ -51,7 +48,8 @@
                     RegExp(curSearchTerm, "i").test(el.itemName)) &&
                 (curCategory === "" ||
                     (el.categories && el.categories.includes(curCategory))) &&
-                (curQuality === "" || (el.quality && el.quality === curQuality))
+                (curQuality === "" ||
+                    (el.quality && el.quality === curQuality)),
         )
         .filter((el, i) => i >= curPage * 10 && i < 10 * (curPage + 1));
 
@@ -61,7 +59,7 @@
                 RegExp(curSearchTerm, "i").test(el.itemName)) &&
             (curCategory === "" ||
                 (el.categories && el.categories.includes(curCategory))) &&
-            (curQuality === "" || (el.quality && el.quality === curQuality))
+            (curQuality === "" || (el.quality && el.quality === curQuality)),
     ).length;
 
     $: categories = itemData.reduce((aggr, cur) => {
@@ -154,10 +152,10 @@
                                             pickerStartDate) &&
                                     (pickerEndDate === null ||
                                         new Date(el.insertedDate) <=
-                                            pickerEndDate)
+                                            pickerEndDate),
                             ),
                             itemData.find((el) => el.itemDef === itemDef)
-                                .quality
+                                .quality,
                         );
                         charts[openItemDef].resize();
                     })
@@ -221,11 +219,11 @@
                                                     pickerStartDate) &&
                                             (pickerEndDate === null ||
                                                 new Date(el.insertedDate) <=
-                                                    pickerEndDate)
+                                                    pickerEndDate),
                                     ),
                                     itemData.find(
-                                        (el) => el.itemDef === openItemDef
-                                    ).quality
+                                        (el) => el.itemDef === openItemDef,
+                                    ).quality,
                                 );
                                 charts[openItemDef].resize();
                             })
@@ -247,10 +245,6 @@
 {:else}
     <AuctionDataEngineInfo />
     <div class="flex justify-between items-center mb-2">
-        <AuctionDataSearchTerm
-            bind:curSearchTerm
-            on:change={searchParamChange}
-        />
         <AuctionDataSearchCatSelect
             bind:curCategory
             bind:categories
@@ -333,10 +327,10 @@
                                             <div
                                                 class="cursor-pointer w-4 inline-block mr-1"
                                                 on:keypress={toggleChart(
-                                                    data.itemDef
+                                                    data.itemDef,
                                                 )}
                                                 on:click={toggleChart(
-                                                    data.itemDef
+                                                    data.itemDef,
                                                 )}
                                             >
                                                 {#if openItemDef === data.itemDef}
@@ -359,7 +353,7 @@
                                             class="px-1 py-1 whitespace-nowrap text-right item-price"
                                         >
                                             {Intl.NumberFormat().format(
-                                                data.low
+                                                data.low,
                                             )}
                                             <Icon
                                                 data={faGem}
@@ -371,7 +365,7 @@
                                             class="px-1 py-1 whitespace-nowrap text-right hidden md:table-cell item-count"
                                         >
                                             {Intl.NumberFormat().format(
-                                                data.count
+                                                data.count,
                                             )}
                                         </td>
                                         <td
@@ -379,7 +373,7 @@
                                         >
                                             {dateFormatRelative(
                                                 new Date(data.inserted * 1000),
-                                                new Date()
+                                                new Date(),
                                             )}
                                         </td>
                                     </tr>
@@ -401,7 +395,7 @@
                                                     />
                                                     <span class="text-nwoun"
                                                         >{$localize(
-                                                            "errors.catError"
+                                                            "errors.catError",
                                                         )}</span
                                                     >
                                                 </div>

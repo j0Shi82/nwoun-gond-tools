@@ -1,15 +1,15 @@
-import pweLogo from "assets/media/icons/neverwinter-96.png";
-import arcLogo from "assets/media/images/arclogo.png";
-import pcLogo from "assets/media/images/Windows_logo_-_2012_derivative.svg.png";
-import xboxLogo from "assets/media/images/Xbox_one_logo.svg.png";
-import ps4Logo from "assets/media/images/ps4-logos-scee-blue.png";
-import redditLogo from "assets/media/images/reddit_icon.png";
-import twitchLogo from "assets/media/icons/TwitchGlitchPurple.svg";
-import rainerLogo from "assets/media/icons/rainer_64.png";
-import faChevronUp from "assets/media/fontawesome/chevron-up.svg";
-import faBookMedical from "assets/media/fontawesome/book-medical.svg";
-import faNewspaper from "assets/media/fontawesome/newspaper.svg";
-import youtubeLogo from "assets/media/icons/youtube-96.png";
+import faBookMedical from "@/assets/media/fontawesome/book-medical.svg";
+import faChevronUp from "@/assets/media/fontawesome/chevron-up.svg";
+import faNewspaper from "@/assets/media/fontawesome/newspaper.svg";
+import twitchLogo from "@/assets/media/icons/TwitchGlitchPurple.svg";
+import pweLogo from "@/assets/media/icons/neverwinter-96.png";
+import rainerLogo from "@/assets/media/icons/rainer_64.png";
+import youtubeLogo from "@/assets/media/icons/youtube-96.png";
+import pcLogo from "@/assets/media/images/Windows_logo_-_2012_derivative.svg.png";
+import xboxLogo from "@/assets/media/images/Xbox_one_logo.svg.png";
+import arcLogo from "@/assets/media/images/arclogo.png";
+import ps4Logo from "@/assets/media/images/ps4-logos-scee-blue.png";
+import redditLogo from "@/assets/media/images/reddit_icon.png";
 
 const logos = {
     pwe: pweLogo,
