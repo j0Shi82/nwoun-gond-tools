@@ -1,7 +1,11 @@
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
-  /* faEdit, */faHashtag, faInfoCircle, faHeartCirclePlus, faGavel, faCoffee,
-} from '@fortawesome/free-solid-svg-icons';
+    /* faEdit, */ faHashtag,
+    faInfoCircle,
+    faHeartCirclePlus,
+    faGavel,
+    faUserCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 // const branded = [
 //   {
@@ -31,52 +35,60 @@ import {
 // ]
 
 export default [
-  {
-    type: 'talk',
-    id: 'repoLink',
-    textLocaleKey: 'menu.repo',
-    external: true,
-    link: 'https://github.com/j0Shi82/nwoun-gond-tools',
-    icon: faGithub,
-  },
-  {
-    type: 'talk',
-    id: 'buyLink',
-    textLocaleKey: 'menu.buy',
-    external: false,
-    link: 'support',
-    icon: faHeartCirclePlus,
-  },
-  {
-    type: 'page',
-    id: 'infohubLink',
-    textLocaleKey: 'menu.infohub',
-    external: false,
-    link: 'infohub',
-    icon: faInfoCircle,
-  },
-  {
-    type: 'page',
-    id: 'trackerLink',
-    textLocaleKey: 'menu.tracker',
-    external: false,
-    link: 'devtracker',
-    icon: faHashtag,
-  },
-  {
-    type: 'page',
-    id: 'auctionLink',
-    textLocaleKey: 'menu.auction',
-    external: false,
-    link: 'auction',
-    icon: faGavel,
-  },
-  // {
-  //   type: 'page',
-  //   id: 'aboutLink',
-  //   textLocaleKey: 'menu.about',
-  //   external: false,
-  //   link: 'about',
-  //   icon: faQuestionCircle,
-  // },
+    {
+        type: "talk",
+        id: "repoLink",
+        textLocaleKey: "menu.repo",
+        external: true,
+        link: "https://github.com/j0Shi82/nwoun-gond-tools",
+        icon: faGithub,
+    },
+    {
+        type: "talk",
+        id: "buyLink",
+        textLocaleKey: "menu.buy",
+        external: false,
+        link: "support",
+        icon: faHeartCirclePlus,
+    },
+    {
+        type: "talk",
+        id: "userLink",
+        textLocaleKey: "menu.user",
+        external: false,
+        link: "user",
+        icon: faUserCircle,
+    },
+    {
+        type: "page",
+        id: "infohubLink",
+        textLocaleKey: "menu.infohub",
+        external: false,
+        link: "infohub",
+        icon: faInfoCircle,
+    },
+    {
+        type: "page",
+        id: "trackerLink",
+        textLocaleKey: "menu.tracker",
+        external: false,
+        link: "devtracker",
+        icon: faHashtag,
+    },
+    {
+        type: "page",
+        id: "auctionLink",
+        textLocaleKey: "menu.auction",
+        external: false,
+        link: "auction",
+        icon: faGavel,
+    },
+    // {
+    //   type: 'page',
+    //   id: 'aboutLink',
+    //   textLocaleKey: 'menu.about',
+    //   external: false,
+    //   link: 'about',
+    //   icon: faQuestionCircle,
+    // },
 ];

@@ -1,7 +1,7 @@
-import appStore from 'store/app/index';
+import appStore from "store/app/index";
 
 const setRouterIsRouting = (state) => {
-  appStore.router.isRouting.set(state);
+    appStore.router.isRouting.set(state);
 };
 
 export default setRouterIsRouting;
