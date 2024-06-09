@@ -12,6 +12,6 @@ export default {
         apiServer:
             import.meta.env.VITE_NODE_ENV === "production"
                 ? "https://api.uncnso.red"
-                : "http://localhost:8084",
+                : import.meta.env.VITE_DEV_API,
     },
 };
