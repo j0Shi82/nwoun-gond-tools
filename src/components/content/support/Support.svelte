@@ -50,7 +50,7 @@
                 >
             </p>
 
-            <p class="mb-2">
+            <!-- <p class="mb-2">
                 The project however does indeed need funding to power the <a
                     class="underline font-medium"
                     href="/#{getLocalizedRouteMatcher('auction')}"
@@ -65,8 +65,8 @@
                 >. So if you like that particular tool strongly consider
                 donating towards keeping the data as updated as possible. Plans
                 start as low as $1.30.
-            </p>
-            <p class="mb-2">
+            </p> -->
+            <!-- <p class="mb-2">
                 <a
                     href="https://www.patreon.com/nw_gond_tools"
                     target="_blank"
@@ -78,7 +78,7 @@
                         class="mx-auto rounded-lg py-2 px-7"
                     /></a
                 >
-            </p>
+            </p> -->
         </div>
     </div>
 </div>

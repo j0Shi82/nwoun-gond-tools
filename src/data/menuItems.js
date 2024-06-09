@@ -1,9 +1,9 @@
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
-    /* faEdit, */ faHashtag,
-    faInfoCircle,
-    faHeartCirclePlus,
     faGavel,
+    /* faEdit, */ faHashtag,
+    faHeartCirclePlus,
+    faInfoCircle,
     faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -51,14 +51,14 @@ export default [
         link: "support",
         icon: faHeartCirclePlus,
     },
-    {
-        type: "talk",
-        id: "userLink",
-        textLocaleKey: "menu.user",
-        external: false,
-        link: "user",
-        icon: faUserCircle,
-    },
+    // {
+    //     type: "talk",
+    //     id: "userLink",
+    //     textLocaleKey: "menu.user",
+    //     external: false,
+    //     link: "user",
+    //     icon: faUserCircle,
+    // },
     {
         type: "page",
         id: "infohubLink",
@@ -75,14 +75,14 @@ export default [
         link: "devtracker",
         icon: faHashtag,
     },
-    {
-        type: "page",
-        id: "auctionLink",
-        textLocaleKey: "menu.auction",
-        external: false,
-        link: "auction",
-        icon: faGavel,
-    },
+    // {
+    //     type: "page",
+    //     id: "auctionLink",
+    //     textLocaleKey: "menu.auction",
+    //     external: false,
+    //     link: "auction",
+    //     icon: faGavel,
+    // },
     // {
     //   type: 'page',
     //   id: 'aboutLink',

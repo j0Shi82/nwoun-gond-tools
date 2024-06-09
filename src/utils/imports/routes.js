@@ -3,10 +3,6 @@ import ChunkComponent from "svelte-spa-chunk/Chunk.svelte";
 
 const applyCodeSplittingToRoute = ChunkGenerator(ChunkComponent);
 
-// route components, loaded async thanks to svelte-spa-chunk
-const UserRoute = applyCodeSplittingToRoute(
-    () => import("@/components/content/user/User.svelte"),
-);
 const SupportRoute = applyCodeSplittingToRoute(
     () => import("@/components/content/support/Support.svelte"),
 );
@@ -29,5 +25,4 @@ export {
     InfohubRoute,
     NotFound,
     SupportRoute,
-    UserRoute,
 };

@@ -2,16 +2,12 @@
     "extends": [
         "stylelint-config-standard-scss",
         "stylelint-config-recommended-scss",
-        "stylelint-config-prettier"
+        "stylelint-config-html/svelte"
     ],
     "overrides": [
         {
-            "files": ["**/*.(scss|css|html|svelte)"],
+            "files": ["**/*.(scss|css)"],
             "customSyntax": "postcss-scss"
-        },
-        {
-            "files": ["**/*.(html|svelte)"],
-            "customSyntax": "postcss-html"
         }
     ]
 }
