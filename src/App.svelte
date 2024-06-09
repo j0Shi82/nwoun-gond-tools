@@ -95,14 +95,14 @@
     <meta
         property="og:url"
         content="{import.meta.env
-            .SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring
+            .VITE_SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring
             ? `?${$currentRouteQuerystring}`
             : ''}"
     />
     <link
         rel="canonical"
         href="{import.meta.env
-            .SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring
+            .VITE_SITE_URL}/#{$currentRouteLocation}{$currentRouteQuerystring
             ? `?${$currentRouteQuerystring}`
             : ''}"
     />
@@ -241,6 +241,6 @@
     }
 
     #sticky {
-        box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.75);
+        box-shadow: 0 5px 20px 0 rgb(0 0 0 / 75%);
     }
 </style>

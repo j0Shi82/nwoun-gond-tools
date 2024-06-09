@@ -10,7 +10,7 @@ export default {
         },
         // apiServer: 'https://api.uncnso.red',
         apiServer:
-            import.meta.env.NODE_ENV === "production"
+            import.meta.env.VITE_NODE_ENV === "production"
                 ? "https://api.uncnso.red"
                 : "http://localhost:8084",
     },
